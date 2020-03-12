@@ -17,10 +17,11 @@ public class DestinationPoint extends Point {
         this.coordinates = coordinates;
     }
 
-    public DestinationPoint(List<Double> coordinates, String interest) {
+    public DestinationPoint(List<Double> coordinates, String title, String interest) {
         this.id = UUID.randomUUID();
 
         this.coordinates = coordinates;
+        this.title = title;
         this.interest = interest;
     }
 

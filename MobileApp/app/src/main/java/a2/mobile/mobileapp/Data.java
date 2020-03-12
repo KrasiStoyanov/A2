@@ -144,7 +144,8 @@ public class Data {
      */
     private PointOfInterest storePointOfInterest(Cell[] row) {
         String coordinates = row[0].getContents();
-        String interest = row[1].getContents();
+        String title = row[1].getContents();
+        String interest = row[2].getContents();
 
         String[] splitCoordinates = coordinates.split(", ");
         List<Double> parsedCoordinates = new ArrayList<>();
@@ -154,7 +155,7 @@ public class Data {
             parsedCoordinates.add(coordinate);
         }
 
-        PointOfInterest pointOfInterest = new PointOfInterest(parsedCoordinates, interest);
+        PointOfInterest pointOfInterest = new PointOfInterest(parsedCoordinates, title, interest);
         pointsOfInterest.add(pointOfInterest);
 
         return pointOfInterest;

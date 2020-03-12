@@ -46,7 +46,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             coordinates.add(coordinate.toString());
         }
 
-        holder.coordinates.setText(StringUtils.join(coordinates));
+//        holder.coordinates.setText(StringUtils.join(coordinates));
+        holder.title.setText(pointOfInterest.title);
         holder.interest.setText(pointOfInterest.interest);
     }
 
@@ -57,12 +58,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView coordinates;
+        TextView title;
         TextView interest;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            coordinates = itemView.findViewById(R.id.title);
+//            coordinates = itemView.findViewById(R.id.coordinates);
+            title = itemView.findViewById(R.id.title);
             interest = itemView.findViewById(R.id.description);
         }
     }

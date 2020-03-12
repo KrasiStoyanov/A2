@@ -31,11 +31,11 @@ public class MainActivity extends AppCompatActivity {
         wait = findViewById(R.id.wait);
 
         dataDistributor = new Data(this);
-        File file = dataDistributor.getDataFile("points_of_interest.xls");
+//        File file = dataDistributor.getDataFile("points_of_interest.xls");
 
 //        TODO: Data.java doesn't work with online files yet.
-//        String fileUrl = "https://github.com/bikashthapa01/excel-reader-android-app/raw/master/story.xls";
-//        File fetchedFile = dataDistributor.fetchDataFile(fileUrl);
+        String fileUrl = "https://github.com/KrasiStoyanov/Robocop/blob/master/MobileApp/app/src/main/assets/points_of_interest.xls?raw=true";
+        File fetchedFile = dataDistributor.fetchDataFile(fileUrl);
 
         printData();
 
@@ -44,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void printData() {
-        if (dataDistributor.getFetchedFile() == null) {
+        File fetchedFile = dataDistributor.getFetchedFile();
+        if (fetchedFile == null || fetchedFile.length() == 0) {
             return;
         }
 

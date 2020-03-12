@@ -6,6 +6,7 @@ import java.util.UUID;
 public class Point {
     private UUID id;
     public List<Double> coordinates;
+    public String title;
     public String interest;
 
     Point() {
@@ -18,10 +19,11 @@ public class Point {
         this.coordinates = coordinates;
     }
 
-    public Point(List<Double> coordinates, String interest) {
+    public Point(List<Double> coordinates, String title, String interest) {
         this.id = UUID.randomUUID();
 
         this.coordinates = coordinates;
+        this.title = title;
         this.interest = interest;
     }
 
