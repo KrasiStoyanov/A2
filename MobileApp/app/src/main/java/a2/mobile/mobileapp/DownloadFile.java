@@ -1,11 +1,12 @@
 package a2.mobile.mobileapp;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,7 +32,7 @@ public class DownloadFile {
     }
 
     @SuppressLint("StaticFieldLeak")
-    private class DownloadTask extends AsyncTask<Void, Void, Void> {
+    private class DownloadTask extends AsyncTask<Void, Void, Boolean> {
         File apkStorage = null;
         File outputFile = null;
 
@@ -43,27 +44,32 @@ public class DownloadFile {
         }
 
         @Override
-        protected void onPostExecute(Void result) {
-            try {
+        protected void onPostExecute(Boolean taskComplete) {
+            if (taskComplete) {
                 if (downloadedFile != null) {
                     Data.storeData(downloadedFile);
+
+                    // Print the fetched data on the UI.
+                    DataPrintHandler dataPrintHandler = new DataPrintHandler(context);
+                    dataPrintHandler.run();
+
                     // TODO: Notify the user that their download is complete.
                 } else {
                     Log.e(TAG, FileConstants.DOWNLOAD_FAILED);
                     // TODO: Notify the user that their download failed.
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                Log.e(TAG, FileConstants.DOWNLOAD_ERROR + " " + e.getLocalizedMessage());
+            }
+            else {
+                Log.e(TAG, FileConstants.DOWNLOAD_ERROR);
                 // TODO: Notify the user that their download failed.
             }
 
-            super.onPostExecute(result);
+            MainActivity activity = (MainActivity)context;
+            activity.downloadComplete();
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Boolean doInBackground(Void... voids) {
             try {
                 URL fileUrl = new URL(url);
 
@@ -116,15 +122,17 @@ public class DownloadFile {
                 }
 
                 inputStream.close();
+
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
                 outputFile = null;
 
                 Log.e(TAG, FileConstants.DOWNLOAD_ERROR + " " + e.getMessage());
                 // TODO: Notify the user that their download failed.
-            }
 
-            return null;
+                return false;
+            }
         }
 
     }
