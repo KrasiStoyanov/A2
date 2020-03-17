@@ -1,12 +1,10 @@
 package a2.mobile.mobileapp;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
-import android.view.View;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -73,6 +71,7 @@ public class DownloadFile {
             try {
                 URL fileUrl = new URL(url);
 
+                // Establish the HTTP File connection.
                 HttpURLConnection connection = (HttpURLConnection) fileUrl.openConnection();
                 connection.setRequestMethod("GET");
                 connection.connect();
@@ -113,6 +112,7 @@ public class DownloadFile {
                     outputStream = new FileOutputStream(outputFile);
                 }
 
+                // Store the downloaded file.
                 InputStream inputStream = connection.getInputStream();
                 downloadedFile = FileUtils.inputStreamToFile(inputStream);
 

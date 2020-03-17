@@ -2,22 +2,12 @@ package a2.mobile.mobileapp;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.util.Log;
-
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.FileAsyncHttpResponseHandler;
-
-import org.apache.commons.io.IOUtils;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.HttpConnection;
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
