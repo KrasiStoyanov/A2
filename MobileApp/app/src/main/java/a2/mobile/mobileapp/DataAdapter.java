@@ -9,19 +9,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
+public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     private Point startPoint;
     private DestinationPoint targetDestination;
     private List<PointOfInterest> pointsOfInterest;
 
     private LayoutInflater inflater;
 
-    Adapter(Context context, Point startPoint, DestinationPoint targetDestination, List<PointOfInterest> pointsOfInterest){
+    DataAdapter(Context context, Point startPoint, DestinationPoint targetDestination, List<PointOfInterest> pointsOfInterest) {
         this.startPoint = startPoint;
         this.targetDestination = targetDestination;
         this.pointsOfInterest = pointsOfInterest;
@@ -32,7 +30,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.list_view, parent,false);
+        View view = inflater.inflate(R.layout.list_view, parent, false);
 
         return new ViewHolder(view);
     }
@@ -56,12 +54,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         return pointsOfInterest.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         TextView coordinates;
         TextView title;
         TextView interest;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
 
 //            coordinates = itemView.findViewById(R.id.coordinates);

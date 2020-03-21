@@ -1,7 +1,6 @@
 package a2.mobile.mobileapp;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -16,7 +15,7 @@ public class DataPrintHandler implements Runnable {
     @Override
     public void run() {
         MainActivity.recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        MainActivity.adapter = new Adapter(context, Data.startPoint, Data.targetDestination, Data.pointsOfInterest);
+        MainActivity.adapter = new DataAdapter(context, Data.startPoint, Data.targetDestination, Data.pointsOfInterest);
 
         MainActivity.recyclerView.setAdapter(MainActivity.adapter);
     }

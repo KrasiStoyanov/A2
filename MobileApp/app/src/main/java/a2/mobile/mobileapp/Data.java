@@ -24,6 +24,7 @@ public class Data {
 
     /**
      * Access a local data file based on the provided filename.
+     *
      * @return The found file
      */
     public static File getDataFile(String filename) {
@@ -44,7 +45,8 @@ public class Data {
 
     /**
      * Get en excel data file from an external storage device (online).
-     * @param fileUrl The URL from which to fetch the desired file
+     *
+     * @param fileUrl                The URL from which to fetch the desired file
      * @param fileUrlWithoutFileName The file URL without the name and extension of the file
      */
     public static void fetchDataFile(String fileUrl, String fileUrlWithoutFileName) {
@@ -53,6 +55,7 @@ public class Data {
 
     /**
      * Store the data extracted from the provided file.
+     *
      * @param file The file from which the data will be extracted
      */
     public static void storeData(File file) {
@@ -83,6 +86,7 @@ public class Data {
 
     /**
      * Process points of interest and add it to the list of points of interests.
+     *
      * @param row The row from which to process the data
      * @return The newly created `PointOfInterest` instance
      */

@@ -56,13 +56,12 @@ public class DownloadFile {
                     Log.e(TAG, FileConstants.DOWNLOAD_FAILED);
                     // TODO: Notify the user that their download failed.
                 }
-            }
-            else {
+            } else {
                 Log.e(TAG, FileConstants.DOWNLOAD_ERROR);
                 // TODO: Notify the user that their download failed.
             }
 
-            MainActivity activity = (MainActivity)context;
+            MainActivity activity = (MainActivity) context;
             activity.downloadComplete();
         }
 

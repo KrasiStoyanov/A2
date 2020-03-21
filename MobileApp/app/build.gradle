@@ -48,4 +48,6 @@ dependencies {
     implementation 'net.sourceforge.jexcelapi:jxl:2.6.12'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation files('libs/commons-io-2.6.jar')
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'androidx.biometric:biometric:1.0.1'
 }

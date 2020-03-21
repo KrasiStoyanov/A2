@@ -9,6 +9,7 @@ import java.io.InputStream;
 public class FileUtils {
     /**
      * Convert InputStream variables to File ones.
+     *
      * @param inputStream The variable that will be converted to a File
      * @return The converted File variable
      */

@@ -1,20 +1,22 @@
 package a2.mobile.mobileapp;
 
-import android.content.DialogInterface;
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -40,6 +42,7 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
         implements OnMapReadyCallback {
 
     private static final String TAG = MapsActivityCurrentPlace.class.getSimpleName();
+
     private GoogleMap map;
     private CameraPosition cameraPosition;
 
@@ -54,12 +57,6 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
     private Location lastKnownLocation;
-
-    // Used for selecting the current place.
-    private String[] likelyPlaceNames;
-    private String[] likelyPlaceAddresses;
-    private List[] likelyPlaceAttributions;
-    private LatLng[] likelyPlaceLatLngs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +79,14 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Build the map.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.map);
 
+        SupportMapFragment mapFragment = (SupportMapFragment) fragment;
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
     }
-    // Posting a Marker on the map
 
     /**
      * Saves the state of the map when the activity is paused.
@@ -97,18 +96,21 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
         if (map != null) {
             outState.putParcelable(MapConstants.KEY_CAMERA_POSITION, map.getCameraPosition());
             outState.putParcelable(MapConstants.KEY_LOCATION, lastKnownLocation);
+
             super.onSaveInstanceState(outState);
         }
     }
 
     /**
      * Sets up the options menu.
+     *
      * @param menu The options menu.
      * @return Boolean.
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.current_place_menu, menu);
+
         return true;
     }
 
@@ -120,13 +122,22 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
+        // Pin all points of interest on the map.
         for (PointOfInterest pointOfInterest : Data.pointsOfInterest) {
             List<Double> coordinates = pointOfInterest.coordinates;
             String title = pointOfInterest.title;
             String interest = pointOfInterest.interest;
 
+            // Create a new instance of a marker based on the coordinates from the point of interest.
             LatLng coordinatesMarker = new LatLng(coordinates.get(0), coordinates.get(1));
-            map.addMarker(new MarkerOptions().position(coordinatesMarker).title(title));
+            MarkerOptions marker = new MarkerOptions();
+
+            // Settings for the marker.
+            marker.position(coordinatesMarker);
+            marker.title(title);
+            marker.snippet(interest);
+
+            map.addMarker(marker);
         }
 
         // Use a custom info window adapter to handle multiple lines of text in the
@@ -139,11 +150,13 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
                 return null;
             }
 
-            @Overridee
+            @Override
             public View getInfoContents(Marker marker) {
                 // Inflate the layouts for the info window, title and snippet.
-                View infoWindow = getLayoutInflater().inflate(R.layout.custom_info_contents,
-                        (FrameLayout) findViewById(R.id.map), false);
+                LayoutInflater layoutInflater = getLayoutInflater();
+                FrameLayout frameLayout = findViewById(R.id.map);
+
+                View infoWindow = layoutInflater.inflate(R.layout.custom_info_contents, frameLayout, false);
 
                 TextView title = infoWindow.findViewById(R.id.title);
                 title.setText(marker.getTitle());
@@ -186,27 +199,34 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
                             lastKnownLocation = task.getResult();
 
                             if (lastKnownLocation != null) {
+                                LatLng lastKnownLocationCoordinates = new LatLng(
+                                        lastKnownLocation.getLatitude(),
+                                        lastKnownLocation.getLongitude()
+                                );
+
                                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                        new LatLng(lastKnownLocation.getLatitude(),
-                                                lastKnownLocation.getLongitude()), MapConstants.DEFAULT_ZOOM));
+                                        lastKnownLocationCoordinates,
+                                        MapConstants.DEFAULT_ZOOM)
+                                );
                             }
-                        }
-                        else {
+                        } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
 
-                            map.moveCamera(CameraUpdateFactory
-                                    .newLatLngZoom(MapConstants.DEFAULT_LOCATION, MapConstants.DEFAULT_ZOOM));
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                    MapConstants.DEFAULT_LOCATION,
+                                    MapConstants.DEFAULT_ZOOM)
+                            );
+
                             map.getUiSettings().setMyLocationButtonEnabled(false);
                         }
                     }
                 });
             }
-        } catch (SecurityException e)  {
+        } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
         }
     }
-
 
     /**
      * Prompts the user for permission to use the device location.
@@ -217,13 +237,19 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
          * device. The result of the permission request is handled by a callback,
          * onRequestPermissionsResult.
          */
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+
+        int locationPermission = ContextCompat.checkSelfPermission(
+                this.getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+        );
+
+        if (locationPermission == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true;
         } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+            String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
+            ActivityCompat.requestPermissions(
+                    this,
+                    permissions,
                     MapConstants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
@@ -232,55 +258,17 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
      * Handles the result of the request for location permissions.
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         locationPermissionGranted = false;
-        switch (requestCode) {
-            case MapConstants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    locationPermissionGranted = true;
-                }
+
+        if (requestCode == MapConstants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                locationPermissionGranted = true;
             }
         }
+
         updateLocationUI();
-    }
-
-    /**
-     * Displays a form allowing the user to select a place from a list of likely places.
-     */
-    private void openPlacesDialog() {
-        // Ask the user to choose the place where they are now.
-        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // The "which" argument contains the position of the selected item.
-                LatLng markerLatLng = likelyPlaceLatLngs[which];
-                String markerSnippet = likelyPlaceAddresses[which];
-                if (likelyPlaceAttributions[which] != null) {
-                    markerSnippet = markerSnippet + "\n" + likelyPlaceAttributions[which];
-                }
-
-                // Add a marker for the selected place, with an info window
-                // showing information about that place.
-                map.addMarker(new MarkerOptions()
-                        .title(likelyPlaceNames[which])
-                        .position(markerLatLng)
-                        .snippet(markerSnippet));
-
-                // Position the map's camera at the location of the marker.
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLatLng,
-                        MapConstants.DEFAULT_ZOOM));
-            }
-        };
-
-        // Display the dialog.
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.pick_place)
-                .setItems(likelyPlaceNames, listener)
-                .show();
     }
 
     /**
@@ -290,6 +278,7 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
         if (map == null) {
             return;
         }
+
         try {
             if (locationPermissionGranted) {
                 map.setMyLocationEnabled(true);
@@ -297,10 +286,12 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
             } else {
                 map.setMyLocationEnabled(false);
                 map.getUiSettings().setMyLocationButtonEnabled(false);
+
                 lastKnownLocation = null;
+
                 getLocationPermission();
             }
-        } catch (SecurityException e)  {
+        } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
         }
     }
