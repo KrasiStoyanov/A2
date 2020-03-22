@@ -1,5 +1,6 @@
 package a2.mobile.mobileapp;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -9,9 +10,17 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,6 +42,8 @@ import java.util.List;
 public class LogIn extends FragmentActivity implements OnMapReadyCallback {
 
     private final String TAG = "Log In";
+
+    private List<AuthenticationOption> authenticationOptions = new ArrayList<>();
     private GoogleMap map;
 
     // The entry point to the Places API.
@@ -56,33 +67,7 @@ public class LogIn extends FragmentActivity implements OnMapReadyCallback {
             mapFragment.getMapAsync(this);
         }
 
-        List<AuthenticationOption> authenticationOptions = new ArrayList<>();
-
-        // Check if the device has a fingerprint sensor.
-        PackageManager packageManager = this.getPackageManager();
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)) {
-            AuthenticationOption fingerprintCard = new AuthenticationOption(
-                    R.string.fingerprint,
-                    R.drawable.icon_fingerprint
-            );
-
-            authenticationOptions.add(fingerprintCard);
-        }
-
-        AuthenticationOption passcodeCard = new AuthenticationOption(
-                R.string.passcode,
-                R.drawable.icon_passcode
-        );
-
-        authenticationOptions.add(passcodeCard);
-
-        RecyclerView authenticationOptionsHolder = findViewById(R.id.authentication_recycler_view);
-        LogInAdapter authenticationAdapter = new LogInAdapter(this, authenticationOptions);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
-
-        authenticationOptionsHolder.setAdapter(authenticationAdapter);
-        authenticationOptionsHolder.setLayoutManager(layoutManager);
-        authenticationOptionsHolder.addItemDecoration(new SpacesItemDecoration(20));
+        generateAuthenticationOptions();
     }
 
 
@@ -118,5 +103,76 @@ public class LogIn extends FragmentActivity implements OnMapReadyCallback {
         mapUiSettings.setScrollGesturesEnabled(false);
         mapUiSettings.setTiltGesturesEnabled(false);
         mapUiSettings.setRotateGesturesEnabled(false);
+    }
+
+    private void generateAuthenticationOptions() {
+        // Check if the device has a fingerprint sensor.
+        PackageManager packageManager = this.getPackageManager();
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)) {
+            AuthenticationOption fingerprintCard = new AuthenticationOption(
+                    R.string.fingerprint,
+                    R.drawable.icon_fingerprint,
+                    new Intent(LogIn.this, MainActivity.class)
+            );
+
+            authenticationOptions.add(fingerprintCard);
+        }
+
+        AuthenticationOption passcodeCard = new AuthenticationOption(
+                R.string.passcode,
+                R.drawable.icon_passcode,
+                new Intent(LogIn.this, MainActivity.class)
+        );
+
+        authenticationOptions.add(passcodeCard);
+
+        RecyclerView authenticationOptionsHolder = findViewById(R.id.authentication_recycler_view);
+        LogInAdapter authenticationAdapter = new LogInAdapter(this, authenticationOptions);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+
+        authenticationOptionsHolder.setAdapter(authenticationAdapter);
+        authenticationOptionsHolder.setLayoutManager(layoutManager);
+        authenticationOptionsHolder.addItemDecoration(new SpacesItemDecoration(20));
+
+        setNoAccountLink();
+    }
+
+    /**
+     * Make the desired part of the message to be a link.
+     */
+    private void setNoAccountLink() {
+        // Store the message from the resources and find the index of the word.
+        String noAccountMessage = getResources().getString(R.string.welcome_no_account);
+        int indexOfClickableWord = noAccountMessage.indexOf("here");
+
+        // Create a clickable span and override its methods.
+        SpannableString spannableString = new SpannableString(noAccountMessage);
+        ClickableSpan clickableSpan = new ClickableSpan() {
+
+            @Override
+            public void onClick(@NonNull View view) {
+                startActivity(new Intent(LogIn.this, MainActivity.class));
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+            }
+        };
+
+        // Create the hyperlink based on the index of the word.
+        spannableString.setSpan(
+                clickableSpan,
+                indexOfClickableWord,
+                noAccountMessage.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+
+        TextView noAccountTextView = findViewById(R.id.body_welcome_no_account);
+
+        noAccountTextView.setText(spannableString);
+        noAccountTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        noAccountTextView.setHighlightColor(Color.TRANSPARENT);
     }
 }
