@@ -118,7 +118,7 @@ public class LogInAdapter extends RecyclerView.Adapter<LogInAdapter.ViewHolder> 
      * Reveal the hidden passcode field and hide the authentication options list.
      */
     private void onPasscodeOptionClick() {
-        PasscodeHandler passcodeHandler = new PasscodeHandler(context);
+        PasscodeHandler passcodeHandler = new PasscodeHandler(context, activityToStart);
         passcodeHandler.onPasscodeOptionClick();
     }
 }

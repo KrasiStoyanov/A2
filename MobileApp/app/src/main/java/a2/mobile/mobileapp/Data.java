@@ -19,6 +19,7 @@ public class Data {
     public static Point startPoint = null;
     public static DestinationPoint targetDestination = null;
     public static List<PointOfInterest> pointsOfInterest = new ArrayList<>();
+    public static List<Route> routes = new ArrayList<>();
 
     public static File fetchedFile = null;
 
@@ -65,10 +66,16 @@ public class Data {
         if (file != null && file.exists()) {
             try {
                 Workbook workbook = Workbook.getWorkbook(file);
-                Sheet sheet = workbook.getSheet(0);
+                Sheet routesSheet = workbook.getSheet(0);
+                for (int index = 0; index < routesSheet.getRows(); index += 1) {
+                    Cell[] row = routesSheet.getRow(index);
 
-                for (int index = 0; index < sheet.getRows(); index += 1) {
-                    Cell[] row = sheet.getRow(index);
+                    Data.storeRoute(row);
+                }
+
+                Sheet pointsOfInterestSheet = workbook.getSheet(1);
+                for (int index = 0; index < pointsOfInterestSheet.getRows(); index += 1) {
+                    Cell[] row = pointsOfInterestSheet.getRow(index);
 
                     Data.storePointOfInterest(row);
                 }
@@ -95,17 +102,25 @@ public class Data {
         String title = row[1].getContents();
         String interest = row[2].getContents();
 
-        String[] splitCoordinates = coordinates.split(", ");
-        List<Double> parsedCoordinates = new ArrayList<>();
-
-        for (String splitCoordinate : splitCoordinates) {
-            Double coordinate = Double.parseDouble(splitCoordinate);
-            parsedCoordinates.add(coordinate);
-        }
+        List<Double> parsedCoordinates = DataUtils.stringToCoordinates(coordinates);
 
         PointOfInterest pointOfInterest = new PointOfInterest(parsedCoordinates, title, interest);
         Data.pointsOfInterest.add(pointOfInterest);
 
         return pointOfInterest;
+    }
+
+    private static Route storeRoute(Cell[] row) {
+        String title = row[0].getContents();
+        String startPointString = row[1].getContents();
+        String endPointString = row[1].getContents();
+
+        Point startPoint = new Point(DataUtils.stringToCoordinates(startPointString));
+        Point endPoint = new Point(DataUtils.stringToCoordinates(endPointString));
+
+        Route route = new Route(title, startPoint, endPoint);
+        Data.routes.add(route);
+
+        return route;
     }
 }

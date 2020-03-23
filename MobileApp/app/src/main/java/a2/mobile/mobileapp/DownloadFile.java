@@ -62,7 +62,6 @@ public class DownloadFile {
             }
 
             MainActivity activity = (MainActivity) context;
-            activity.downloadComplete();
         }
 
         @Override

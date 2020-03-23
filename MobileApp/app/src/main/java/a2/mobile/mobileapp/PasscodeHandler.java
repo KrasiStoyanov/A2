@@ -16,10 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 class PasscodeHandler {
     private int PASSCODE_KEY;
-    private Context context;
 
-    PasscodeHandler(Context context) {
+    private Context context;
+    private Intent activityToStart;
+
+    PasscodeHandler(Context context, Intent activityToStart) {
         this.context = context;
+        this.activityToStart = activityToStart;
 
         PASSCODE_KEY = Integer.parseInt(context.getResources()
                 .getString(R.string.passcode_key)
@@ -59,10 +62,7 @@ class PasscodeHandler {
                     boolean isPasscodeValid = isPasscodeValid(passcodeInput.getText().toString());
 
                     if (isPasscodeValid) {
-                        context.startActivity(new Intent(
-                                context,
-                                MainActivity.class
-                        ));
+                        context.startActivity(activityToStart);
                     }
                 }
             }
@@ -84,10 +84,7 @@ class PasscodeHandler {
 
                 boolean isPasscodeValid = isPasscodeValid(passcodeInput.getText().toString());
                 if (isPasscodeValid) {
-                    context.startActivity(new Intent(
-                            context,
-                            MainActivity.class
-                    ));
+                    context.startActivity(activityToStart);
                 }
             }
 

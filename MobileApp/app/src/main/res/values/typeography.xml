@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="body_font_size">14sp</dimen>
+    <dimen name="small_font_size">12sp</dimen>
+
+    <dimen name="h1">32sp</dimen>
+    <dimen name="h2">22sp</dimen>
+    <dimen name="h3">18sp</dimen>
+    <dimen name="h4">16sp</dimen>
+    <dimen name="h5">@dimen/body_font_size</dimen>
+</resources>

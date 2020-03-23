@@ -47,7 +47,7 @@
                 android:id="@+id/rounded"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp"
-                android:src="@drawable/radius"
+                android:src="@drawable/radius_large"
                 android:gravity="bottom"
                 android:contentDescription="Top rounded part of content holder" />
 
@@ -73,7 +73,7 @@
             android:text="@string/welcome_title"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/title"
-            android:textSize="32sp"/>
+            android:textSize="@dimen/h1"/>
 
         <TextView
             android:id="@+id/body_welcome_subtitle"
@@ -84,15 +84,17 @@
             android:text="@string/welcome_subtitle"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/body"
-            android:textSize="14sp" />
+            android:textSize="@dimen/h5" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/authentication_recycler_view"
-            android:layout_width="300dp"
+            android:layout_width="250dp"
             android:layout_height="0dp"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp"
-            android:layout_weight="1" />
+            android:paddingTop="12dp"
+            android:paddingBottom="11dp"
+            android:layout_weight="1"/>
 
         <LinearLayout
             android:id="@+id/passcode_holder"
@@ -101,7 +103,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="top|center_horizontal"
             android:visibility="gone">
 
             <EditText
@@ -118,9 +120,7 @@
                 android:fontFamily="@font/raleway_medium"
                 android:background="@drawable/input_field"
                 android:paddingBottom="5dp"
-                android:paddingTop="5dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp" />
+                android:paddingTop="5dp" />
         </LinearLayout>
 
         <TextView
@@ -133,7 +133,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/body"
             android:textColorLink="@color/primary"
-            android:textSize="14sp" />
+            android:textSize="@dimen/h5" />
 
     </LinearLayout>
 </LinearLayout>

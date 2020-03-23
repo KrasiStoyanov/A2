@@ -12,6 +12,9 @@
     <string name="welcome_subtitle">Choose an option to log in</string>
     <string name="welcome_no_account">Don\'t have an account? Make one here</string>
 
+    <!--  Routes  -->
+    <string name="routes_title">Route Selection</string>
+
     <!--  Authentication types  -->
     <string name="fingerprint">Fingerprint</string>
     <string name="passcode">Passcode</string>
@@ -27,4 +30,5 @@
 
     <!--  Test passcode key  -->
     <string name="passcode_key">2846</string>
+
 </resources>

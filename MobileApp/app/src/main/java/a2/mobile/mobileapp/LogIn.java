@@ -44,6 +44,9 @@ public class LogIn extends FragmentActivity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
+        // Initial context set up of the Data handler.
+        Data.context = this;
+
         INPUT_METHOD_MANAGER = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         // Construct a PlacesClient
