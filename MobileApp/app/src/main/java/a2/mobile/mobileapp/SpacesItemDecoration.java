@@ -9,12 +9,17 @@ import androidx.recyclerview.widget.RecyclerView;
 public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
     private int space;
 
-    public SpacesItemDecoration(int space) {
+    SpacesItemDecoration(int space) {
         this.space = space;
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, @NonNull View view, RecyclerView parent, @NonNull RecyclerView.State state) {
+    public void getItemOffsets(
+            Rect outRect,
+            @NonNull View view,
+            @NonNull RecyclerView parent,
+            @NonNull RecyclerView.State state) {
+        
         outRect.left = space;
         outRect.right = space;
     }

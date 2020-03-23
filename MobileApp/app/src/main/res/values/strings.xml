@@ -16,4 +16,15 @@
     <string name="fingerprint">Fingerprint</string>
     <string name="passcode">Passcode</string>
     <string name="face_id">Face ID</string>
+
+    <!--  Authentication IDs  -->
+    <string name="fingerprint_id">@string/fingerprint</string>
+    <string name="passcode_id">@string/passcode</string>
+    <string name="face_id_id">@string/face_id</string>
+
+    <!--  Input field placeholders  -->
+    <string name="placeholder_passcode">Passcode</string>
+
+    <!--  Test passcode key  -->
+    <string name="passcode_key">2846</string>
 </resources>

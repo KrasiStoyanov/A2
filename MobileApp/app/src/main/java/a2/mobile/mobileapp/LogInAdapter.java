@@ -16,6 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class LogInAdapter extends RecyclerView.Adapter<LogInAdapter.ViewHolder> {
+    private final String TAG = "Log In Adapter";
+    private final String KEY_NAME = "Android Key";
+
     private final Context context;
     private final List<AuthenticationOption> authenticationOptions;
     private Intent activityToStart;
@@ -34,42 +37,50 @@ public class LogInAdapter extends RecyclerView.Adapter<LogInAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.authentication_option, parent, false);
-        view.setOnClickListener(new View.OnClickListener() {
+        View rootView = inflater.inflate(R.layout.authentication_option, parent, false);
 
-            @Override
-            public void onClick(View view) {
-                TextView title = view.findViewById(R.id.title);
-                ImageView icon = view.findViewById(R.id.icon);
+        rootView.setOnClickListener(view -> {
 
-                title.setTextColor(view.getResources().getColor(R.color.blue_darker));
-                icon.setColorFilter(view.getResources().getColor(R.color.blue));
+            // Change colors of the title and the icon.
+            TextView title = view.findViewById(R.id.title);
+            ImageView icon = view.findViewById(R.id.icon);
 
-                GradientDrawable buttonRadius = (GradientDrawable) view.getResources()
-                        .getDrawable(R.drawable.button_radius);
+            title.setTextColor(view.getResources().getColor(R.color.blue_darker));
+            icon.setColorFilter(view.getResources().getColor(R.color.blue));
 
-                buttonRadius.setColor(view.getResources().getColor(R.color.dust));
-                buttonRadius.setStroke(
-                        1,
-                        view.getResources().getColor(R.color.blue),
-                        0,
-                        0
-                );
+            // Get the background drawable shape to change its background and stroke colors.
+            GradientDrawable buttonRadius = (GradientDrawable) view.getResources()
+                    .getDrawable(R.drawable.button_radius);
 
-                CardView card = view.findViewById(R.id.option);
-                card.setBackground(buttonRadius);
+            buttonRadius.setColor(view.getResources().getColor(R.color.dust));
+            buttonRadius.setStroke(
+                    1,
+                    view.getResources().getColor(R.color.blue),
+                    0,
+                    0
+            );
 
-                context.startActivity(activityToStart);
+            CardView card = view.findViewById(R.id.option);
+            card.setBackground(buttonRadius);
+
+            Object cardTag = card.getTag();
+            if (cardTag.equals(R.string.face_id_id)) {
+                // onFaceIdOptionClick();
+            } else if (cardTag.equals(R.string.fingerprint_id)) {
+                onFingerprintOptionClick();
+            } else if (cardTag.equals(R.string.passcode_id)) {
+                onPasscodeOptionClick();
             }
         });
 
-        return new ViewHolder(view);
+        return new ViewHolder(rootView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AuthenticationOption authenticationOption = authenticationOptions.get(position);
 
+        holder.card.setTag(authenticationOption.id);
         holder.icon.setImageResource(authenticationOption.icon);
         holder.title.setText(authenticationOption.title);
 
@@ -82,14 +93,32 @@ public class LogInAdapter extends RecyclerView.Adapter<LogInAdapter.ViewHolder> 
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
+        CardView card;
         TextView title;
         ImageView icon;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            card = itemView.findViewById(R.id.option);
             title = itemView.findViewById(R.id.title);
             icon = itemView.findViewById(R.id.icon);
         }
+    }
+
+    /**
+     * Begin fingerprint authentication.
+     */
+    private void onFingerprintOptionClick() {
+        FingerprintHandler fingerprintHandler = new FingerprintHandler(context, activityToStart);
+        fingerprintHandler.onFingerprintOptionClick();
+    }
+
+    /**
+     * Reveal the hidden passcode field and hide the authentication options list.
+     */
+    private void onPasscodeOptionClick() {
+        PasscodeHandler passcodeHandler = new PasscodeHandler(context);
+        passcodeHandler.onPasscodeOptionClick();
     }
 }

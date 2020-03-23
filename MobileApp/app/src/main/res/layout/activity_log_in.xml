@@ -87,12 +87,41 @@
             android:textSize="14sp" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/authentication_recycler_view"
             android:layout_width="300dp"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp"
-            android:id="@+id/authentication_recycler_view" />
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/passcode_holder"
+            android:layout_width="300dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/passcode_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:lines="1"
+                android:maxLines="1"
+                android:hint="@string/placeholder_passcode"
+                android:textSize="12sp"
+                android:textColor="@color/blue_dark"
+                android:fontFamily="@font/raleway_medium"
+                android:background="@drawable/input_field"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/body_welcome_no_account"
