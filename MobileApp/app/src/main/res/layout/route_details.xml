@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/route_details"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:orientation="vertical"
+    android:gravity="top|center_horizontal"
+    android:background="@drawable/divider"
+    android:paddingRight="20dp"
+    android:paddingLeft="20dp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/raleway_extrabold"
+        android:text="@string/route_details_title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/title"
+        android:textSize="@dimen/h2"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="top|center_horizontal"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp">
+
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="top|center_horizontal"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/icon_start_point"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/icon_font"
+                    android:text="@string/icon_disc"
+                    android:textColor="@color/icon"
+                    android:textSize="@dimen/h4"/>
+
+                <EditText
+                    android:id="@+id/input_start_point"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:hint="Start Point"
+                    android:textSize="@dimen/body_font_size"
+                    android:textColor="@color/blue_dark"
+                    android:fontFamily="@font/raleway_medium"
+                    android:background="@drawable/divider"
+                    android:layout_marginLeft="20dp"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:layout_marginStart="20dp" />
+
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="top|center_horizontal"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/icon_end_point"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/icon_font"
+                    android:text="@string/icon_marker"
+                    android:textColor="@color/icon"
+                    android:textSize="@dimen/h4"/>
+
+                <EditText
+                    android:id="@+id/input_end_point"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:hint="End Point"
+                    android:textSize="@dimen/body_font_size"
+                    android:textColor="@color/blue_dark"
+                    android:fontFamily="@font/raleway_medium"
+                    android:background="@drawable/divider"
+                    android:layout_marginLeft="20dp"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:layout_marginStart="20dp" />
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="top|center_horizontal"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/icon_add_point"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/icon_font"
+                    android:text="@string/icon_plus_circle"
+                    android:textColor="@color/icon"
+                    android:textSize="@dimen/h4"/>
+
+                <EditText
+                    android:id="@+id/input_add_point"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:hint="@string/placeholder_add_destination"
+                    android:textSize="@dimen/small_font_size"
+                    android:textColor="@color/input_color"
+                    android:textColorHint="@color/input_color"
+                    android:fontFamily="@font/raleway_medium"
+                    android:background="@color/transparent"
+                    android:layout_marginLeft="20dp"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:layout_marginStart="20dp" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/route_details_cards"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/button_navigate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center"
+            app:cardBackgroundColor="@color/button_primary__background"
+            app:contentPadding="13dp"
+            app:cardCornerRadius="6dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:id="@+id/icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/icon_font"
+                    android:text="@string/icon_navigation"
+                    android:textColor="@color/button_primary__icon"
+                    android:textSize="@dimen/button_icon_size"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/placeholder_navigate"
+                    android:fontFamily="@font/sen_bold"
+                    android:textSize="@dimen/button_font_size"
+                    android:textAllCaps="true"
+                    android:textColor="@color/button_primary__text"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginStart="6dp"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/button_view_routes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            app:cardBackgroundColor="@color/button_transparent_primary__background"
+            app:contentPadding="13dp"
+            app:cardCornerRadius="6dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/placeholder_view_routes"
+                    android:fontFamily="@font/sen_bold"
+                    android:textSize="@dimen/button_font_size"
+                    android:textAllCaps="true"
+                    android:textColor="@color/button_transparent_primary__text"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+</LinearLayout>

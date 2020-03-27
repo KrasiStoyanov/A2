@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="chevron_down"></string>
+    <!--  Chevrons  -->
+    <string name="icon_chevron_down"></string>
+
+    <!--  Arrows  -->
+    <string name="icon_arrow_right"></string>
+
+    <string name="icon_disc"></string>
+    <string name="icon_marker"></string>
+    <string name="icon_distance"></string>
+    <string name="icon_eye"></string>
+    <string name="icon_navigation"></string>
+
+    <!--  Pluses  -->
+    <string name="icon_plus_circle"></string>
 </resources>

@@ -1,0 +1,35 @@
+package a2.mobile.mobileapp.data.classes;
+
+import java.util.List;
+import java.util.UUID;
+
+public class DestinationPoint extends Point {
+    private UUID id;
+    private List<PointOfInterest> pointsOfInterest;
+
+    public DestinationPoint() {
+        this.id = UUID.randomUUID();
+    }
+
+    public DestinationPoint(List<Double> coordinates) {
+        this.id = UUID.randomUUID();
+
+        this.coordinates = coordinates;
+    }
+
+    public DestinationPoint(List<Double> coordinates, String title, String interest) {
+        this.id = UUID.randomUUID();
+
+        this.coordinates = coordinates;
+        this.title = title;
+        this.interest = interest;
+    }
+
+    public UUID getId() {
+        return this.id;
+    }
+
+    public List<PointOfInterest> getPointsOfInterest() {
+        return this.pointsOfInterest;
+    }
+}

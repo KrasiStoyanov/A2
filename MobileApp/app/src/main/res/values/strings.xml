@@ -14,6 +14,7 @@
 
     <!--  Routes  -->
     <string name="routes_title">Route Selection</string>
+    <string name="route_details_title">Sample Route #1</string>
 
     <!--  Authentication types  -->
     <string name="fingerprint">Fingerprint</string>
@@ -27,6 +28,10 @@
 
     <!--  Input field placeholders  -->
     <string name="placeholder_passcode">Passcode</string>
+    <string name="placeholder_add_destination">Add destination</string>
+    <string name="placeholder_route_detail">350m</string>
+    <string name="placeholder_navigate">Navigate</string>
+    <string name="placeholder_view_routes">View Routes</string>
 
     <!--  Test passcode key  -->
     <string name="passcode_key">2846</string>

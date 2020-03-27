@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="transparent">#FFFFFFFF</color>
     <color name="white">#FFFFFF</color>
+
+    <color name="snow_dark">#F3F9FF</color>
     <color name="snow">#F9F9F9</color>
-    <color name="dust">#F3F9FF</color>
 
     <color name="blue_darkest">#263E5F</color>
     <color name="blue_darker">#688BBB</color>
@@ -10,6 +12,8 @@
     <color name="blue">#648FE6</color>
     <color name="blue_light">#A6BADC</color>
     <color name="blue_lighter">#B9D0FF</color>
+    <color name="blue_lightest">#E3ECFF</color>
+    <color name="blue_snow">#EAF1FF</color>
 
     <color name="primary">@color/blue</color>
 
@@ -17,11 +21,25 @@
     <color name="overlay">#F2648FE6</color>
 
     <!--  Typography  -->
-    <color name="body">#A6BADC</color>
+    <color name="body">@color/blue_light</color>
     <color name="title">@color/blue_darkest</color>
     <color name="link">@color/primary</color>
 
     <!--  Icons  -->
-    <color name="icon">@color/blue_light</color>
+    <color name="icon">@color/blue_lighter</color>
     <color name="icon_selected">@color/primary</color>
+
+    <!--  UI Elements  -->
+    <color name="card_background">@color/snow</color>
+
+    <color name="input_color">@color/blue_light</color>
+    <color name="input_placeholder_color">@color/blue_dark</color>
+
+    <!--  Buttons  -->
+    <color name="button_transparent_primary__background">@color/transparent</color>
+    <color name="button_transparent_primary__text">@color/blue</color>
+
+    <color name="button_primary__background">@color/blue</color>
+    <color name="button_primary__text">@color/white</color>
+    <color name="button_primary__icon">@color/blue_lighter</color>
 </resources>

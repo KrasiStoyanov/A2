@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
     <LinearLayout
         android:id="@+id/log_in"
@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/white"
-        tools:context=".LogIn">
+        tools:context=".activities.LogInActivity">
 
         <RelativeLayout
             android:id="@+id/map_holder"
@@ -44,46 +44,87 @@
                     android:layout_height="32dp"
                     android:background="@android:color/transparent"
                     android:fontFamily="@font/icon_font"
-                    android:text="@string/chevron_down"
-                    android:textColor="@color/blue_light"
-                    android:textSize="@dimen/h2" />
+                    android:text="@string/icon_chevron_down"
+                    android:textColor="@color/icon"
+                    android:textSize="@dimen/h2"
+                    android:elevation="0dp"/>
 
             </LinearLayout>
         </RelativeLayout>
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:gravity="top|center_horizontal"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/routes_holder"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:gravity="top|center_horizontal"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/title_routes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/raleway_extrabold"
+                    android:text="@string/routes_title"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@color/title"
+                    android:textSize="@dimen/h2"/>
+
+                <LinearLayout android:id="@+id/routes_list_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="top|center_horizontal">
+
+<!--                    <androidx.recyclerview.widget.RecyclerView-->
+<!--                        android:id="@+id/routes_list"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_marginTop="10dp"/>-->
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/route_details_holder"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:gravity="top|center_horizontal"
+                android:visibility="visible">
+
+<!--                <include-->
+<!--                    layout="@layout/route_details"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:paddingRight="10dp"-->
+<!--                    android:paddingLeft="10dp"-->
+<!--                    android:gravity="top|center_horizontal"/>-->
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <FrameLayout
             android:id="@+id/content_holder"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingRight="30sp"
-            android:paddingBottom="30sp"
-            android:paddingLeft="30sp"
-            android:gravity="top|center_horizontal">
+            android:orientation="horizontal"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:gravity="top|center_horizontal"/>
 
-            <TextView
-                android:id="@+id/title_routes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/raleway_extrabold"
-                android:text="@string/routes_title"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@color/title"
-                android:textSize="@dimen/h2"/>
-
-            <LinearLayout android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_gravity="top|center_horizontal">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/routes_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-            </LinearLayout>
-        </LinearLayout>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
