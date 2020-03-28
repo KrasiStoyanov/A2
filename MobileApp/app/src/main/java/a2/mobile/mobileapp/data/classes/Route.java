@@ -14,18 +14,4 @@ public class Route {
     public Route() {
         this.id = UUID.randomUUID();
     }
-
-    public Route(
-            String title,
-            Point startPoint,
-            Point endPoint,
-            List<PointOfInterest> pointsOfInterest
-    ) {
-        this.id = UUID.randomUUID();
-
-        this.title = title;
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
-        this.pointsOfInterest = pointsOfInterest;
-    }
 }

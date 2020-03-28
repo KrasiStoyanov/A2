@@ -11,4 +11,5 @@ public class MapConstants {
     public static final LatLng DEFAULT_LOCATION = new LatLng(51.842175, 5.859508);
     public static final int DEFAULT_ZOOM = 15;
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    public static final int MAP_FOCUS_PADDING = 200; // Offset from the edges of the map in pixels.
 }

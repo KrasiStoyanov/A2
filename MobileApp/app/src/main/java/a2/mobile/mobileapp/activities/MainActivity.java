@@ -41,7 +41,8 @@ import java.util.List;
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.constants.MapConstants;
 import a2.mobile.mobileapp.data.Data;
-import a2.mobile.mobileapp.data.classes.PointOfInterest;
+import a2.mobile.mobileapp.data.classes.Point;
+import a2.mobile.mobileapp.data.classes.Route;
 import a2.mobile.mobileapp.fragments.MainActivityFragment;
 import a2.mobile.mobileapp.fragments.RoutesHandler;
 
@@ -155,26 +156,15 @@ public class MainActivity extends AppCompatActivity
         wait.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
 
-        showRoutes();
-
         map = googleMap;
 
-        // Pin all points of interest on the map.
-        for (PointOfInterest pointOfInterest : Data.pointsOfInterest) {
-            List<Double> coordinates = pointOfInterest.coordinates;
-            String title = pointOfInterest.title;
-            String interest = pointOfInterest.interest;
+        // Pin all start and end points of all routes on the map.
+        for (Route route : Data.routes) {
+            Point startPoint = route.startPoint;
+            Point endPoint = route.endPoint;
 
-            // Create a new instance of a marker based on the coordinates from the point of interest.
-            LatLng coordinatesMarker = new LatLng(coordinates.get(0), coordinates.get(1));
-            MarkerOptions marker = new MarkerOptions();
-
-            // Settings for the marker.
-            marker.position(coordinatesMarker);
-            marker.title(title);
-            marker.snippet(interest);
-
-            map.addMarker(marker);
+            generateRouteMarker(startPoint);
+            generateRouteMarker(endPoint);
         }
 
         // Use a custom info window adapter to handle multiple lines of text in the
@@ -213,6 +203,30 @@ public class MainActivity extends AppCompatActivity
 
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
+
+        // After the Google Map has been generated show the routes list.
+        showRoutes();
+    }
+
+    /**
+     * Generate a route marker and add it to the Google Map.
+     * @param point the current point that holds the coordinates
+     */
+    private void generateRouteMarker(Point point) {
+        List<Double> coordinates = point.coordinates;
+        String title = point.title;
+        String interest = point.interest;
+
+        // Create a new instance of a marker based on the coordinates from the point of interest.
+        LatLng coordinatesMarker = new LatLng(coordinates.get(0), coordinates.get(1));
+        MarkerOptions marker = new MarkerOptions();
+
+        // Settings for the marker.
+        marker.position(coordinatesMarker);
+        marker.title(title);
+        marker.snippet(interest);
+
+        map.addMarker(marker);
     }
 
     /**
@@ -333,7 +347,15 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Show all routes on the UI.
+     */
     private void showRoutes() {
-        RoutesHandler.handleRoutes(this, findViewById(R.id.scene_manager), Data.routes);
+        RoutesHandler.handleRoutes(
+                this,
+                findViewById(R.id.scene_manager),
+                Data.routes,
+                map
+        );
     }
 }

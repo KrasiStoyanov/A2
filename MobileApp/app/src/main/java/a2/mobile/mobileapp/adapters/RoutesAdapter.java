@@ -1,25 +1,31 @@
 package a2.mobile.mobileapp.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.common.login.RouteDetailsCard;
+import a2.mobile.mobileapp.constants.MapConstants;
 import a2.mobile.mobileapp.data.Data;
+import a2.mobile.mobileapp.data.classes.Point;
 import a2.mobile.mobileapp.data.classes.Route;
 import a2.mobile.mobileapp.fragments.MainActivityFragment;
 import a2.mobile.mobileapp.handlers.RouteDetailsHandler;
@@ -30,13 +36,20 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
     private final Context context;
     private View rootView;
     private final List<Route> routesList;
+    private GoogleMap map;
 
     private LayoutInflater inflater;
 
-    public RoutesAdapter(Context context, View rootView, List<Route> routesList) {
+    public RoutesAdapter(
+            Context context,
+            View rootView,
+            List<Route> routesList,
+            GoogleMap map) {
+
         this.context = context;
         this.rootView = rootView;
         this.routesList = routesList;
+        this.map = map;
 
         this.inflater = LayoutInflater.from(context);
     }
@@ -90,7 +103,26 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
     private void onRouteClick(View view) {
         MainActivityFragment.switchScene(R.layout.route_deails_scene);
 
-        RouteDetailsAdapter.fillRouteDetailPlaceholders(rootView, view);
+        View routeOption = view.findViewById(R.id.route_option);
+        Route route = Data.getRoute(routeOption.getTag());
+
+        assert route != null;
+        RouteDetailsAdapter.fillRouteDetailPlaceholders(rootView, route);
+
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+        // Move GoogleMaps camera to the route area.
+        MarkerOptions startMarker = generateRouteMarkers(route.startPoint);
+        builder.include(startMarker.getPosition());
+
+        MarkerOptions endMarker = generateRouteMarkers(route.endPoint);
+        builder.include(endMarker.getPosition());
+
+        LatLngBounds latLngBounds = builder.build();
+        CameraUpdate cameraUpdate = CameraUpdateFactory
+                .newLatLngBounds(latLngBounds, MapConstants.MAP_FOCUS_PADDING);
+
+        map.animateCamera(cameraUpdate);
 
         // TODO: This should be made into functions later, not hardcoded!
         RouteDetailsCard distance = new RouteDetailsCard(R.string.icon_distance, "350m");
@@ -112,5 +144,16 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
 
         RouteDetailsHandler.handleRouteDetails(context, rootView, routeDetailsCards);
         // TODO: The above code block should be made into functions later, not hardcoded!
+    }
+
+    private MarkerOptions generateRouteMarkers(Point point) {
+        List<Double> coordinates = point.coordinates;
+
+        // Create a new instance of a marker based on the coordinates from the point of interest.
+        LatLng coordinatesMarker = new LatLng(coordinates.get(0), coordinates.get(1));
+        MarkerOptions marker = new MarkerOptions();
+        marker.position(coordinatesMarker);
+
+        return marker;
     }
 }

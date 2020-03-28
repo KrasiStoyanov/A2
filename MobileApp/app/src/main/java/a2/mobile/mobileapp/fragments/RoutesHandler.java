@@ -7,6 +7,8 @@ import android.view.View;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.maps.GoogleMap;
+
 import java.util.List;
 
 import a2.mobile.mobileapp.R;
@@ -14,12 +16,22 @@ import a2.mobile.mobileapp.adapters.RoutesAdapter;
 import a2.mobile.mobileapp.data.classes.Route;
 
 public class RoutesHandler {
-    public static void handleRoutes(Context context, View rootView, List<Route> routesList) {
+    public static void handleRoutes(
+            Context context,
+            View rootView,
+            List<Route> routesList,
+            GoogleMap map) {
+
         View view = ((Activity) context).getWindow().getDecorView()
                 .findViewById(android.R.id.content);
 
         RecyclerView routesListHolder = view.findViewById(R.id.routes_list);
-        RoutesAdapter routesAdapter = new RoutesAdapter(context, rootView, routesList);
+        RoutesAdapter routesAdapter = new RoutesAdapter(
+                context,
+                rootView,
+                routesList,
+                map
+        );
 
         routesListHolder.setAdapter(routesAdapter);
 

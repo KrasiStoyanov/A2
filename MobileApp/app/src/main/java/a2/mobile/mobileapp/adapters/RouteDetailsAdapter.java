@@ -14,7 +14,6 @@ import java.util.List;
 
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.common.login.RouteDetailsCard;
-import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.data.classes.Route;
 
 public class RouteDetailsAdapter extends RecyclerView.Adapter<RouteDetailsAdapter.ViewHolder> {
@@ -57,9 +56,6 @@ public class RouteDetailsAdapter extends RecyclerView.Adapter<RouteDetailsAdapte
         TextView icon;
         TextView title;
 
-        EditText startPoint;
-        EditText endPoint;
-
         ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -68,11 +64,12 @@ public class RouteDetailsAdapter extends RecyclerView.Adapter<RouteDetailsAdapte
         }
     }
 
-    static void fillRouteDetailPlaceholders(View rootView, View optionsListView) {
-        View routeOption = optionsListView.findViewById(R.id.route_option);
-        Route route = Data.getRoute(routeOption.getTag());
-
-        assert route != null;
+    /**
+     * Fill the data received on the UI.
+     * @param rootView the root View
+     * @param route the selected route
+     */
+    static void fillRouteDetailPlaceholders(View rootView, Route route) {
         TextView routeTitle = rootView.findViewById(R.id.title);
         routeTitle.setText(route.title);
 

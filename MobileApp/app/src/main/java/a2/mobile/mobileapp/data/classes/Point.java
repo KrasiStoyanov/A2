@@ -49,5 +49,7 @@ public class Point {
         return this.id;
     }
 
-    public List<Integer> getLocationZones() { return this.locationZones; }
+    public List<Integer> getLocationZones() {
+        return this.locationZones;
+    }
 }

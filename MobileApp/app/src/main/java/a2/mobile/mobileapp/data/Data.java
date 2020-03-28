@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import a2.mobile.mobileapp.data.classes.DestinationPoint;
 import a2.mobile.mobileapp.data.classes.Point;
@@ -29,6 +28,7 @@ public class Data {
     public static List<Route> routes = new ArrayList<>();
 
     public static File fetchedFile = null;
+    public static Route selectedRoute = null;
 
     /**
      * Access a local data file based on the provided filename.
@@ -67,6 +67,8 @@ public class Data {
      * @param file The file from which the data will be extracted
      */
     public static void storeData(File file) {
+        if (fetchedFile != null) return;
+
         WorkbookSettings workbookSettings = new WorkbookSettings();
         workbookSettings.setGCDisabled(true);
 
@@ -88,6 +90,7 @@ public class Data {
 
     /**
      * Get the desired route from the list of routes using its UUID.
+     *
      * @param id the UUID to use when filtering the routes list
      * @return The found route/null
      */
