@@ -1,6 +1,7 @@
 package a2.mobile.mobileapp.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,10 +67,11 @@ public class RouteDetailsAdapter extends RecyclerView.Adapter<RouteDetailsAdapte
 
     /**
      * Fill the data received on the UI.
+     *
      * @param rootView the root View
-     * @param route the selected route
+     * @param route    the selected route
      */
-    static void fillRouteDetailPlaceholders(View rootView, Route route) {
+    public static void fillRouteDetailPlaceholders(View rootView, Route route) {
         TextView routeTitle = rootView.findViewById(R.id.title);
         routeTitle.setText(route.title);
 

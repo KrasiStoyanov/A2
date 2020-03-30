@@ -19,8 +19,7 @@ public class RoutesHandler {
     public static void handleRoutes(
             Context context,
             View rootView,
-            List<Route> routesList,
-            GoogleMap map) {
+            List<Route> routesList) {
 
         View view = ((Activity) context).getWindow().getDecorView()
                 .findViewById(android.R.id.content);
@@ -29,8 +28,7 @@ public class RoutesHandler {
         RoutesAdapter routesAdapter = new RoutesAdapter(
                 context,
                 rootView,
-                routesList,
-                map
+                routesList
         );
 
         routesListHolder.setAdapter(routesAdapter);

@@ -40,18 +40,18 @@ import java.util.List;
 
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.constants.MapConstants;
+import a2.mobile.mobileapp.constants.SceneConstants;
 import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.data.classes.Point;
 import a2.mobile.mobileapp.data.classes.Route;
 import a2.mobile.mobileapp.fragments.MainActivityFragment;
-import a2.mobile.mobileapp.fragments.RoutesHandler;
 
 public class MainActivity extends AppCompatActivity
         implements OnMapReadyCallback {
 
     private static final String TAG = "Main Activity";
 
-    private GoogleMap map;
+    public static GoogleMap map;
     private CameraPosition cameraPosition;
 
     // The entry point to the Places API.
@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity
 
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
-
     private boolean locationPermissionGranted;
 
     // The geographical location where the device is currently located. That is, the last-known
@@ -67,6 +66,7 @@ public class MainActivity extends AppCompatActivity
     private Location lastKnownLocation;
 
     public static RecyclerView recyclerView;
+    public static MainActivityFragment sceneManager;
 
     public ProgressBar progressBar;
     public TextView wait;
@@ -112,11 +112,13 @@ public class MainActivity extends AppCompatActivity
             mapFragment.getMapAsync(this);
         }
 
+        // Initialize scene manager.
+        sceneManager = new MainActivityFragment(this);
+
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            MainActivityFragment mainActivityFragment = new MainActivityFragment();
 
-            transaction.replace(R.id.content_holder, mainActivityFragment);
+            transaction.replace(R.id.content_holder, sceneManager);
             transaction.commit();
         }
     }
@@ -205,11 +207,12 @@ public class MainActivity extends AppCompatActivity
         getDeviceLocation();
 
         // After the Google Map has been generated show the routes list.
-        showRoutes();
+        sceneManager.switchScene(SceneConstants.DEFAULT_SCENE_TO_LOAD);
     }
 
     /**
      * Generate a route marker and add it to the Google Map.
+     *
      * @param point the current point that holds the coordinates
      */
     private void generateRouteMarker(Point point) {
@@ -323,6 +326,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
+     * When the user presses the back button, switch scenes.
+     */
+    @Override
+    public void onBackPressed() {
+        sceneManager.switchScene(R.layout.routes_scene);
+    }
+
+    /**
      * Updates the map's UI settings based on whether the user has granted location permission.
      */
     private void updateLocationUI() {
@@ -345,17 +356,5 @@ public class MainActivity extends AppCompatActivity
         } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
         }
-    }
-
-    /**
-     * Show all routes on the UI.
-     */
-    private void showRoutes() {
-        RoutesHandler.handleRoutes(
-                this,
-                findViewById(R.id.scene_manager),
-                Data.routes,
-                map
-        );
     }
 }

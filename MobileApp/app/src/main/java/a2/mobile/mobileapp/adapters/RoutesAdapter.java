@@ -18,17 +18,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import a2.mobile.mobileapp.R;
-import a2.mobile.mobileapp.common.login.RouteDetailsCard;
+import a2.mobile.mobileapp.activities.MainActivity;
 import a2.mobile.mobileapp.constants.MapConstants;
 import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.data.classes.Point;
 import a2.mobile.mobileapp.data.classes.Route;
-import a2.mobile.mobileapp.fragments.MainActivityFragment;
-import a2.mobile.mobileapp.handlers.RouteDetailsHandler;
 
 public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder> {
     private final String TAG = "Routes Adapter";
@@ -36,20 +33,17 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
     private final Context context;
     private View rootView;
     private final List<Route> routesList;
-    private GoogleMap map;
 
     private LayoutInflater inflater;
 
     public RoutesAdapter(
             Context context,
             View rootView,
-            List<Route> routesList,
-            GoogleMap map) {
+            List<Route> routesList) {
 
         this.context = context;
         this.rootView = rootView;
         this.routesList = routesList;
-        this.map = map;
 
         this.inflater = LayoutInflater.from(context);
     }
@@ -101,8 +95,17 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
     }
 
     private void onRouteClick(View view) {
-        MainActivityFragment.switchScene(R.layout.route_deails_scene);
+        // Switch scenes.
+        MainActivity.sceneManager.switchScene(R.layout.route_deails_scene);
 
+        focusMapOnRoute(view, rootView);
+    }
+
+    /**
+     * Focus the Google Map on the route's start and end point area.
+     * @param view The view
+     */
+    private static void focusMapOnRoute(View view, View rootView) {
         View routeOption = view.findViewById(R.id.route_option);
         Route route = Data.getRoute(routeOption.getTag());
 
@@ -122,31 +125,15 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
         CameraUpdate cameraUpdate = CameraUpdateFactory
                 .newLatLngBounds(latLngBounds, MapConstants.MAP_FOCUS_PADDING);
 
-        map.animateCamera(cameraUpdate);
-
-        // TODO: This should be made into functions later, not hardcoded!
-        RouteDetailsCard distance = new RouteDetailsCard(R.string.icon_distance, "350m");
-
-        String pointsOfInterestTitle = " points of interest";
-        int pointsOfInterestCount = Data.pointsOfInterest.size();
-        if (pointsOfInterestCount == 1) {
-            pointsOfInterestTitle = " point of interest";
-        }
-
-        RouteDetailsCard pointsOfInterest = new RouteDetailsCard(
-                R.string.icon_eye,
-                pointsOfInterestCount + pointsOfInterestTitle
-        );
-
-        List<RouteDetailsCard> routeDetailsCards = new ArrayList<>();
-        routeDetailsCards.add(distance);
-        routeDetailsCards.add(pointsOfInterest);
-
-        RouteDetailsHandler.handleRouteDetails(context, rootView, routeDetailsCards);
-        // TODO: The above code block should be made into functions later, not hardcoded!
+        MainActivity.map.animateCamera(cameraUpdate);
     }
 
-    private MarkerOptions generateRouteMarkers(Point point) {
+    /**
+     * Generate markers for the Google Map based on the provided point.
+     * @param point The point with the needed coordinates
+     * @return The newly generated marker
+     */
+    private static MarkerOptions generateRouteMarkers(Point point) {
         List<Double> coordinates = point.coordinates;
 
         // Create a new instance of a marker based on the coordinates from the point of interest.
