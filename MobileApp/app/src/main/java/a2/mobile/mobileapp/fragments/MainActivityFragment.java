@@ -1,5 +1,6 @@
 package a2.mobile.mobileapp.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.transition.Scene;
 import android.transition.TransitionManager;
@@ -10,26 +11,50 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import a2.mobile.mobileapp.R;
+import a2.mobile.mobileapp.activities.MainActivity;
+import a2.mobile.mobileapp.data.Data;
+import a2.mobile.mobileapp.handlers.RouteDetailsHandler;
 
 public class MainActivityFragment extends Fragment {
 
-    private static Scene routesScene;
-    private static Scene routeDetailsScene;
-    private ViewGroup rootScene;
+    private Context context;
+    public View rootView;
 
-    public static MainActivityFragment newInstance() {
-        return new MainActivityFragment();
+    private Scene routesScene;
+    private Scene routeDetailsScene;
+
+    private static int currentScene;
+
+    public MainActivityFragment(Context context) {
+        this.context = context;
     }
 
-    public static void switchScene(int id) {
+    /**
+     * Switch scenes based on the provided scene ID.
+     *
+     * @param id The scene to play
+     */
+    public void switchScene(int id) {
+        if (currentScene == id) {
+            return;
+        }
+
         switch (id) {
             case R.layout.routes_scene:
                 TransitionManager.go(routesScene);
+                RoutesHandler.handleRoutes(
+                        context,
+                        rootView,
+                        Data.routes
+                );
 
+                currentScene = R.layout.routes_scene;
                 break;
             case R.layout.route_deails_scene:
                 TransitionManager.go(routeDetailsScene);
+                RouteDetailsHandler.handleRouteSelection(context, rootView);
 
+                currentScene = R.layout.route_deails_scene;
                 break;
         }
     }
@@ -37,18 +62,23 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.main_activity_content_fragment, container, false);
+
+        View view = inflater.inflate(
+                R.layout.main_activity_content_fragment,
+                container,
+                false
+        );
 
         assert view != null;
-        rootScene = view.findViewById(R.id.scene_manager);
+        rootView = view.findViewById(R.id.scene_manager);
         routesScene = Scene.getSceneForLayout(
-                rootScene,
+                (ViewGroup) rootView,
                 R.layout.routes_scene,
                 getActivity()
         );
 
         routeDetailsScene = Scene.getSceneForLayout(
-                rootScene,
+                (ViewGroup) rootView,
                 R.layout.route_deails_scene,
                 getActivity()
         );

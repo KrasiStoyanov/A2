@@ -57,18 +57,15 @@ import java.util.List;
 
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.constants.MapConstants;
+import a2.mobile.mobileapp.constants.SceneConstants;
 import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.data.classes.Point;
 import a2.mobile.mobileapp.data.classes.Route;
 import a2.mobile.mobileapp.fragments.MainActivityFragment;
-import a2.mobile.mobileapp.fragments.RoutesHandler;
-
-
 
 
 public class MainActivity extends AppCompatActivity
-        implements OnMapReadyCallback ,View.OnClickListener
-        {
+        implements OnMapReadyCallback ,View.OnClickListener {
 
     private static final String TAG = "Main Activity";
     private static final float POLYLINE_WIDTH = 1;
@@ -84,7 +81,7 @@ public class MainActivity extends AppCompatActivity
     private TextView TextView;
     private MapView mMapView;
 
-    private GoogleMap map;
+    public static GoogleMap map;
     private CameraPosition cameraPosition;
     private static final int overview = 0;
     // The entry point to the Places API.
@@ -92,17 +89,17 @@ public class MainActivity extends AppCompatActivity
 
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
-
     private boolean locationPermissionGranted;
 
     //public String url = "https://maps.googleapis.com/maps/api/directions/json?\n" +
-           // "origin=" + origin + "&destination=" + destination + "&mode=walking&key=YOUR_API_KEY";
+    // "origin=" + origin + "&destination=" + destination + "&mode=walking&key=YOUR_API_KEY";
 
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
     private Location lastKnownLocation;
 
     public static RecyclerView recyclerView;
+    public static MainActivityFragment sceneManager;
 
     public ProgressBar progressBar;
     public TextView wait;
@@ -148,15 +145,16 @@ public class MainActivity extends AppCompatActivity
             mapFragment.getMapAsync(this);
         }
 
+        // Initialize scene manager.
+        sceneManager = new MainActivityFragment(this);
+
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            MainActivityFragment mainActivityFragment = new MainActivityFragment();
 
-            transaction.replace(R.id.content_holder, mainActivityFragment);
+            transaction.replace(R.id.content_holder, sceneManager);
             transaction.commit();
         }
     }
-
 
 
     /**
@@ -245,10 +243,13 @@ public class MainActivity extends AppCompatActivity
         getDeviceLocation();
 
         // After the Google Map has been generated show the routes list.
-        showRoutes();
+
         FetchUrl();
 
+        sceneManager.switchScene(SceneConstants.DEFAULT_SCENE_TO_LOAD);
     }
+
+
     private void setupGoogleMapScreenSettings(GoogleMap map) {
         map.setBuildingsEnabled(true);
         map.setIndoorEnabled(true);
@@ -261,8 +262,10 @@ public class MainActivity extends AppCompatActivity
         mUiSettings.setTiltGesturesEnabled(true);
         mUiSettings.setRotateGesturesEnabled(true);
     }
+
     /**
      * Generate a route marker and add it to the Google Map.
+     *
      * @param point the current point that holds the coordinates
      */
     private void generateRouteMarker(Point point) {
@@ -282,7 +285,7 @@ public class MainActivity extends AppCompatActivity
         map.addMarker(marker);
     }
 
-    private void FetchUrl(){
+    private void FetchUrl() {
         // Initialize a new RequestQueue instance
 
         RequestQueue requestQueue = Volley.newRequestQueue(Data.context);
@@ -293,44 +296,25 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onResponse(JSONObject response) {
-                       // TextView.setText("Response: " + response.toString());
-                         try{
+                        // TextView.setText("Response: " + response.toString());
+                        try {
 
-                             for(int i =0; i<response.length();i++) {
-                                 // Get the JSON array
-                                 JSONArray routes = response.getJSONArray("routes");
-                                 JSONObject polyline = routes.getJSONObject(i).getJSONObject("overview_polyline");
-                                 String points = polyline.getString("points");
-                                 Log.e(LOG_TAG,points);
-                                 latLngList.addAll(PolyUtil.decode(points.trim().replace("\\\\", "\\")));
-                                 mMutablePolylineBlue = map.addPolyline(new PolylineOptions()
-                                         .color(getResources().getColor(R.color.colorPolyLineBlue))
-                                         .width(20f)
-                                         .clickable(false)
-                                         .addAll(latLngList));
+                            for (int i = 0; i < response.length(); i++) {
+                                // Get the JSON array
+                                JSONArray routes = response.getJSONArray("routes");
+                                JSONObject polyline = routes.getJSONObject(i).getJSONObject("overview_polyline");
+                                String points = polyline.getString("points");
+                                Log.e(LOG_TAG, points);
+                                latLngList.addAll(PolyUtil.decode(points.trim().replace("\\\\", "\\")));
+                                mMutablePolylineBlue = map.addPolyline(new PolylineOptions()
+                                        .color(getResources().getColor(R.color.colorPolyLineBlue))
+                                        .width(20f)
+                                        .clickable(false)
+                                        .addAll(latLngList));
 
 
-                             /*while(keys.hasNext()) {
-                                 String key = keys.next();
-                                 if (object.get(key) instanceof JSONObject) {
-                                     // do something with jsonObject here
-                                 }
-
-                                 // Get current json object
-                                 //JSONObject point = object.getJSONObject(i);
-
-                                 // Get the current student (json object) data
-                                 JSONArray points = object.getJSONArray("overview_polyline");
-                                 String routes = points.getString("points");
-
-                                 latLngList.addAll(PolyUtil.decode(routes.replace("\\\\", "\\")));
-                                 Log.e("Sample Tag", "Coordinates " + latLngList);
-                                 // Display the formatted json data in text view
-                                 //TextView.append(points);
-
-                             }*/
-                             }
-                             }catch (JSONException e){
+                            }
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
@@ -338,12 +322,11 @@ public class MainActivity extends AppCompatActivity
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d(LOG_TAG,"error");
+                        Log.d(LOG_TAG, "error");
                     }
                 });
 
         requestQueue.add(jsonObjectRequest);
-
 
 
     }
@@ -351,7 +334,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * Gets the current location of the device, and positions the map's camera.
      */
-    private void getDeviceLocation(){
+    private void getDeviceLocation() {
         /*
          * Get the best and most recent location of the device, which may be null in rare
          * cases when a location is not available.
@@ -442,6 +425,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
+     * When the user presses the back button, switch scenes.
+     */
+    @Override
+    public void onBackPressed() {
+        sceneManager.switchScene(R.layout.routes_scene);
+    }
+
+    /**
      * Updates the map's UI settings based on whether the user has granted location permission.
      */
     private void updateLocationUI() {
@@ -466,21 +457,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    /**
-     * Show all routes on the UI.
-     */
-    private void showRoutes() {
-        RoutesHandler.handleRoutes(
-                this,
-                findViewById(R.id.scene_manager),
-                Data.routes,
-                map
-        );
-    }
-
     @Override
     public void onClick(View v) {
 
     }
-
 }
+
+
+
