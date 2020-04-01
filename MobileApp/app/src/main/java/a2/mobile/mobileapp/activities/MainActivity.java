@@ -21,21 +21,38 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.maps.GeoApiContext;
+import com.google.maps.android.PolyUtil;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import a2.mobile.mobileapp.R;
@@ -46,14 +63,30 @@ import a2.mobile.mobileapp.data.classes.Route;
 import a2.mobile.mobileapp.fragments.MainActivityFragment;
 import a2.mobile.mobileapp.fragments.RoutesHandler;
 
+
+
+
 public class MainActivity extends AppCompatActivity
-        implements OnMapReadyCallback {
+        implements OnMapReadyCallback ,View.OnClickListener
+        {
 
     private static final String TAG = "Main Activity";
+    private static final float POLYLINE_WIDTH = 1;
+    private static final String LINE_BLUE = "lineBlue";
+    private GeoApiContext GeoApiContext = null;
+    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+    private Polyline mMutablePolylineBlue;
+    public static final String LAT_LNG_POINT = "latLngPoint";
+    public static final String ENCODED_POINTS = "encodedPoints";
+    private static final String LOG_TAG = MainActivity.class.getName();
+    private static final String Bytesnet = "53.244755, 6.527290";
+    private static final String ZernikeCampus = "53.240768, 6.534017";
+    private TextView TextView;
+    private MapView mMapView;
 
     private GoogleMap map;
     private CameraPosition cameraPosition;
-
+    private static final int overview = 0;
     // The entry point to the Places API.
     private PlacesClient placesClient;
 
@@ -61,6 +94,9 @@ public class MainActivity extends AppCompatActivity
     private FusedLocationProviderClient fusedLocationProviderClient;
 
     private boolean locationPermissionGranted;
+
+    //public String url = "https://maps.googleapis.com/maps/api/directions/json?\n" +
+           // "origin=" + origin + "&destination=" + destination + "&mode=walking&key=YOUR_API_KEY";
 
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
@@ -121,6 +157,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+
     /**
      * Saves the state of the map when the activity is paused.
      */
@@ -157,6 +195,8 @@ public class MainActivity extends AppCompatActivity
         progressBar.setVisibility(View.GONE);
 
         map = googleMap;
+        setupGoogleMapScreenSettings(googleMap);
+        //draw routes
 
         // Pin all start and end points of all routes on the map.
         for (Route route : Data.routes) {
@@ -206,8 +246,21 @@ public class MainActivity extends AppCompatActivity
 
         // After the Google Map has been generated show the routes list.
         showRoutes();
-    }
+        FetchUrl();
 
+    }
+    private void setupGoogleMapScreenSettings(GoogleMap map) {
+        map.setBuildingsEnabled(true);
+        map.setIndoorEnabled(true);
+        UiSettings mUiSettings = map.getUiSettings();
+        mUiSettings.setZoomControlsEnabled(true);
+        mUiSettings.setCompassEnabled(true);
+        mUiSettings.setMyLocationButtonEnabled(true);
+        mUiSettings.setScrollGesturesEnabled(true);
+        mUiSettings.setZoomGesturesEnabled(true);
+        mUiSettings.setTiltGesturesEnabled(true);
+        mUiSettings.setRotateGesturesEnabled(true);
+    }
     /**
      * Generate a route marker and add it to the Google Map.
      * @param point the current point that holds the coordinates
@@ -229,10 +282,76 @@ public class MainActivity extends AppCompatActivity
         map.addMarker(marker);
     }
 
+    private void FetchUrl(){
+        // Initialize a new RequestQueue instance
+
+        RequestQueue requestQueue = Volley.newRequestQueue(Data.context);
+        List<LatLng> latLngList = new ArrayList<>();
+        String url = "https://maps.googleapis.com/maps/api/directions/json?origin=53.244755,%206.527290&destination=53.240768,%206.534017&mode=walking&key=AIzaSyD-K7BXFSfMYhL-uS5GrlO7buKRBzHqdCM";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                       // TextView.setText("Response: " + response.toString());
+                         try{
+
+                             for(int i =0; i<response.length();i++) {
+                                 // Get the JSON array
+                                 JSONArray routes = response.getJSONArray("routes");
+                                 JSONObject polyline = routes.getJSONObject(i).getJSONObject("overview_polyline");
+                                 String points = polyline.getString("points");
+                                 Log.e(LOG_TAG,points);
+                                 latLngList.addAll(PolyUtil.decode(points.trim().replace("\\\\", "\\")));
+                                 mMutablePolylineBlue = map.addPolyline(new PolylineOptions()
+                                         .color(getResources().getColor(R.color.colorPolyLineBlue))
+                                         .width(20f)
+                                         .clickable(false)
+                                         .addAll(latLngList));
+
+
+                             /*while(keys.hasNext()) {
+                                 String key = keys.next();
+                                 if (object.get(key) instanceof JSONObject) {
+                                     // do something with jsonObject here
+                                 }
+
+                                 // Get current json object
+                                 //JSONObject point = object.getJSONObject(i);
+
+                                 // Get the current student (json object) data
+                                 JSONArray points = object.getJSONArray("overview_polyline");
+                                 String routes = points.getString("points");
+
+                                 latLngList.addAll(PolyUtil.decode(routes.replace("\\\\", "\\")));
+                                 Log.e("Sample Tag", "Coordinates " + latLngList);
+                                 // Display the formatted json data in text view
+                                 //TextView.append(points);
+
+                             }*/
+                             }
+                             }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(LOG_TAG,"error");
+                    }
+                });
+
+        requestQueue.add(jsonObjectRequest);
+
+
+
+    }
+
     /**
      * Gets the current location of the device, and positions the map's camera.
      */
-    private void getDeviceLocation() {
+    private void getDeviceLocation(){
         /*
          * Get the best and most recent location of the device, which may be null in rare
          * cases when a location is not available.
@@ -358,4 +477,10 @@ public class MainActivity extends AppCompatActivity
                 map
         );
     }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
 }
