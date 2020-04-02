@@ -2,7 +2,6 @@ package a2.mobile.mobileapp.data;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.util.Log;
 
 import java.io.File;
 import java.io.InputStream;
@@ -132,22 +131,6 @@ public class Data {
         );
     }
 
-//    private static void storePointsOfInterest(Workbook workbook) {
-//
-//        Sheet pointsOfInterestSheet = workbook.getSheet(1);
-//        for (int jndnex = 0; jndnex < pointsOfInterestSheet.getRows(); jndnex += 1) {
-//            Cell[] currentRow = pointsOfInterestSheet.getRow(index);
-//            PointOfInterest pointOfInterest = Data.generatePointOfInterest(currentRow);
-//
-//            for (int zone : pointOfInterest.getLocationZones()) {
-//                Log.e("Data", "Zone " + zone + " Route Zone " + route.zone);
-//                if (zone == route.zone) {
-//                    route.pointsOfInterest.add(pointOfInterest);
-//                }
-//            }
-//        }
-//    }
-
     private static void storeRoute(Workbook workbook) {
         Sheet routesSheet = workbook.getSheet(0);
 
@@ -168,7 +151,6 @@ public class Data {
                 PointOfInterest pointOfInterest = Data.generatePointOfInterest(currentRow);
 
                 for (int zone : pointOfInterest.getLocationZones()) {
-                    Log.e("Data", "Zone " + zone + " Route Zone " + route.zone);
                     if (zone == route.zone) {
                         route.pointsOfInterest.add(pointOfInterest);
                     }
