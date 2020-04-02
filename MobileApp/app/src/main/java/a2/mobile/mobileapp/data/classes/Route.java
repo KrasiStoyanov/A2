@@ -10,6 +10,7 @@ public class Route {
     public Point startPoint;
     public Point endPoint;
     public List<PointOfInterest> pointsOfInterest;
+    public int zone;
 
     public Route() {
         this.id = UUID.randomUUID();

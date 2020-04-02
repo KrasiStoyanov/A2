@@ -60,4 +60,5 @@ dependencies {
     implementation files('libs/commons-io-2.6.jar')
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.biometric:biometric:1.0.1'
+    implementation 'com.google.android.material:material:1.1.0'
 }

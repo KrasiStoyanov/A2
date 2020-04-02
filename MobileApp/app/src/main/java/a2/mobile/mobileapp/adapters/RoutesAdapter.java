@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -69,8 +68,14 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
             holder.layout.setBackgroundResource(0);
         }
 
-        holder.layout.setOnClickListener(this::onRouteClick);
         holder.layout.setTag(route.id);
+        holder.layout.setOnClickListener(view -> {
+            Data.selectedRoute = route;
+
+            // Switch scenes.
+            MainActivity.sceneManager.switchScene(R.layout.scene_route_deails);
+            focusMapOnRoute(view, rootView);
+        });
     }
 
     @Override
@@ -94,25 +99,20 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
         }
     }
 
-    private void onRouteClick(View view) {
-        // Switch scenes.
-        MainActivity.sceneManager.switchScene(R.layout.route_deails_scene);
-
-        focusMapOnRoute(view, rootView);
+    private void onRouteClick(View view, Route route) {
     }
 
     /**
      * Focus the Google Map on the route's start and end point area.
+     *
      * @param view The view
      */
     private static void focusMapOnRoute(View view, View rootView) {
         View routeOption = view.findViewById(R.id.route_option);
         Route route = Data.getRoute(routeOption.getTag());
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
         assert route != null;
-        RouteDetailsAdapter.fillRouteDetailPlaceholders(rootView, route);
-
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
         // Move GoogleMaps camera to the route area.
         MarkerOptions startMarker = generateRouteMarkers(route.startPoint);
@@ -130,6 +130,7 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
 
     /**
      * Generate markers for the Google Map based on the provided point.
+     *
      * @param point The point with the needed coordinates
      * @return The newly generated marker
      */

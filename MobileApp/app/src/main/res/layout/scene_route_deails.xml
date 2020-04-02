@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/raleway_extrabold"
-        android:text="@string/route_details_title"
+        android:text="@string/title_route_details"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/title"
         android:textSize="@dimen/h2"/>

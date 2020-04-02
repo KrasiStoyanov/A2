@@ -16,12 +16,20 @@ public class PointOfInterest extends Point {
         this.coordinates = coordinates;
     }
 
-    public PointOfInterest(List<Double> coordinates, String title, String interest) {
+    public PointOfInterest(
+            List<Double> coordinates,
+            List<Integer> locationZones,
+            String title,
+            String interest,
+            String typeOfBuilding) {
+
         this.id = UUID.randomUUID();
 
         this.coordinates = coordinates;
+        this.locationZones = locationZones;
         this.title = title;
         this.interest = interest;
+        this.typeOfBuilding = typeOfBuilding;
     }
 
     public UUID getId() {

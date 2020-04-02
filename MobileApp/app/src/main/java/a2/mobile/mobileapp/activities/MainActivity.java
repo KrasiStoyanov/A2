@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public void onBackPressed() {
-        sceneManager.switchScene(R.layout.routes_scene);
+        sceneManager.goBack();
     }
 
     /**
