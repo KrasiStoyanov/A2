@@ -31,7 +31,7 @@
     <string name="placeholder_add_destination">Add destination</string>
     <string name="placeholder_route_detail">350m</string>
     <string name="placeholder_navigate">Navigate</string>
-    <string name="placeholder_view_routes">View Routes</string>
+    <string name="placeholder_view_points_of_interest">Interest Points</string>
 
     <!--  Test passcode key  -->
     <string name="passcode_key">2846</string>
