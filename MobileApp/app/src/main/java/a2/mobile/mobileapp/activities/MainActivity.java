@@ -160,16 +160,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         progressBar.setVisibility(View.GONE);
 
         map = googleMap;
-        //draw routes
-
-        // Pin all start and end points of all routes on the map.
-        for (Route route : Data.routes) {
-            Point startPoint = route.startPoint;
-            Point endPoint = route.endPoint;
-
-            generateRouteMarker(startPoint);
-            generateRouteMarker(endPoint);
-        }
 
         // Use a custom info window adapter to handle multiple lines of text in the
         // info window contents.
@@ -210,28 +200,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // After the Google Map has been generated show the routes list.
         sceneManager.switchScene(SceneConstants.DEFAULT_SCENE_TO_LOAD);
-    }
-
-    /**
-     * Generate a route marker and add it to the Google Map.
-     *
-     * @param point the current point that holds the coordinates
-     */
-    private void generateRouteMarker(Point point) {
-        List<Double> coordinates = point.coordinates;
-        String title = point.title;
-        String interest = point.interest;
-
-        // Create a new instance of a marker based on the coordinates from the point of interest.
-        LatLng coordinatesMarker = new LatLng(coordinates.get(0), coordinates.get(1));
-        MarkerOptions marker = new MarkerOptions();
-
-        // Settings for the marker.
-        marker.position(coordinatesMarker);
-        marker.title(title);
-        marker.snippet(interest);
-
-        map.addMarker(marker);
     }
 
     /**

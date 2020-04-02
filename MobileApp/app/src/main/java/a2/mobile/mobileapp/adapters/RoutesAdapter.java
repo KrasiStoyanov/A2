@@ -11,19 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 import java.util.List;
 
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.activities.MainActivity;
-import a2.mobile.mobileapp.constants.MapConstants;
 import a2.mobile.mobileapp.data.Data;
-import a2.mobile.mobileapp.data.classes.Point;
 import a2.mobile.mobileapp.data.classes.Route;
 
 public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder> {
@@ -71,10 +63,7 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
         holder.layout.setTag(route.id);
         holder.layout.setOnClickListener(view -> {
             Data.selectedRoute = route;
-
-            // Switch scenes.
             MainActivity.sceneManager.switchScene(R.layout.scene_route_deails);
-            focusMapOnRoute(view, rootView);
         });
     }
 
@@ -97,51 +86,5 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
             points = itemView.findViewById(R.id.points);
             button = itemView.findViewById(R.id.call_to_action_button);
         }
-    }
-
-    private void onRouteClick(View view, Route route) {
-    }
-
-    /**
-     * Focus the Google Map on the route's start and end point area.
-     *
-     * @param view The view
-     */
-    private static void focusMapOnRoute(View view, View rootView) {
-        View routeOption = view.findViewById(R.id.route_option);
-        Route route = Data.getRoute(routeOption.getTag());
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-        assert route != null;
-
-        // Move GoogleMaps camera to the route area.
-        MarkerOptions startMarker = generateRouteMarkers(route.startPoint);
-        builder.include(startMarker.getPosition());
-
-        MarkerOptions endMarker = generateRouteMarkers(route.endPoint);
-        builder.include(endMarker.getPosition());
-
-        LatLngBounds latLngBounds = builder.build();
-        CameraUpdate cameraUpdate = CameraUpdateFactory
-                .newLatLngBounds(latLngBounds, MapConstants.MAP_FOCUS_PADDING);
-
-        MainActivity.map.animateCamera(cameraUpdate);
-    }
-
-    /**
-     * Generate markers for the Google Map based on the provided point.
-     *
-     * @param point The point with the needed coordinates
-     * @return The newly generated marker
-     */
-    private static MarkerOptions generateRouteMarkers(Point point) {
-        List<Double> coordinates = point.coordinates;
-
-        // Create a new instance of a marker based on the coordinates from the point of interest.
-        LatLng coordinatesMarker = new LatLng(coordinates.get(0), coordinates.get(1));
-        MarkerOptions marker = new MarkerOptions();
-        marker.position(coordinatesMarker);
-
-        return marker;
     }
 }

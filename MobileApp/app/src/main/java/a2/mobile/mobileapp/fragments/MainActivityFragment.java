@@ -12,7 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import a2.mobile.mobileapp.R;
+import a2.mobile.mobileapp.activities.MainActivity;
 import a2.mobile.mobileapp.data.Data;
+import a2.mobile.mobileapp.handlers.MapHandler;
 import a2.mobile.mobileapp.handlers.PointsOfInterestHandler;
 import a2.mobile.mobileapp.handlers.RouteDetailsHandler;
 import a2.mobile.mobileapp.handlers.RoutesHandler;
@@ -36,6 +38,10 @@ public class MainActivityFragment extends Fragment {
         switch (currentScene) {
             case R.layout.scene_route_deails:
                 switchScene(R.layout.scene_routes);
+
+                // TODO: Only clear route rendering if there is no active navigation.
+                MainActivity.map.clear();
+
                 break;
             case R.layout.scene_points_of_interest:
                 switchScene(R.layout.scene_route_deails);
@@ -65,6 +71,12 @@ public class MainActivityFragment extends Fragment {
                 break;
             case R.layout.scene_route_deails:
                 TransitionManager.go(routeDetailsScene);
+
+                if (currentScene == R.layout.scene_routes) {
+                    MapHandler.focusMapOnRoute();
+                    MapHandler.setupRouteDirectionsAPI(rootView);
+                }
+
                 RouteDetailsHandler.handleRouteSelection(context, rootView);
 
                 break;
