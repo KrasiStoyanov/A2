@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import a2.mobile.mobileapp.data.classes.DestinationPoint;
 import a2.mobile.mobileapp.data.classes.Point;
 import a2.mobile.mobileapp.data.classes.PointOfInterest;
 import a2.mobile.mobileapp.data.classes.Route;
@@ -23,7 +22,6 @@ public class Data {
     public static Context context = null;
 
     public static Point startPoint = null;
-    public static DestinationPoint targetDestination = null;
     public static List<PointOfInterest> pointsOfInterest = new ArrayList<>();
     public static List<Route> routes = new ArrayList<>();
 
@@ -75,6 +73,7 @@ public class Data {
         if (file != null && file.exists()) {
             try {
                 Workbook workbook = Workbook.getWorkbook(file);
+//                Data.storePointsOfInterest(workbook);
                 Data.storeRoute(workbook);
 
                 workbook.close();
@@ -113,10 +112,23 @@ public class Data {
         String title = row[0].getContents();
         String interest = row[1].getContents();
         String coordinates = row[2].getContents();
+        String typeOfBuilding = row[3].getContents();
+
+        List<Integer> locationZones = new ArrayList<>();
+        String[] zonesText = row[4].getContents().split(", ");
+        for (String zone : zonesText) {
+            locationZones.add(Integer.parseInt(zone));
+        }
 
         List<Double> parsedCoordinates = DataUtils.stringToCoordinates(coordinates);
 
-        return new PointOfInterest(parsedCoordinates, title, interest);
+        return new PointOfInterest(
+                parsedCoordinates,
+                locationZones,
+                title,
+                interest,
+                typeOfBuilding
+        );
     }
 
     private static void storeRoute(Workbook workbook) {
@@ -129,15 +141,20 @@ public class Data {
             route.title = row[0].getContents();
             route.startPoint = generateRoutePoints(row, 1);
             route.endPoint = generateRoutePoints(row, 3);
+            route.zone = Integer.parseInt(row[5].getContents());
 
             route.pointsOfInterest = new ArrayList<>();
 
             Sheet pointsOfInterestSheet = workbook.getSheet(1);
             for (int jndnex = 0; jndnex < pointsOfInterestSheet.getRows(); jndnex += 1) {
-                Cell[] currentRow = pointsOfInterestSheet.getRow(index);
-
+                Cell[] currentRow = pointsOfInterestSheet.getRow(jndnex);
                 PointOfInterest pointOfInterest = Data.generatePointOfInterest(currentRow);
-                route.pointsOfInterest.add(pointOfInterest);
+
+                for (int zone : pointOfInterest.getLocationZones()) {
+                    if (zone == route.zone) {
+                        route.pointsOfInterest.add(pointOfInterest);
+                    }
+                }
             }
 
             Data.routes.add(route);

@@ -8,25 +8,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import a2.mobile.mobileapp.R;
-import a2.mobile.mobileapp.activities.MainActivity;
 import a2.mobile.mobileapp.data.Data;
+import a2.mobile.mobileapp.handlers.PointsOfInterestHandler;
 import a2.mobile.mobileapp.handlers.RouteDetailsHandler;
+import a2.mobile.mobileapp.handlers.RoutesHandler;
 
 public class MainActivityFragment extends Fragment {
 
     private Context context;
-    public View rootView;
+    private View rootView;
 
     private Scene routesScene;
     private Scene routeDetailsScene;
+    private Scene pointsOfInterestScene;
 
-    private static int currentScene;
+    private int currentScene;
 
     public MainActivityFragment(Context context) {
         this.context = context;
+    }
+
+    public void goBack() {
+        switch (currentScene) {
+            case R.layout.scene_route_deails:
+                switchScene(R.layout.scene_routes);
+                break;
+            case R.layout.scene_points_of_interest:
+                switchScene(R.layout.scene_route_deails);
+                break;
+        }
     }
 
     /**
@@ -34,13 +48,13 @@ public class MainActivityFragment extends Fragment {
      *
      * @param id The scene to play
      */
-    public void switchScene(int id) {
+    public void switchScene(@NonNull int id) {
         if (currentScene == id) {
             return;
         }
 
         switch (id) {
-            case R.layout.routes_scene:
+            case R.layout.scene_routes:
                 TransitionManager.go(routesScene);
                 RoutesHandler.handleRoutes(
                         context,
@@ -48,15 +62,24 @@ public class MainActivityFragment extends Fragment {
                         Data.routes
                 );
 
-                currentScene = R.layout.routes_scene;
                 break;
-            case R.layout.route_deails_scene:
+            case R.layout.scene_route_deails:
                 TransitionManager.go(routeDetailsScene);
                 RouteDetailsHandler.handleRouteSelection(context, rootView);
 
-                currentScene = R.layout.route_deails_scene;
+                break;
+            case R.layout.scene_points_of_interest:
+                TransitionManager.go(pointsOfInterestScene);
+                PointsOfInterestHandler.handlePointsOfInterest(
+                        context,
+                        rootView,
+                        Data.selectedRoute.pointsOfInterest
+                );
+
                 break;
         }
+
+        currentScene = id;
     }
 
     @Override
@@ -73,13 +96,19 @@ public class MainActivityFragment extends Fragment {
         rootView = view.findViewById(R.id.scene_manager);
         routesScene = Scene.getSceneForLayout(
                 (ViewGroup) rootView,
-                R.layout.routes_scene,
+                R.layout.scene_routes,
                 getActivity()
         );
 
         routeDetailsScene = Scene.getSceneForLayout(
                 (ViewGroup) rootView,
-                R.layout.route_deails_scene,
+                R.layout.scene_route_deails,
+                getActivity()
+        );
+
+        pointsOfInterestScene = Scene.getSceneForLayout(
+                (ViewGroup) rootView,
+                R.layout.scene_points_of_interest,
                 getActivity()
         );
 

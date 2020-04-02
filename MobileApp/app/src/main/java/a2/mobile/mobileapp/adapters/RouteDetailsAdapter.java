@@ -1,11 +1,9 @@
 package a2.mobile.mobileapp.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,18 +13,23 @@ import java.util.List;
 
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.common.login.RouteDetailsCard;
-import a2.mobile.mobileapp.data.classes.Route;
 
 public class RouteDetailsAdapter extends RecyclerView.Adapter<RouteDetailsAdapter.ViewHolder> {
     private final String TAG = "Route Details Adapter";
 
     private final Context context;
+    private final View rootView;
     private final List<RouteDetailsCard> routeDetailsCards;
 
     private LayoutInflater inflater;
 
-    public RouteDetailsAdapter(Context context, List<RouteDetailsCard> routeDetailsCards) {
+    public RouteDetailsAdapter(
+            Context context,
+            View rootView,
+            List<RouteDetailsCard> routeDetailsCards) {
+
         this.context = context;
+        this.rootView = rootView;
         this.routeDetailsCards = routeDetailsCards;
 
         this.inflater = LayoutInflater.from(context);
@@ -63,22 +66,5 @@ public class RouteDetailsAdapter extends RecyclerView.Adapter<RouteDetailsAdapte
             icon = itemView.findViewById(R.id.icon);
             title = itemView.findViewById(R.id.title);
         }
-    }
-
-    /**
-     * Fill the data received on the UI.
-     *
-     * @param rootView the root View
-     * @param route    the selected route
-     */
-    public static void fillRouteDetailPlaceholders(View rootView, Route route) {
-        TextView routeTitle = rootView.findViewById(R.id.title);
-        routeTitle.setText(route.title);
-
-        EditText startPoint = rootView.findViewById(R.id.input_start_point);
-        startPoint.setText(route.startPoint.title);
-
-        EditText endPoint = rootView.findViewById(R.id.input_end_point);
-        endPoint.setText(route.endPoint.title);
     }
 }

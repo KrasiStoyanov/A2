@@ -10,4 +10,9 @@
         <item name="android:textColorHint">@color/input_placeholder_color</item>
     </style>
 
+    <style name="SwitchTheme" parent="Theme.AppCompat.Light">
+        <item name="android:trackTint">@color/blue_dark</item>
+        <item name="android:colorControlActivated">@color/primary</item>
+    </style>
+
 </resources>

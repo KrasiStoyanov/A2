@@ -1,4 +1,4 @@
-package a2.mobile.mobileapp.fragments;
+package a2.mobile.mobileapp.handlers;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,8 +6,6 @@ import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.gms.maps.GoogleMap;
 
 import java.util.List;
 
