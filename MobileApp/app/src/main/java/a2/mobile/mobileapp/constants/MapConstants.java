@@ -18,6 +18,10 @@ public class MapConstants {
     public static final String DIRECTIONS_ROUTE_PATH_OBJECT_KEY = "overview_polyline";
     public static final String DIRECTIONS_ROUTE_POINTS_OBJECT_KEY = "points";
 
+    // Location settings
+    public static final int INTERVAL_BETWEEN_LOCATION_UPDATE = 200;
+    public static final int INTERVAL_FASTEST_BETWEEN_LOCATION_UPDATE = 1000;
+
     // Directions URL settings
     public static final String DIRECTIONS_URL_PATHNAME = "https://maps.googleapis.com/maps/api/directions/json?";
     public static final String DRIECTIONS_URL_QUERY_ORIGIN = "origin=";

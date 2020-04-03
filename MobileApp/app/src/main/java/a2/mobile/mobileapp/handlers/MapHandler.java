@@ -19,7 +19,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import a2.mobile.mobileapp.R;
@@ -35,7 +34,6 @@ public class MapHandler {
 
     /**
      * Set up the Direction API URL and render the outcome - a JSON object with the route path.
-     *
      */
     public static void setupRouteDirectionsAPI() {
         // Initialize a new RequestQueue instance
@@ -65,38 +63,27 @@ public class MapHandler {
      *
      * @param routeObject The JSON Object to get the path from
      */
-    public static void renderRoutePath(JSONObject routeObject) {
-        Iterator<String> keys = routeObject.keys();
+    private static void renderRoutePath(JSONObject routeObject) {
+        try {
+            JSONObject polyline = routeObject.getJSONObject(MapConstants.DIRECTIONS_ROUTE_PATH_OBJECT_KEY);
+            String points = polyline.getString(MapConstants.DIRECTIONS_ROUTE_POINTS_OBJECT_KEY);
 
-        while (keys.hasNext()) {
-            String key = keys.next();
+            List<LatLng> latLngList = new ArrayList<>(
+                    PolyUtil.decode(points.trim().replace(
+                            "\\\\",
+                            "\\"
+                    ))
+            );
 
-            if (key.equals(MapConstants.DIRECTIONS_ROUTE_PATH_OBJECT_KEY)) {
-                JSONObject polyline;
-                String points = "";
+            MainActivity.map.addPolyline(new PolylineOptions()
+                    .color(R.color.primary)
+                    .width(20f)
+                    .clickable(false)
+                    .addAll(latLngList)
+            );
 
-                try {
-                    polyline = routeObject.getJSONObject(key);
-                    points = polyline.getString(MapConstants.DIRECTIONS_ROUTE_POINTS_OBJECT_KEY);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                List<LatLng> latLngList = new ArrayList<>();
-                latLngList.addAll(PolyUtil.decode(points.trim().replace(
-                        "\\\\",
-                        "\\"
-                )));
-
-                MainActivity.map.addPolyline(new PolylineOptions()
-                        .color(R.color.primary)
-                        .width(20f)
-                        .clickable(false)
-                        .addAll(latLngList)
-                );
-
-                break;
-            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -105,7 +92,7 @@ public class MapHandler {
      *
      * @return The generated URL
      */
-    public static String generateUrl() {
+    private static String generateUrl() {
         StringBuilder startPointString = new StringBuilder();
         StringBuilder endPointString = new StringBuilder();
 

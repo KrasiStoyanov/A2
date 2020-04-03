@@ -46,8 +46,11 @@ public class MainActivityFragment extends Fragment {
 
                 break;
             case R.layout.scene_points_of_interest:
-            case R.layout.scene_navigation:
                 switchScene(R.layout.scene_route_deails);
+
+                break;
+            case R.layout.scene_navigation:
+                NavigationHandler.stopNavigation();
 
                 break;
         }

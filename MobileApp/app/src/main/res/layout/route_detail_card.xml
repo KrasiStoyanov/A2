@@ -41,8 +41,8 @@
                 android:fontFamily="@font/sen_bold"
                 android:text="@string/placeholder_route_detail"
                 android:textColor="@color/blue_dark"
-                android:textSize="12sp"
-                android:layout_marginLeft="8dp"/>
+                android:textSize="@dimen/small_font_size"
+                android:layout_marginStart="8dp"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
