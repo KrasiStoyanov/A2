@@ -15,6 +15,7 @@ import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.activities.MainActivity;
 import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.handlers.MapHandler;
+import a2.mobile.mobileapp.handlers.NavigationHandler;
 import a2.mobile.mobileapp.handlers.PointsOfInterestHandler;
 import a2.mobile.mobileapp.handlers.RouteDetailsHandler;
 import a2.mobile.mobileapp.handlers.RoutesHandler;
@@ -27,6 +28,7 @@ public class MainActivityFragment extends Fragment {
     private Scene routesScene;
     private Scene routeDetailsScene;
     private Scene pointsOfInterestScene;
+    private Scene navigationScene;
 
     private int currentScene;
 
@@ -44,7 +46,9 @@ public class MainActivityFragment extends Fragment {
 
                 break;
             case R.layout.scene_points_of_interest:
+            case R.layout.scene_navigation:
                 switchScene(R.layout.scene_route_deails);
+
                 break;
         }
     }
@@ -74,7 +78,7 @@ public class MainActivityFragment extends Fragment {
 
                 if (currentScene == R.layout.scene_routes) {
                     MapHandler.focusMapOnRoute();
-                    MapHandler.setupRouteDirectionsAPI(rootView);
+                    MapHandler.setupRouteDirectionsAPI();
                 }
 
                 RouteDetailsHandler.handleRouteSelection(context, rootView);
@@ -86,6 +90,15 @@ public class MainActivityFragment extends Fragment {
                         context,
                         rootView,
                         Data.selectedRoute.pointsOfInterest
+                );
+
+                break;
+            case R.layout.scene_navigation:
+                TransitionManager.go(navigationScene);
+                NavigationHandler.startNavigation(
+                        context,
+                        rootView,
+                        MapHandler.currentRouteObject
                 );
 
                 break;
@@ -121,6 +134,12 @@ public class MainActivityFragment extends Fragment {
         pointsOfInterestScene = Scene.getSceneForLayout(
                 (ViewGroup) rootView,
                 R.layout.scene_points_of_interest,
+                getActivity()
+        );
+
+        navigationScene = Scene.getSceneForLayout(
+                (ViewGroup) rootView,
+                R.layout.scene_navigation,
                 getActivity()
         );
 

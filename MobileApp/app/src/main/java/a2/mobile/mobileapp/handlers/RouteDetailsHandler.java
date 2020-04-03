@@ -28,6 +28,7 @@ public class RouteDetailsHandler {
      */
     public static void handleRouteSelection(Context context, View view) {
         fillRouteDetailPlaceholders(view);
+        onRouteOptionButtonsClick(view);
 
         List<RouteDetailsCard> routeDetailsCards = generateRouteDetailsCards();
         handleRouteDetailsCards(context, view, routeDetailsCards);
@@ -97,9 +98,16 @@ public class RouteDetailsHandler {
 
         routeDetailsHolder.setLayoutManager(layoutManager);
         routeDetailsHolder.addItemDecoration(new SpacesItemDecoration(20));
+    }
 
-        CardView viewRoutesButton = rootView.findViewById(R.id.button_view_routes);
-        viewRoutesButton.setOnClickListener(view -> {
+    private static void onRouteOptionButtonsClick(View view) {
+        CardView navigateButton = view.findViewById(R.id.button_navigate);
+        navigateButton.setOnClickListener(v -> {
+            MainActivity.sceneManager.switchScene(R.layout.scene_navigation);
+        });
+
+        CardView viewRoutesButton = view.findViewById(R.id.button_view_routes);
+        viewRoutesButton.setOnClickListener(v -> {
             MainActivity.sceneManager.switchScene(R.layout.scene_points_of_interest);
         });
     }

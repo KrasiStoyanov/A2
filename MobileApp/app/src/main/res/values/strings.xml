@@ -15,6 +15,7 @@
     <string name="title_routes">Route Selection</string>
     <string name="title_route_details">Sample Route #1</string>
     <string name="title_points_of_interest">Points of Interest</string>
+    <string name="title_navigation">Navigation</string>
 
     <!--  Authentication types  -->
     <string name="fingerprint">Fingerprint</string>
@@ -32,6 +33,7 @@
     <string name="placeholder_route_detail">350m</string>
     <string name="placeholder_navigate">Navigate</string>
     <string name="placeholder_view_points_of_interest">Interest Points</string>
+    <string name="placeholder_exit_navigation">Exit</string>
 
     <!--  Test passcode key  -->
     <string name="passcode_key">2846</string>

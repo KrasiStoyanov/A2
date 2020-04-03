@@ -1,7 +1,6 @@
 package a2.mobile.mobileapp.handlers;
 
 import android.util.Log;
-import android.view.View;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -31,13 +30,14 @@ import a2.mobile.mobileapp.data.classes.Point;
 import a2.mobile.mobileapp.data.classes.Route;
 
 public class MapHandler {
+    public static JSONObject currentRouteObject;
+    public static double currentRouteDistance;
 
     /**
      * Set up the Direction API URL and render the outcome - a JSON object with the route path.
      *
-     * @param view The view
      */
-    public static void setupRouteDirectionsAPI(View view) {
+    public static void setupRouteDirectionsAPI() {
         // Initialize a new RequestQueue instance
         RequestQueue requestQueue = Volley.newRequestQueue(Data.context);
 
@@ -50,7 +50,7 @@ public class MapHandler {
                         JSONObject routesJSONObject = routes.getJSONObject(0);
 
                         MapHandler.renderRoutePath(routesJSONObject);
-
+                        currentRouteObject = routesJSONObject;
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

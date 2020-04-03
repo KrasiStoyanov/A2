@@ -12,6 +12,9 @@
     <string name="icon_eye"></string>
     <string name="icon_navigation"></string>
 
+    <!--  Crosses  -->
+    <string name="icon_cross"></string>
+
     <!--  Pluses  -->
     <string name="icon_plus_circle"></string>
 </resources>
