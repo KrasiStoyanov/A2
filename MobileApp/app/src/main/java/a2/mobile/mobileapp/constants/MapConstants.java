@@ -17,7 +17,9 @@ public class MapConstants {
     public static final String DEFAULT_DIRECTIONS_MODE = "walking";
     public static final String DIRECTIONS_ROUTE_PATH_OBJECT_KEY = "overview_polyline";
     public static final String DIRECTIONS_ROUTE_POINTS_OBJECT_KEY = "points";
-
+    public static final String DISTANCE_PATH_OBJECT_KEY = "legs";
+    public static final String DISTANCE_POINT_OBJECT_KEY = "distance";
+    public static final String DISTANCE_VALUE_OBJECT_KEY = "text";
     // Directions URL settings
     public static final String DIRECTIONS_URL_PATHNAME = "https://maps.googleapis.com/maps/api/directions/json?";
     public static final String DRIECTIONS_URL_QUERY_ORIGIN = "origin=";
@@ -27,6 +29,10 @@ public class MapConstants {
 
     public static final String URL_QUERY_AND_SEPARATOR = "&";
     public static final String URL_QUERY_COMA_SEPERATOR = ",%20";
+
+
+
+
 
     public static String generateDirectionsUrl(String originText, String destinationText) {
         String origin = DRIECTIONS_URL_QUERY_ORIGIN + originText;
@@ -39,4 +45,5 @@ public class MapConstants {
                 + URL_QUERY_AND_SEPARATOR + mode
                 + URL_QUERY_AND_SEPARATOR + key;
     }
+
 }
