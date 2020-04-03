@@ -31,7 +31,7 @@ import a2.mobile.mobileapp.data.classes.Route;
 
 public class MapHandler {
     public static JSONObject currentRouteObject;
-    public static double currentRouteDistance;
+    public static String currentRouteDistance;
 
     /**
      * Set up the Direction API URL and render the outcome - a JSON object with the route path.
@@ -46,9 +46,15 @@ public class MapHandler {
                 (Request.Method.GET, url, null, response -> {
 
                     try {
+                        //routes element
                         JSONArray routes = response.getJSONArray("routes");
                         JSONObject routesJSONObject = routes.getJSONObject(0);
 
+                        //Legs element
+                        JSONArray leg = routesJSONObject.getJSONArray("legs");
+                        JSONObject distance = leg.getJSONObject(0).getJSONObject("distance");
+                        currentRouteDistance = distance.getString("text");
+                        Log.e("distance",currentRouteDistance);
                         MapHandler.renderRoutePath(routesJSONObject);
                         currentRouteObject = routesJSONObject;
                     } catch (JSONException e) {
