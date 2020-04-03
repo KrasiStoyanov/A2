@@ -54,7 +54,7 @@ public class RouteDetailsHandler {
      * @return A list of the generated cards
      */
     private static List<RouteDetailsCard> generateRouteDetailsCards() {
-        RouteDetailsCard distance = new RouteDetailsCard(R.string.icon_distance, "350m");
+        RouteDetailsCard distance = new RouteDetailsCard(R.string.icon_distance, MapHandler.currentRouteDistance);
 
         String pointsOfInterestTitle = " points of interest";
         int pointsOfInterestCount = Data.selectedRoute.pointsOfInterest.size();
