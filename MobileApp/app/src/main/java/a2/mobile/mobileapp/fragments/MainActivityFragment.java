@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import java.util.function.Function;
+
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.activities.MainActivity;
 import a2.mobile.mobileapp.data.Data;
@@ -31,6 +33,8 @@ public class MainActivityFragment extends Fragment {
     private Scene navigationScene;
 
     private int currentScene;
+
+    public static Function onRouteRenderComplete = null;
 
     public MainActivityFragment(Context context) {
         this.context = context;
@@ -81,10 +85,8 @@ public class MainActivityFragment extends Fragment {
 
                 if (currentScene == R.layout.scene_routes) {
                     MapHandler.focusMapOnRoute();
-                    MapHandler.setupRouteDirectionsAPI();
+                    MapHandler.setupRouteDirectionsAPI(context, rootView);
                 }
-
-                RouteDetailsHandler.handleRouteSelection(context, rootView);
 
                 break;
             case R.layout.scene_points_of_interest:
@@ -147,5 +149,9 @@ public class MainActivityFragment extends Fragment {
         );
 
         return view;
+    }
+
+    public static void onRouteRenderComplete(Context context, View rootView) {
+        RouteDetailsHandler.handleRouteSelection(context, rootView);
     }
 }
