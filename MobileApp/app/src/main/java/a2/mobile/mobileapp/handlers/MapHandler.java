@@ -55,7 +55,7 @@ public class MapHandler {
                         JSONArray leg = routesJSONObject.getJSONArray("legs");
                         JSONObject distance = leg.getJSONObject(0).getJSONObject("distance");
                         currentRouteDistance = distance.getString("text");
-                        Log.e("distance",currentRouteDistance);
+
                         MapHandler.renderRoutePath(routesJSONObject);
                         currentRouteObject = routesJSONObject;
 

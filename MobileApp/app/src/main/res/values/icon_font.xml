@@ -17,4 +17,7 @@
 
     <!--  Pluses  -->
     <string name="icon_plus_circle"></string>
+
+    <!--  Directions  -->
+    <string name="icon_corner_up_left"></string>
 </resources>

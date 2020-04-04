@@ -43,6 +43,7 @@ import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.data.classes.location.LocationLiveData;
 import a2.mobile.mobileapp.data.classes.location.LocationViewModel;
 import a2.mobile.mobileapp.fragments.MainActivityFragment;
+import a2.mobile.mobileapp.fragments.MainActivityMapFragment;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public static RecyclerView recyclerView;
     public static MainActivityFragment sceneManager;
+    public static MainActivityMapFragment mapManager;
 
     public ProgressBar progressBar;
     public TextView wait;
@@ -111,8 +113,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mapFragment.getMapAsync(this);
         }
 
-        // Initialize scene manager.
+        // Initialize scene and map managers.
         sceneManager = new MainActivityFragment(this);
+        mapManager = new MainActivityMapFragment(this, findViewById(R.id.map_holder));
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.transition.Scene;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +34,6 @@ public class MainActivityFragment extends Fragment {
     private Scene navigationScene;
 
     private int currentScene;
-
-    public static Function onRouteRenderComplete = null;
 
     public MainActivityFragment(Context context) {
         this.context = context;
@@ -83,10 +82,8 @@ public class MainActivityFragment extends Fragment {
             case R.layout.scene_route_deails:
                 TransitionManager.go(routeDetailsScene);
 
-                if (currentScene == R.layout.scene_routes) {
-                    MapHandler.focusMapOnRoute();
-                    MapHandler.setupRouteDirectionsAPI(context, rootView);
-                }
+                MapHandler.focusMapOnRoute();
+                MapHandler.setupRouteDirectionsAPI(context, rootView);
 
                 break;
             case R.layout.scene_points_of_interest:
@@ -100,6 +97,8 @@ public class MainActivityFragment extends Fragment {
                 break;
             case R.layout.scene_navigation:
                 TransitionManager.go(navigationScene);
+
+                MainActivity.mapManager.setUpViewForNavigation();
                 NavigationHandler.startNavigation(
                         context,
                         rootView,
