@@ -4,15 +4,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.transition.Scene;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
-import java.util.function.Function;
 
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.activities.MainActivity;

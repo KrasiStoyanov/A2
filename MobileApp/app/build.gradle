@@ -65,14 +65,20 @@ dependencies {
     implementation 'androidx.biometric:biometric:1.0.1'
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'com.google.android.gms:play-services-vision:19.0.0'
+
     //google direction api
     implementation 'com.google.maps:google-maps-services:0.11.0'
     implementation 'org.slf4j:slf4j-simple:1.7.26'
     implementation 'com.google.maps.android:android-maps-utils:0.5'
     implementation 'com.google.firebase:firebase-core:17.2.3'
+
     //Firebase Authentication
     implementation 'com.google.firebase:firebase-auth:19.3.0'
+
     // Firestore Firestore
     implementation 'com.google.firebase:firebase-firestore:21.4.1'
     implementation 'androidx.fragment:fragment:1.2.3'
+
+    // Mapbox
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.0.0'
 }

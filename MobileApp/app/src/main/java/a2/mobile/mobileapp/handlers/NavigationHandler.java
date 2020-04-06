@@ -1,10 +1,7 @@
 package a2.mobile.mobileapp.handlers;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.lifecycle.LifecycleOwner;
@@ -16,8 +13,6 @@ import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.activities.MainActivity;
 import a2.mobile.mobileapp.data.classes.location.LocationLiveData;
 import a2.mobile.mobileapp.data.classes.location.LocationModel;
-import a2.mobile.mobileapp.fragments.MainActivityFragment;
-import a2.mobile.mobileapp.fragments.MainActivityMapFragment;
 
 public class NavigationHandler {
     private static Observer<LocationModel> locationObserver;
