@@ -48,11 +48,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activities.TestMapActivity"
-            android:label="@string/label_activity_log_in"
-            android:exported="true" />
-
     </application>
 
 </manifest>

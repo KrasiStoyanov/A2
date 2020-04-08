@@ -1,6 +1,6 @@
 package a2.mobile.mobileapp.constants;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 public class MapConstants {
     // Global keys

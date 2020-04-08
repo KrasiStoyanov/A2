@@ -81,4 +81,5 @@ dependencies {
 
     // Mapbox
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.0.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.8.0'
 }
