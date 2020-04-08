@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="target_lat">51.811650</string>
+    <string name="target_lon">5.837275</string>
+
+    <string name="min_zoom">10</string>
+    <string name="max_zoom">10</string>
+</resources>

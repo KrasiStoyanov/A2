@@ -21,12 +21,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.libraries.places.api.Places;
+import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.SupportMapFragment;
+import com.mapbox.mapboxsdk.maps.UiSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +45,15 @@ public class LogInActivity extends FragmentActivity implements OnMapReadyCallbac
     public static InputMethodManager INPUT_METHOD_MANAGER;
 
     private List<AuthenticationOption> authenticationOptions = new ArrayList<>();
-    private GoogleMap map;
+    private MapboxMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Mapbox access token is configured here. This needs to be called either in your application
+        // object or in the same activity which contains the mapview.
+        Mapbox.getInstance(this, MapConstants.MAPBOX_API);
         setContentView(R.layout.activity_log_in);
 
         // Initial context set up of the Data handler.
@@ -82,8 +87,8 @@ public class LogInActivity extends FragmentActivity implements OnMapReadyCallbac
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
+    public void onMapReady(@NonNull MapboxMap mapboxMap) {
+        map = mapboxMap;
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 MapConstants.DEFAULT_LOCATION,

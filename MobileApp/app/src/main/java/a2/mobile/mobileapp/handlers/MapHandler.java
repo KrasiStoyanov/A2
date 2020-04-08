@@ -3,18 +3,24 @@ package a2.mobile.mobileapp.handlers;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.maps.android.PolyUtil;
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
+import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.offline.OfflineManager;
+import com.mapbox.mapboxsdk.offline.OfflineRegion;
+import com.mapbox.mapboxsdk.offline.OfflineRegionError;
+import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
+import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,8 +28,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.activities.MainActivity;
 import a2.mobile.mobileapp.constants.MapConstants;
 import a2.mobile.mobileapp.data.Data;
@@ -32,8 +38,122 @@ import a2.mobile.mobileapp.data.classes.Route;
 import a2.mobile.mobileapp.fragments.MainActivityFragment;
 
 public class MapHandler {
+    private static final String SOURCE_ID = "Route markers";
+
+    private static List<Feature> routeMarkers = new ArrayList<>();
+    private static List<Feature> pointsOfInterestMarkers = new ArrayList<>();
+
     public static JSONObject currentRouteObject;
     public static String currentRouteDistance;
+    private static boolean isOfflineRegionDownloaded;
+
+    /**
+     * Download an offline region of the map - Nijmegen.
+     *
+     * @param context The MainActivity context
+     */
+    public static void downloadOfflineRegion(Context context) {
+        // Create a bounding box for the offline region
+        LatLngBounds latLngBounds = new LatLngBounds.Builder()
+                .include(new com.mapbox.mapboxsdk.geometry.LatLng(
+                        MapConstants.MAP_REGION_MIN_LAT,
+                        MapConstants.MAP_REGION_MIN_LON)
+                )
+                .include(new com.mapbox.mapboxsdk.geometry.LatLng(
+                        MapConstants.MAP_REGION_MAX_LAT,
+                        MapConstants.MAP_REGION_MAX_LON)
+                )
+                .build();
+
+        MainActivity.map.setStyle(Style.OUTDOORS, style -> {
+            // Define the offline region
+            OfflineTilePyramidRegionDefinition definition = new OfflineTilePyramidRegionDefinition(
+                    style.getUri(),
+                    latLngBounds,
+                    MapConstants.MIN_ZOOM,
+                    MapConstants.MAX_ZOOM,
+                    context.getResources().getDisplayMetrics().density
+            );
+
+            // Set the metadata
+            byte[] metadata;
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put(MapConstants.MAP_JSON_FIELD_REGION_NAME, MapConstants.MAP_NAME);
+
+                String json = jsonObject.toString();
+                metadata = json.getBytes(MapConstants.MAP_JSON_CHARSET);
+            } catch (Exception exception) {
+                Log.e("Failed to encode metadata: %s", Objects.requireNonNull(exception.getMessage()));
+                metadata = null;
+            }
+
+            // Create the region asynchronously
+            if (metadata != null) {
+                MainActivity.offlineMapManager.createOfflineRegion(
+                        definition,
+                        metadata,
+                        new OfflineManager.CreateOfflineRegionCallback() {
+
+                            @Override
+                            public void onCreate(OfflineRegion offlineRegion) {
+                                offlineRegion.setDownloadState(OfflineRegion.STATE_ACTIVE);
+
+                                // Display the download progress bar
+                                MapHandler.startProgress();
+
+                                observeDownloadingProcess(context, offlineRegion);
+                            }
+
+                            @Override
+                            public void onError(String error) {
+                                Log.e("Error: %s", error);
+                            }
+                        });
+            }
+        });
+    }
+
+    /**
+     * Visualize a progress bar on download start.
+     */
+    private static void startProgress() {
+
+        // Start and show the progress bar
+        isOfflineRegionDownloaded = false;
+        MainActivity.progressBar.setIndeterminate(true);
+        MainActivity.progressBar.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Update the download state using percentages.
+     *
+     * @param percentage The current percentage
+     */
+    private static void setPercentage(final int percentage) {
+        MainActivity.progressBar.setIndeterminate(false);
+        MainActivity.progressBar.setProgress(percentage);
+    }
+
+    /**
+     * Hide the progress bard on download end and notify the user of it.
+     *
+     * @param context The MainActivity context
+     */
+    private static void endProgress(Context context) {
+        // Don't notify more than once
+        if (isOfflineRegionDownloaded) {
+            return;
+        }
+
+        // Stop and hide the progress bar
+        isOfflineRegionDownloaded = true;
+        MainActivity.progressBar.setIndeterminate(false);
+        MainActivity.progressBar.setVisibility(View.GONE);
+
+        // Show a toast
+        Toast.makeText(context, "Region downloaded successfully!", Toast.LENGTH_LONG).show();
+    }
 
     /**
      * Set up the Direction API URL and render the outcome - a JSON object with the route path.
@@ -75,27 +195,67 @@ public class MapHandler {
      * @param routeObject The JSON Object to get the path from
      */
     private static void renderRoutePath(JSONObject routeObject) {
-        try {
-            JSONObject polyline = routeObject.getJSONObject(MapConstants.DIRECTIONS_ROUTE_PATH_OBJECT_KEY);
-            String points = polyline.getString(MapConstants.DIRECTIONS_ROUTE_POINTS_OBJECT_KEY);
+//        try {
+//            JSONObject polyline = routeObject.getJSONObject(MapConstants.DIRECTIONS_ROUTE_PATH_OBJECT_KEY);
+//            String points = polyline.getString(MapConstants.DIRECTIONS_ROUTE_POINTS_OBJECT_KEY);
+//
+//            List<LatLng> latLngList = new ArrayList<>(
+//                    PolyUtil.decode(points.trim().replace(
+//                            "\\\\",
+//                            "\\"
+//                    ))
+//            );
+//
+//            MainActivity.map.addPolyline(new PolylineOptions()
+//                    .color(R.color.primary)
+//                    .width(20f)
+//                    .clickable(false)
+//                    .addAll(latLngList)
+//            );
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+    }
 
-            List<LatLng> latLngList = new ArrayList<>(
-                    PolyUtil.decode(points.trim().replace(
-                            "\\\\",
-                            "\\"
-                    ))
-            );
+    /**
+     * Monitor the downloading process using an observer.
+     *
+     * @param offlineRegion The region to observe while downloading.
+     */
+    private static void observeDownloadingProcess(Context context, OfflineRegion offlineRegion) {
+        offlineRegion.setObserver(new OfflineRegion.OfflineRegionObserver() {
 
-            MainActivity.map.addPolyline(new PolylineOptions()
-                    .color(R.color.primary)
-                    .width(20f)
-                    .clickable(false)
-                    .addAll(latLngList)
-            );
+            @Override
+            public void onStatusChanged(OfflineRegionStatus status) {
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+                // Calculate the download percentage and update the progress bar
+                double percentage = status.getRequiredResourceCount() >= 0
+                        ? (100.0 * status.getCompletedResourceCount() / status.getRequiredResourceCount()) :
+                        0.0;
+
+                if (status.isComplete()) {
+                    // Download complete
+                    MapHandler.endProgress(context);
+                } else if (status.isRequiredResourceCountPrecise()) {
+                    // Switch to determinate state
+                    setPercentage((int) Math.round(percentage));
+                }
+            }
+
+            @Override
+            public void onError(OfflineRegionError error) {
+                // If an error occurs, print to logcat
+                Log.e("onError reason: %s", error.getReason());
+                Log.e("onError message: %s", error.getMessage());
+            }
+
+            @Override
+            public void mapboxTileCountLimitExceeded(long limit) {
+                // Notify if offline region exceeds maximum tile count
+                Log.e("Mapbox tile count limit exceeded: %s", String.valueOf(limit));
+            }
+        });
     }
 
     /**
@@ -133,48 +293,61 @@ public class MapHandler {
      * Focus the Google Map on the route's start and end point area.
      */
     public static void focusMapOnRoute() {
-        MainActivity.map.clear();
-
         Route route = Data.selectedRoute;
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-        // Move GoogleMaps camera to the route area.
-        MarkerOptions startMarker = generateRouteMarker(route.startPoint);
-        builder.include(startMarker.getPosition());
+        Feature startMarker = generateRouteMarker(route.startPoint);
+        routeMarkers.add(startMarker);
 
-        MainActivity.map.addMarker(startMarker);
+        Feature endMarker = generateRouteMarker(route.endPoint);
+        routeMarkers.add(endMarker);
 
-        MarkerOptions endMarker = generateRouteMarker(route.endPoint);
-        builder.include(endMarker.getPosition());
+        MainActivity.map.setStyle(
+                new Style.Builder().fromUri("mapbox://styles/mapbox/cjf4m44iw0uza2spb3q0a7s41")
+                        .withSource(new GeoJsonSource(
+                                SOURCE_ID,
+                                FeatureCollection.fromFeatures(routeMarkers)
+                        ))
+        );
 
-        MainActivity.map.addMarker(endMarker);
+        LatLngBounds latLngBounds = new LatLngBounds.Builder()
+                .include(new LatLng(
+                        route.startPoint.coordinates.get(0),
+                        route.startPoint.coordinates.get(1)
+                ))
+                .include(new LatLng(
+                        route.endPoint.coordinates.get(0),
+                        route.endPoint.coordinates.get(1)
+                ))
+                .build();
 
-        LatLngBounds latLngBounds = builder.build();
-        CameraUpdate cameraUpdate = CameraUpdateFactory
-                .newLatLngBounds(latLngBounds, MapConstants.MAP_FOCUS_PADDING);
-
-        MainActivity.map.animateCamera(cameraUpdate);
+        MainActivity.map.easeCamera(CameraUpdateFactory.newLatLngBounds(
+                latLngBounds,
+                MapConstants.MAP_FOCUS_PADDING)
+        );
     }
 
     /**
-     * Generate a route marker and add it to the Google Map.
+     * Generate a route marker and add it to the Mapbox map.
      *
      * @param point the current point that holds the coordinates
      */
-    private static MarkerOptions generateRouteMarker(Point point) {
+    private static Feature generateRouteMarker(Point point) {
         List<Double> coordinates = point.coordinates;
         String title = point.title;
         String interest = point.interest;
 
         // Create a new instance of a marker based on the coordinates from the point of interest.
-        LatLng coordinatesMarker = new LatLng(coordinates.get(0), coordinates.get(1));
-        MarkerOptions marker = new MarkerOptions();
+        com.mapbox.geojson.Point coordinatesPoint = com.mapbox.geojson.Point.fromLngLat(
+                coordinates.get(0),
+                coordinates.get(1)
+        );
+
+        Feature feature = Feature.fromGeometry(coordinatesPoint);
 
         // Settings for the marker.
-        marker.position(coordinatesMarker);
-        marker.title(title);
-        marker.snippet(interest);
+        feature.addStringProperty("title", title);
+        feature.addStringProperty("interest", interest);
 
-        return marker;
+        return feature;
     }
 }

@@ -1,16 +1,30 @@
 package a2.mobile.mobileapp.constants;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 public class MapConstants {
     // Global keys
     public static final String KEY_CAMERA_POSITION = "camera_position";
     public static final String KEY_LOCATION = "location";
     public static final String KEY_API = "AIzaSyD-K7BXFSfMYhL-uS5GrlO7buKRBzHqdCM";
+    public static final String MAPBOX_API = "pk.eyJ1Ijoia3Jhc2ktc3RveWFub3YiLCJhIjoiY2s4b2QyYmFuMDFtMDNocXA1d2kzY2E1cSJ9.EvNaJHhbCaIQF7UTFhoqWQ";
+
+    // Mapbox Settings
+    public static final String MAP_JSON_CHARSET = "UTF-8";
+    public static final String MAP_JSON_FIELD_REGION_NAME = "FIELD_REGION_NAME";
+    public static final String MAP_NAME = "Nijmegen";
+
+    public static final Double MAP_REGION_MIN_LAT = 51.8064;
+    public static final Double MAP_REGION_MAX_LAT = 51.8549;
+    public static final Double MAP_REGION_MIN_LON = 5.8183;
+    public static final Double MAP_REGION_MAX_LON = 5.8914;
+
+    public static final int MIN_ZOOM = 15;
+    public static final int MAX_ZOOM = 22;
+    public static final int DEFAULT_ZOOM = MIN_ZOOM;
 
     // Google Maps settings
     public static final LatLng DEFAULT_LOCATION = new LatLng(51.842175, 5.859508);
-    public static final int DEFAULT_ZOOM = 15;
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     public static final int MAP_FOCUS_PADDING = 200; // Offset from the edges of the map in pixels.
 
@@ -30,9 +44,6 @@ public class MapConstants {
 
     public static final String URL_QUERY_AND_SEPARATOR = "&";
     public static final String URL_QUERY_COMA_SEPERATOR = ",%20";
-
-
-
 
 
     public static String generateDirectionsUrl(String originText, String destinationText) {
