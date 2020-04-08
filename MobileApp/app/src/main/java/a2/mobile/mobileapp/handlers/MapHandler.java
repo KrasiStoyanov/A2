@@ -51,7 +51,7 @@ public class MapHandler {
                         JSONArray routes = response.getJSONArray("routes");
                         JSONObject routesJSONObject = routes.getJSONObject(0);
 
-                        //Legs element
+                        //Legs element to get the distance value
                         JSONArray leg = routesJSONObject.getJSONArray("legs");
                         JSONObject distance = leg.getJSONObject(0).getJSONObject("distance");
                         currentRouteDistance = distance.getString("text");
