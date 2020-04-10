@@ -19,6 +19,7 @@ import a2.mobile.mobileapp.handlers.NavigationHandler;
 import a2.mobile.mobileapp.handlers.PointsOfInterestHandler;
 import a2.mobile.mobileapp.handlers.RouteDetailsHandler;
 import a2.mobile.mobileapp.handlers.RoutesHandler;
+import a2.mobile.mobileapp.utils.MapUtils;
 
 public class MainActivityFragment extends Fragment {
 
@@ -42,7 +43,7 @@ public class MainActivityFragment extends Fragment {
                 switchScene(R.layout.scene_routes);
 
                 // TODO: Only clear route rendering if there is no active navigation.
-                MainActivity.map.clear();
+                MapUtils.clearRouteMarkers();
 
                 break;
             case R.layout.scene_points_of_interest:

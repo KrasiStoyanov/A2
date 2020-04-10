@@ -19,14 +19,18 @@ public class MapConstants {
     public static final Double MAP_REGION_MIN_LON = 5.8183;
     public static final Double MAP_REGION_MAX_LON = 5.8914;
 
-    public static final int MIN_ZOOM = 15;
+    public static final int MIN_ZOOM = 10;
     public static final int MAX_ZOOM = 22;
     public static final int DEFAULT_ZOOM = MIN_ZOOM;
 
+    // Mapbox symbols settings
+    public static final String MAP_ROUTE_LAYER_ID = "Route Layer";
+    public static final String MAP_ROUTE_LAYER_SROUCE_ID = "Route Layer Source ID";
+    public static final String MAP_MARKER_ID = "Marker Icon";
+
     // Google Maps settings
     public static final LatLng DEFAULT_LOCATION = new LatLng(51.842175, 5.859508);
-    public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    public static final int MAP_FOCUS_PADDING = 200; // Offset from the edges of the map in pixels.
+    public static final int MAP_FOCUS_PADDING = 20; // Offset from the edges of the map in pixels.
 
     public static final String DEFAULT_DIRECTIONS_MODE = "walking";
     public static final String DIRECTIONS_ROUTE_PATH_OBJECT_KEY = "overview_polyline";

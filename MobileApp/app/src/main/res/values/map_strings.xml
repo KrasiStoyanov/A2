@@ -4,5 +4,5 @@
     <string name="target_lon">5.837275</string>
 
     <string name="min_zoom">10</string>
-    <string name="max_zoom">10</string>
+    <string name="max_zoom">15</string>
 </resources>

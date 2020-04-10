@@ -22,9 +22,8 @@
             android:gravity="top"
             android:orientation="horizontal">
 
-            <fragment
+            <com.mapbox.mapboxsdk.maps.MapView
                 android:id="@+id/mapbox"
-                android:name="com.mapbox.mapboxsdk.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 mapbox:mapbox_cameraTargetLat="@string/target_lat"

@@ -5,12 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
@@ -20,13 +15,10 @@ import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineRegionError;
 import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,13 +28,9 @@ import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.data.classes.Point;
 import a2.mobile.mobileapp.data.classes.Route;
 import a2.mobile.mobileapp.fragments.MainActivityFragment;
+import a2.mobile.mobileapp.utils.MapUtils;
 
 public class MapHandler {
-    private static final String SOURCE_ID = "Route markers";
-
-    private static List<Feature> routeMarkers = new ArrayList<>();
-    private static List<Feature> pointsOfInterestMarkers = new ArrayList<>();
-
     public static JSONObject currentRouteObject;
     public static String currentRouteDistance;
     private static boolean isOfflineRegionDownloaded;
@@ -65,53 +53,50 @@ public class MapHandler {
                 )
                 .build();
 
-        MainActivity.map.setStyle(Style.OUTDOORS, style -> {
-            // Define the offline region
-            OfflineTilePyramidRegionDefinition definition = new OfflineTilePyramidRegionDefinition(
-                    style.getUri(),
-                    latLngBounds,
-                    MapConstants.MIN_ZOOM,
-                    MapConstants.MAX_ZOOM,
-                    context.getResources().getDisplayMetrics().density
-            );
+        OfflineTilePyramidRegionDefinition definition = new OfflineTilePyramidRegionDefinition(
+                Style.MAPBOX_STREETS,
+                latLngBounds,
+                MapConstants.MIN_ZOOM,
+                MapConstants.MAX_ZOOM,
+                context.getResources().getDisplayMetrics().density
+        );
 
-            // Set the metadata
-            byte[] metadata;
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put(MapConstants.MAP_JSON_FIELD_REGION_NAME, MapConstants.MAP_NAME);
+        // Set the metadata
+        byte[] metadata;
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(MapConstants.MAP_JSON_FIELD_REGION_NAME, MapConstants.MAP_NAME);
 
-                String json = jsonObject.toString();
-                metadata = json.getBytes(MapConstants.MAP_JSON_CHARSET);
-            } catch (Exception exception) {
-                Log.e("Failed to encode metadata: %s", Objects.requireNonNull(exception.getMessage()));
-                metadata = null;
-            }
+            String json = jsonObject.toString();
+            metadata = json.getBytes(MapConstants.MAP_JSON_CHARSET);
+        } catch (Exception exception) {
+            Log.e("Failed to encode metadata: %s", Objects.requireNonNull(exception.getMessage()));
+            metadata = null;
+        }
 
-            // Create the region asynchronously
-            if (metadata != null) {
-                MainActivity.offlineMapManager.createOfflineRegion(
-                        definition,
-                        metadata,
-                        new OfflineManager.CreateOfflineRegionCallback() {
+        // Create the region asynchronously
+        if (metadata != null) {
+            MainActivity.offlineMapManager.createOfflineRegion(
+                    definition,
+                    metadata,
+                    new OfflineManager.CreateOfflineRegionCallback() {
 
-                            @Override
-                            public void onCreate(OfflineRegion offlineRegion) {
-                                offlineRegion.setDownloadState(OfflineRegion.STATE_ACTIVE);
+                        @Override
+                        public void onCreate(OfflineRegion offlineRegion) {
+                            offlineRegion.setDownloadState(OfflineRegion.STATE_ACTIVE);
 
-                                // Display the download progress bar
-                                MapHandler.startProgress();
+                            // Display the download progress bar
+                            MapHandler.startProgress();
 
-                                observeDownloadingProcess(context, offlineRegion);
-                            }
+                            observeDownloadingProcess(context, offlineRegion);
+                        }
 
-                            @Override
-                            public void onError(String error) {
-                                Log.e("Error: %s", error);
-                            }
-                        });
-            }
-        });
+                        @Override
+                        public void onError(String error) {
+                            Log.e("Error: %s", error);
+                        }
+                    });
+        }
     }
 
     /**
@@ -159,34 +144,36 @@ public class MapHandler {
      * Set up the Direction API URL and render the outcome - a JSON object with the route path.
      */
     public static void setupRouteDirectionsAPI(Context context, View view) {
-        // Initialize a new RequestQueue instance
-        RequestQueue requestQueue = Volley.newRequestQueue(Data.context);
+//        // Initialize a new RequestQueue instance
+//        RequestQueue requestQueue = Volley.newRequestQueue(Data.context);
+//
+//        String url = MapHandler.generateUrl();
+//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+//                (Request.Method.GET, url, null, response -> {
+//
+//                    try {
+//                        //routes element
+//                        JSONArray routes = response.getJSONArray("routes");
+//                        JSONObject routesJSONObject = routes.getJSONObject(0);
+//
+//                        //Legs element
+//                        JSONArray leg = routesJSONObject.getJSONArray("legs");
+//                        JSONObject distance = leg.getJSONObject(0).getJSONObject("distance");
+//                        currentRouteDistance = distance.getString("text");
+//
+//                        MapHandler.renderRoutePath(routesJSONObject);
+//                        currentRouteObject = routesJSONObject;
+//
+//                        MainActivityFragment.onRouteRenderComplete(context, view);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }, error -> Log.d("Route Details Handler", "error"));
+//
+//        requestQueue.add(jsonObjectRequest);
 
-        String url = MapHandler.generateUrl();
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, response -> {
-
-                    try {
-                        //routes element
-                        JSONArray routes = response.getJSONArray("routes");
-                        JSONObject routesJSONObject = routes.getJSONObject(0);
-
-                        //Legs element
-                        JSONArray leg = routesJSONObject.getJSONArray("legs");
-                        JSONObject distance = leg.getJSONObject(0).getJSONObject("distance");
-                        currentRouteDistance = distance.getString("text");
-
-                        MapHandler.renderRoutePath(routesJSONObject);
-                        currentRouteObject = routesJSONObject;
-
-                        MainActivityFragment.onRouteRenderComplete(context, view);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }, error -> Log.d("Route Details Handler", "error"));
-
-        requestQueue.add(jsonObjectRequest);
+        MainActivityFragment.onRouteRenderComplete(context, view);
     }
 
     /**
@@ -206,7 +193,7 @@ public class MapHandler {
 //                    ))
 //            );
 //
-//            MainActivity.map.addPolyline(new PolylineOptions()
+//            MapUtils.map.addPolyline(new PolylineOptions()
 //                    .color(R.color.primary)
 //                    .width(20f)
 //                    .clickable(false)
@@ -270,6 +257,9 @@ public class MapHandler {
         List<Double> startPointCoordinates = Data.selectedRoute.startPoint.coordinates;
         List<Double> endPointCoordinates = Data.selectedRoute.endPoint.coordinates;
 
+        Collections.reverse(startPointCoordinates);
+        Collections.reverse(endPointCoordinates);
+
         for (int index = 0; index < startPointCoordinates.size(); index += 1) {
             String startCoordinate = startPointCoordinates.get(index).toString();
             String endCoordinate = endPointCoordinates.get(index).toString();
@@ -296,18 +286,12 @@ public class MapHandler {
         Route route = Data.selectedRoute;
 
         Feature startMarker = generateRouteMarker(route.startPoint);
-        routeMarkers.add(startMarker);
+        MapUtils.addRouteMarker(startMarker);
 
         Feature endMarker = generateRouteMarker(route.endPoint);
-        routeMarkers.add(endMarker);
+        MapUtils.addRouteMarker(endMarker);
 
-        MainActivity.map.setStyle(
-                new Style.Builder().fromUri("mapbox://styles/mapbox/cjf4m44iw0uza2spb3q0a7s41")
-                        .withSource(new GeoJsonSource(
-                                SOURCE_ID,
-                                FeatureCollection.fromFeatures(routeMarkers)
-                        ))
-        );
+        MapUtils.updateRouteMarkers();
 
         LatLngBounds latLngBounds = new LatLngBounds.Builder()
                 .include(new LatLng(
@@ -320,10 +304,10 @@ public class MapHandler {
                 ))
                 .build();
 
-        MainActivity.map.easeCamera(CameraUpdateFactory.newLatLngBounds(
+        MapUtils.map.easeCamera(CameraUpdateFactory.newLatLngBounds(
                 latLngBounds,
-                MapConstants.MAP_FOCUS_PADDING)
-        );
+                MapConstants.MAP_FOCUS_PADDING
+        ));
     }
 
     /**
@@ -338,8 +322,8 @@ public class MapHandler {
 
         // Create a new instance of a marker based on the coordinates from the point of interest.
         com.mapbox.geojson.Point coordinatesPoint = com.mapbox.geojson.Point.fromLngLat(
-                coordinates.get(0),
-                coordinates.get(1)
+                coordinates.get(1),
+                coordinates.get(0)
         );
 
         Feature feature = Feature.fromGeometry(coordinatesPoint);

@@ -21,7 +21,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.libraries.places.api.Places;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -60,10 +59,6 @@ public class LogInActivity extends FragmentActivity implements OnMapReadyCallbac
         Data.context = this;
 
         INPUT_METHOD_MANAGER = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        // Construct a PlacesClient
-        Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
-        Places.createClient(this);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         FragmentManager fragmentManager = getSupportFragmentManager();
