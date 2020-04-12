@@ -1,7 +1,9 @@
 package a2.mobile.mobileapp.activities;
 
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -9,8 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
+import com.mapbox.api.directions.v5.DirectionsCriteria;
+import com.mapbox.api.directions.v5.MapboxDirections;
+import com.mapbox.api.directions.v5.models.DirectionsResponse;
+import com.mapbox.api.directions.v5.models.DirectionsRoute;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.location.LocationComponent;
@@ -24,20 +31,32 @@ import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.maps.UiSettings;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
+import com.mapbox.mapboxsdk.style.layers.LineLayer;
+import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.utils.BitmapUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.constants.MapConstants;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
+import static com.mapbox.core.constants.Constants.PRECISION_6;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineCap;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineJoin;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 
 public class TestMapActivity extends AppCompatActivity implements
         OnMapReadyCallback, PermissionsListener {
@@ -48,7 +67,16 @@ public class TestMapActivity extends AppCompatActivity implements
 
     private SymbolManager symbolManager;
     private Symbol symbol;
-
+    private static final String ROUTE_LAYER_ID = "route-layer-id";
+    private static final String ROUTE_SOURCE_ID = "route-source-id";
+    private static final String ICON_LAYER_ID = "icon-layer-id";
+    private static final String ICON_SOURCE_ID = "icon-source-id";
+    private static final String RED_PIN_ICON_ID = "red-pin-icon-id";
+    private Point origin;
+    private Point destination;
+    private MapboxDirections client;
+    private static final String TAG = "MainActivity";
+    private DirectionsRoute currentRoute;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,9 +125,59 @@ public class TestMapActivity extends AppCompatActivity implements
             UiSettings uiSettings = map.getUiSettings();
             uiSettings.setCompassEnabled(true);
 
+            initSource(style);
+
+            initLayers(style);
+            origin = Point.fromLngLat(6.527295, 53.244789);
+
+            // Set the destination location
+            destination = Point.fromLngLat(6.534489, 53.241229);
+            getRoute(mapboxMap, origin, destination);
             enableLocationComponent(style);
         });
+
     }
+    /**
+     * Add the route and marker sources to the map
+     */
+    private void initSource(@NonNull Style loadedMapStyle) {
+        loadedMapStyle.addSource(new GeoJsonSource(ROUTE_SOURCE_ID));
+
+        GeoJsonSource iconGeoJsonSource = new GeoJsonSource(ICON_SOURCE_ID, FeatureCollection.fromFeatures(new Feature[] {
+                Feature.fromGeometry(Point.fromLngLat(origin.longitude(), origin.latitude())),
+                Feature.fromGeometry(Point.fromLngLat(destination.longitude(), destination.latitude()))}));
+        loadedMapStyle.addSource(iconGeoJsonSource);
+    }
+    /**
+     * Add the route and marker icon layers to the map
+     */
+    private void initLayers(@NonNull Style loadedMapStyle) {
+        LineLayer routeLayer = new LineLayer(ROUTE_LAYER_ID, ROUTE_SOURCE_ID);
+
+        // Add the LineLayer to the map. This layer will display the directions route.
+        routeLayer.setProperties(
+                lineCap(Property.LINE_CAP_ROUND),
+                lineJoin(Property.LINE_JOIN_ROUND),
+                lineWidth(5f),
+                lineColor(Color.parseColor("#009688"))
+        );
+        loadedMapStyle.addLayer(routeLayer);
+
+        // Add the red marker icon image to the map
+        loadedMapStyle.addImage(RED_PIN_ICON_ID, Objects.requireNonNull(Objects.requireNonNull(BitmapUtils.getBitmapFromDrawable(
+                getResources().getDrawable(R.drawable.red_marker)))));
+
+        // Add the red marker icon SymbolLayer to the map
+        loadedMapStyle.addLayer(new SymbolLayer(ICON_LAYER_ID, ICON_SOURCE_ID).withProperties(
+                iconImage(RED_PIN_ICON_ID),
+                iconIgnorePlacement(true),
+                iconAllowOverlap(true),
+                iconOffset(new Float[] {0f, -9f})));
+    }
+
+
+
+
 
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
         // Check if permissions are enabled and if not request
@@ -160,6 +238,62 @@ public class TestMapActivity extends AppCompatActivity implements
             finish();
         }
     }
+    private void getRoute(MapboxMap mapboxMap, Point origin, Point destination) {
+        client = MapboxDirections.builder()
+                .origin(origin)
+                .destination(destination)
+                .overview(DirectionsCriteria.OVERVIEW_FULL)
+                .profile(DirectionsCriteria.PROFILE_DRIVING)
+                .accessToken(MapConstants.MAPBOX_API)
+                .build();
+
+        client.enqueueCall(new Callback<DirectionsResponse>() {
+            @Override
+            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
+                // You can get the generic HTTP info about the response
+                Log.e(TAG,"Response code: " + response.code());
+                if (response.body() == null) {
+                    Log.e(TAG,"No routes found, make sure you set the right user and access token.");
+                    return;
+                } else if (response.body().routes().size() < 1) {
+                    Log.e(TAG,"No routes found");
+                    return;
+                }
+
+                // Get the directions route
+                currentRoute = response.body().routes().get(0);
+
+                if (mapboxMap != null) {
+                    mapboxMap.getStyle(new Style.OnStyleLoaded() {
+                        @Override
+                        public void onStyleLoaded(@NonNull Style style) {
+
+                            // Retrieve and update the source designated for showing the directions route
+                            GeoJsonSource source = style.getSourceAs(ROUTE_SOURCE_ID);
+
+                            // Create a LineString with the directions route's geometry and
+                            // reset the GeoJSON source for the route LineLayer source
+                            if (source != null) {
+                                source.setGeoJson(LineString.fromPolyline(currentRoute.geometry(), PRECISION_6));
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DirectionsResponse> call, Throwable throwable) {
+                Log.e(TAG,"Error: " + throwable.getMessage());
+                Toast.makeText(TestMapActivity.this, "Error: " + throwable.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
+
+
 
     @Override
     @SuppressWarnings({"MissingPermission"})
