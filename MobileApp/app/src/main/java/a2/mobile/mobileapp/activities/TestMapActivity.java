@@ -72,8 +72,8 @@ public class TestMapActivity extends AppCompatActivity implements
     private static final String ICON_LAYER_ID = "icon-layer-id";
     private static final String ICON_SOURCE_ID = "icon-source-id";
     private static final String RED_PIN_ICON_ID = "red-pin-icon-id";
-    private Point origin;
-    private Point destination;
+    private Point origin = Point.fromLngLat(6.527295, 53.244789);
+    private Point destination = Point.fromLngLat(6.534489, 53.241229);
     private MapboxDirections client;
     private static final String TAG = "MainActivity";
     private DirectionsRoute currentRoute;
@@ -128,10 +128,8 @@ public class TestMapActivity extends AppCompatActivity implements
             initSource(style);
 
             initLayers(style);
-            origin = Point.fromLngLat(6.527295, 53.244789);
 
             // Set the destination location
-            destination = Point.fromLngLat(6.534489, 53.241229);
             getRoute(mapboxMap, origin, destination);
             enableLocationComponent(style);
         });
