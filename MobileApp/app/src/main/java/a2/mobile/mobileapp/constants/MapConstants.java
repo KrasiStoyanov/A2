@@ -25,7 +25,10 @@ public class MapConstants {
 
     // Mapbox symbols settings
     public static final String MAP_ROUTE_LAYER_ID = "Route Layer";
-    public static final String MAP_ROUTE_LAYER_SROUCE_ID = "Route Layer Source ID";
+    public static final String MAP_ROUTE_LAYER_SOURCE_ID = "Route Layer Source ID";
+
+    public static final String MAP_ROUTE_MARKER_LAYER_ID = "Route Marker Layer";
+    public static final String MAP_ROUTE_MARKER_LAYER_SOURCE_ID = "Route Marker Layer Source ID";
     public static final String MAP_MARKER_ID = "Marker Icon";
 
     // Google Maps settings

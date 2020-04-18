@@ -282,26 +282,48 @@ public class MapHandler {
     /**
      * Focus the Google Map on the route's start and end point area.
      */
-    public static void focusMapOnRoute() {
+    public static void focusMapOnRoute(Context context) {
         Route route = Data.selectedRoute;
+        LatLng startPoint = new LatLng(
+                route.startPoint.coordinates.get(0),
+                route.startPoint.coordinates.get(1)
+        );
 
-        Feature startMarker = generateRouteMarker(route.startPoint);
-        MapUtils.addRouteMarker(startMarker);
+        LatLng endPoint = new LatLng(
+                route.endPoint.coordinates.get(0),
+                route.endPoint.coordinates.get(1)
+        );
 
-        Feature endMarker = generateRouteMarker(route.endPoint);
-        MapUtils.addRouteMarker(endMarker);
+        // Add the start and end markers to the map.
+        MapUtils.addRouteMarker(generateRouteMarker(
+                route.startPoint,
+                startPoint.getLongitude(),
+                startPoint.getLatitude()
+        ));
 
-        MapUtils.updateRouteMarkers();
+        MapUtils.addRouteMarker(generateRouteMarker(
+                route.endPoint,
+                endPoint.getLongitude(),
+                endPoint.getLatitude()
+        ));
 
+        // Render the markers and route layers on the map.
+        MapUtils.updateRoute(
+                context,
+                com.mapbox.geojson.Point.fromLngLat(
+                        startPoint.getLongitude(),
+                        startPoint.getLatitude()
+                ),
+                com.mapbox.geojson.Point.fromLngLat(
+                        endPoint.getLongitude(),
+                        endPoint.getLatitude()
+                )
+        );
+
+        // Position the camera in the bounds of the route.
         LatLngBounds latLngBounds = new LatLngBounds.Builder()
-                .include(new LatLng(
-                        route.startPoint.coordinates.get(0),
-                        route.startPoint.coordinates.get(1)
-                ))
-                .include(new LatLng(
-                        route.endPoint.coordinates.get(0),
-                        route.endPoint.coordinates.get(1)
-                ))
+                .include(startPoint)
+                .include(endPoint)
                 .build();
 
         MapUtils.map.easeCamera(CameraUpdateFactory.newLatLngBounds(
@@ -315,15 +337,14 @@ public class MapHandler {
      *
      * @param point the current point that holds the coordinates
      */
-    private static Feature generateRouteMarker(Point point) {
-        List<Double> coordinates = point.coordinates;
+    private static Feature generateRouteMarker(Point point, double longitude, double latitude) {
         String title = point.title;
         String interest = point.interest;
 
         // Create a new instance of a marker based on the coordinates from the point of interest.
         com.mapbox.geojson.Point coordinatesPoint = com.mapbox.geojson.Point.fromLngLat(
-                coordinates.get(1),
-                coordinates.get(0)
+                longitude,
+                latitude
         );
 
         Feature feature = Feature.fromGeometry(coordinatesPoint);

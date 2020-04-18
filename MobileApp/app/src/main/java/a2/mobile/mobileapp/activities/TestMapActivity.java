@@ -1,13 +1,13 @@
 package a2.mobile.mobileapp.activities;
 
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
@@ -35,17 +35,16 @@ import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.mapbox.mapboxsdk.utils.BitmapUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.constants.MapConstants;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 import static com.mapbox.core.constants.Constants.PRECISION_6;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
@@ -77,6 +76,7 @@ public class TestMapActivity extends AppCompatActivity implements
     private MapboxDirections client;
     private static final String TAG = "MainActivity";
     private DirectionsRoute currentRoute;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +98,7 @@ public class TestMapActivity extends AppCompatActivity implements
 
         SymbolLayer routeLayer = new SymbolLayer(
                 MapConstants.MAP_ROUTE_LAYER_ID,
-                MapConstants.MAP_ROUTE_LAYER_SROUCE_ID
+                MapConstants.MAP_ROUTE_LAYER_SOURCE_ID
         ).withProperties(
                 iconImage(MapConstants.MAP_MARKER_ID),
                 iconSize(0.5f),
@@ -107,17 +107,12 @@ public class TestMapActivity extends AppCompatActivity implements
                 iconOffset(new Float[]{0f, -9f})
         );
 
-        GeoJsonSource source = new GeoJsonSource(MapConstants.MAP_ROUTE_LAYER_SROUCE_ID,
+        GeoJsonSource source = new GeoJsonSource(MapConstants.MAP_ROUTE_LAYER_SOURCE_ID,
                 FeatureCollection.fromFeatures(symbolLayerIconFeatureList)
         );
 
         Style.Builder mapStyle = new Style.Builder()
-                .fromUri(Style.MAPBOX_STREETS)
-                .withImage(MapConstants.MAP_MARKER_ID, BitmapFactory.decodeResource(
-                        getResources(), R.drawable.red_marker
-                ))
-                .withSource(source)
-                .withLayer(routeLayer);
+                .fromUri(Style.MAPBOX_STREETS);
 
         // Map is set up and the style has loaded. Now you can add data or make other map adjustments
         map = mapboxMap;
@@ -135,17 +130,19 @@ public class TestMapActivity extends AppCompatActivity implements
         });
 
     }
+
     /**
      * Add the route and marker sources to the map
      */
     private void initSource(@NonNull Style loadedMapStyle) {
         loadedMapStyle.addSource(new GeoJsonSource(ROUTE_SOURCE_ID));
 
-        GeoJsonSource iconGeoJsonSource = new GeoJsonSource(ICON_SOURCE_ID, FeatureCollection.fromFeatures(new Feature[] {
+        GeoJsonSource iconGeoJsonSource = new GeoJsonSource(ICON_SOURCE_ID, FeatureCollection.fromFeatures(new Feature[]{
                 Feature.fromGeometry(Point.fromLngLat(origin.longitude(), origin.latitude())),
                 Feature.fromGeometry(Point.fromLngLat(destination.longitude(), destination.latitude()))}));
         loadedMapStyle.addSource(iconGeoJsonSource);
     }
+
     /**
      * Add the route and marker icon layers to the map
      */
@@ -157,24 +154,25 @@ public class TestMapActivity extends AppCompatActivity implements
                 lineCap(Property.LINE_CAP_ROUND),
                 lineJoin(Property.LINE_JOIN_ROUND),
                 lineWidth(5f),
-                lineColor(Color.parseColor("#009688"))
+                lineColor(ContextCompat.getColor(this, R.color.primary))
         );
+
         loadedMapStyle.addLayer(routeLayer);
 
         // Add the red marker icon image to the map
-        loadedMapStyle.addImage(RED_PIN_ICON_ID, Objects.requireNonNull(Objects.requireNonNull(BitmapUtils.getBitmapFromDrawable(
-                getResources().getDrawable(R.drawable.red_marker)))));
+        loadedMapStyle.addImage(MapConstants.MAP_MARKER_ID, BitmapFactory.decodeResource(
+                getResources(),
+                R.drawable.red_marker
+        ));
 
         // Add the red marker icon SymbolLayer to the map
         loadedMapStyle.addLayer(new SymbolLayer(ICON_LAYER_ID, ICON_SOURCE_ID).withProperties(
                 iconImage(RED_PIN_ICON_ID),
                 iconIgnorePlacement(true),
                 iconAllowOverlap(true),
-                iconOffset(new Float[] {0f, -9f})));
+                iconOffset(new Float[]{0f, -9f})
+        ));
     }
-
-
-
 
 
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
@@ -236,6 +234,7 @@ public class TestMapActivity extends AppCompatActivity implements
             finish();
         }
     }
+
     private void getRoute(MapboxMap mapboxMap, Point origin, Point destination) {
         client = MapboxDirections.builder()
                 .origin(origin)
@@ -247,14 +246,17 @@ public class TestMapActivity extends AppCompatActivity implements
 
         client.enqueueCall(new Callback<DirectionsResponse>() {
             @Override
-            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
+            public void onResponse(
+                    @NonNull Call<DirectionsResponse> call,
+                    @NonNull Response<DirectionsResponse> response) {
+
                 // You can get the generic HTTP info about the response
-                Log.e(TAG,"Response code: " + response.code());
+                Timber.e("Response code: %s", response.code());
                 if (response.body() == null) {
-                    Log.e(TAG,"No routes found, make sure you set the right user and access token.");
+                    Timber.e("No routes found, make sure you set the right user and access token.");
                     return;
                 } else if (response.body().routes().size() < 1) {
-                    Log.e(TAG,"No routes found");
+                    Timber.e("No routes found");
                     return;
                 }
 
@@ -262,35 +264,37 @@ public class TestMapActivity extends AppCompatActivity implements
                 currentRoute = response.body().routes().get(0);
 
                 if (mapboxMap != null) {
-                    mapboxMap.getStyle(new Style.OnStyleLoaded() {
-                        @Override
-                        public void onStyleLoaded(@NonNull Style style) {
+                    mapboxMap.getStyle(style -> {
 
-                            // Retrieve and update the source designated for showing the directions route
-                            GeoJsonSource source = style.getSourceAs(ROUTE_SOURCE_ID);
+                        // Retrieve and update the source designated for showing the directions route
+                        GeoJsonSource source = style.getSourceAs(ROUTE_SOURCE_ID);
 
-                            // Create a LineString with the directions route's geometry and
-                            // reset the GeoJSON source for the route LineLayer source
-                            if (source != null) {
-                                source.setGeoJson(LineString.fromPolyline(currentRoute.geometry(), PRECISION_6));
-                            }
+                        // Create a LineString with the directions route's geometry and
+                        // reset the GeoJSON source for the route LineLayer source
+                        Log.e(" SADASDSAD ", " currentRoute " + currentRoute);
+                        if (source != null) {
+                            source.setGeoJson(LineString.fromPolyline(
+                                    currentRoute.geometry(),
+                                    PRECISION_6
+                            ));
                         }
                     });
                 }
             }
 
             @Override
-            public void onFailure(Call<DirectionsResponse> call, Throwable throwable) {
-                Log.e(TAG,"Error: " + throwable.getMessage());
-                Toast.makeText(TestMapActivity.this, "Error: " + throwable.getMessage(),
-                        Toast.LENGTH_SHORT).show();
+            public void onFailure(
+                    @NonNull Call<DirectionsResponse> call,
+                    @NonNull Throwable throwable) {
+
+                Toast.makeText(
+                        TestMapActivity.this,
+                        "Error: " + throwable.getMessage(),
+                        Toast.LENGTH_SHORT
+                ).show();
             }
         });
     }
-
-
-
-
 
 
     @Override

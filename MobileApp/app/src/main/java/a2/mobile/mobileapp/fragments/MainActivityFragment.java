@@ -80,7 +80,7 @@ public class MainActivityFragment extends Fragment {
             case R.layout.scene_route_deails:
                 TransitionManager.go(routeDetailsScene);
 
-                MapHandler.focusMapOnRoute();
+                MapHandler.focusMapOnRoute(context);
                 MapHandler.setupRouteDirectionsAPI(context, rootView);
 
                 break;
