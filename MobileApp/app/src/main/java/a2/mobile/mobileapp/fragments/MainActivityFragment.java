@@ -20,6 +20,7 @@ import a2.mobile.mobileapp.handlers.PointsOfInterestHandler;
 import a2.mobile.mobileapp.handlers.RouteDetailsHandler;
 import a2.mobile.mobileapp.handlers.RoutesHandler;
 import a2.mobile.mobileapp.utils.MapUtils;
+import a2.mobile.mobileapp.utils.NavigationUtils;
 
 public class MainActivityFragment extends Fragment {
 
@@ -79,6 +80,9 @@ public class MainActivityFragment extends Fragment {
                 break;
             case R.layout.scene_route_deails:
                 TransitionManager.go(routeDetailsScene);
+                if (currentScene == R.layout.scene_navigation) {
+                    MainActivity.mapManager.switchScene(R.layout.scene_map_view);
+                }
 
                 MapHandler.focusMapOnRoute(context);
                 MapHandler.setupRouteDirectionsAPI(context, rootView);
@@ -96,7 +100,8 @@ public class MainActivityFragment extends Fragment {
             case R.layout.scene_navigation:
                 TransitionManager.go(navigationScene);
 
-                MainActivity.mapManager.setUpViewForNavigation();
+                MainActivity.mapManager.switchScene(R.layout.scene_navigation_view);
+
                 NavigationHandler.startNavigation(
                         context,
                         rootView,

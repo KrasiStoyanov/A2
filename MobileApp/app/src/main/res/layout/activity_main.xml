@@ -8,7 +8,7 @@
     tools:context=".activities.MainActivity">
 
     <LinearLayout
-        android:id="@+id/log_in"
+        android:id="@+id/activity_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -22,14 +22,10 @@
             android:gravity="top"
             android:orientation="horizontal">
 
-            <com.mapbox.mapboxsdk.maps.MapView
-                android:id="@+id/mapbox"
+            <FrameLayout
+                android:id="@+id/map_scene_holder"
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                mapbox:mapbox_cameraTargetLat="@string/target_lat"
-                mapbox:mapbox_cameraTargetLng="@string/target_lon"
-                mapbox:mapbox_cameraZoom="@string/min_zoom"
-                mapbox:mapbox_cameraZoomMin="@string/max_zoom"/>
+                android:layout_height="fill_parent"/>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/current_direction"

@@ -1,71 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/map_manager"
+    <FrameLayout
+        android:id="@+id/map_scene_manager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="top"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
 
-        <fragment
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent" />
+        <include layout="@layout/scene_map_view"/>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/current_direction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="330dp"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            app:cardBackgroundColor="@color/button_primary__background"
-            app:cardCornerRadius="6dp"
-            app:contentPaddingTop="16dp"
-            app:contentPaddingRight="18dp"
-            app:contentPaddingBottom="16dp"
-            app:contentPaddingLeft="18dp"
-            android:visibility="invisible">
+    </FrameLayout>
 
-            <TextView
-                android:id="@+id/icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/icon_font"
-                android:text="@string/icon_cross"
-                android:textColor="@color/button_primary__icon"
-                android:textSize="@dimen/button_icon_size_large" />
-
-        </androidx.cardview.widget.CardView>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="0dp"
-            android:paddingTop="10dp"
-            android:background="@drawable/radius_medium"
-            android:gravity="top|center_horizontal"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/push_content_down_button"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/icon_font"
-                android:text="@string/icon_chevron_down"
-                android:textColor="@color/icon"
-                android:textSize="@dimen/h2"
-                android:elevation="0dp"/>
-
-        </LinearLayout>
-    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

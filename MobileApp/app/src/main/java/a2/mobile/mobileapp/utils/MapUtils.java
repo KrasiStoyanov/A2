@@ -2,14 +2,10 @@ package a2.mobile.mobileapp.utils;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import com.mapbox.api.directions.v5.DirectionsCriteria;
-import com.mapbox.api.directions.v5.MapboxDirections;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
 import com.mapbox.api.directions.v5.models.DirectionsRoute;
 import com.mapbox.geojson.Feature;
@@ -23,6 +19,8 @@ import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.services.android.navigation.v5.navigation.MapboxNavigation;
+import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +47,9 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 public class MapUtils {
     public static MapboxMap map;
     private static Style.Builder mapStyle;
+    private static MapboxNavigation navigation;
+    static DirectionsRoute navigationRoute;
+
     private static GeoJsonSource mapMarkerSource;
     private static GeoJsonSource mapRouteSource;
 
@@ -70,6 +71,15 @@ public class MapUtils {
      */
     public static void storeMapInstance(MapboxMap mapboxMap) {
         map = mapboxMap;
+    }
+
+    /**
+     * Store the mapbox navigation instance.
+     *
+     * @param mapboxNavigation The mapbox navigation instance
+     */
+    public static void storeNavigationInstance(MapboxNavigation mapboxNavigation) {
+        navigation = mapboxNavigation;
     }
 
     /**
@@ -177,60 +187,61 @@ public class MapUtils {
         });
     }
 
+    /**
+     * Render the route line layer based on the origin and destination points provided.
+     *
+     * @param context     The MainActivity context
+     * @param origin      The origin point
+     * @param destination The destination point
+     */
     private static void renderRouteLayer(Context context, Point origin, Point destination) {
-        MapboxDirections client = MapboxDirections.builder()
+        NavigationRoute.builder(context)
+                .accessToken(context.getString(R.string.mapbox_access_token))
                 .origin(origin)
                 .destination(destination)
-                .overview(DirectionsCriteria.OVERVIEW_FULL)
-                .profile(DirectionsCriteria.PROFILE_DRIVING)
-                .accessToken(MapConstants.MAPBOX_API)
-                .build();
+                .alternatives(true)
+                .build()
+                .getRoute(new Callback<DirectionsResponse>() {
+                    @Override
+                    public void onResponse(
+                            @NonNull Call<DirectionsResponse> call,
+                            @NonNull Response<DirectionsResponse> response) {
 
-        client.enqueueCall(new Callback<DirectionsResponse>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<DirectionsResponse> call,
-                    @NonNull Response<DirectionsResponse> response) {
+                        // You can get the generic HTTP info about the response
+                        Timber.e("Response code: %s", response.code());
+                        if (response.body() == null) {
+                            Timber.e("No routes found, make sure you set the right user and access token.");
+                            return;
+                        } else if (response.body().routes().size() < 1) {
+                            Timber.e("No routes found");
+                            return;
+                        }
 
-                // You can get the generic HTTP info about the response
-                Timber.e("Response code: %s", response.code());
-                if (response.body() == null) {
-                    Timber.e("No routes found, make sure you set the right user and access token.");
-                    return;
-                } else if (response.body().routes().size() < 1) {
-                    Timber.e("No routes found");
-                    return;
-                }
+                        // Get the directions route
+                        DirectionsRoute currentRoute = response.body().routes().get(0);
+                        map.getStyle(style -> {
+                            // Retrieve and update the source designated for showing the directions route
+                            GeoJsonSource source = style.getSourceAs(MapConstants.MAP_ROUTE_LAYER_SOURCE_ID);
 
-                // Get the directions route
-                DirectionsRoute currentRoute = response.body().routes().get(0);
-                map.getStyle(style -> {
-                    // Retrieve and update the source designated for showing the directions route
-                    GeoJsonSource source = style.getSourceAs(MapConstants.MAP_ROUTE_LAYER_SOURCE_ID);
+                            // Create a LineString with the directions route's geometry and
+                            // reset the GeoJSON source for the route LineLayer source
+                            if (source != null) {
+                                source.setGeoJson(LineString.fromPolyline(
+                                        Objects.requireNonNull(currentRoute.geometry()),
+                                        PRECISION_6
+                                ));
 
-                    // Create a LineString with the directions route's geometry and
-                    // reset the GeoJSON source for the route LineLayer source
-                    Log.e("ASDASD", " Source " + source);
-                    if (source != null) {
-                        source.setGeoJson(LineString.fromPolyline(
-                                Objects.requireNonNull(currentRoute.geometry()),
-                                PRECISION_6
-                        ));
+                                navigationRoute = currentRoute;
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(
+                            @NonNull Call<DirectionsResponse> call,
+                            @NonNull Throwable t) {
+
                     }
                 });
-            }
-
-            @Override
-            public void onFailure(
-                    @NonNull Call<DirectionsResponse> call,
-                    @NonNull Throwable throwable) {
-
-                Toast.makeText(
-                        context,
-                        "Error: " + throwable.getMessage(),
-                        Toast.LENGTH_SHORT
-                ).show();
-            }
-        });
     }
 }

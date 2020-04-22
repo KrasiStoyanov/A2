@@ -18,8 +18,6 @@ import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 
 import org.json.JSONObject;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 import a2.mobile.mobileapp.activities.MainActivity;
@@ -29,6 +27,7 @@ import a2.mobile.mobileapp.data.classes.Point;
 import a2.mobile.mobileapp.data.classes.Route;
 import a2.mobile.mobileapp.fragments.MainActivityFragment;
 import a2.mobile.mobileapp.utils.MapUtils;
+import a2.mobile.mobileapp.views.MapViewPartial;
 
 public class MapHandler {
     public static JSONObject currentRouteObject;
@@ -76,7 +75,7 @@ public class MapHandler {
 
         // Create the region asynchronously
         if (metadata != null) {
-            MainActivity.offlineMapManager.createOfflineRegion(
+            MapViewPartial.offlineMapManager.createOfflineRegion(
                     definition,
                     metadata,
                     new OfflineManager.CreateOfflineRegionCallback() {
@@ -177,35 +176,6 @@ public class MapHandler {
     }
 
     /**
-     * Render the route path based on the provided JSON Object.
-     *
-     * @param routeObject The JSON Object to get the path from
-     */
-    private static void renderRoutePath(JSONObject routeObject) {
-//        try {
-//            JSONObject polyline = routeObject.getJSONObject(MapConstants.DIRECTIONS_ROUTE_PATH_OBJECT_KEY);
-//            String points = polyline.getString(MapConstants.DIRECTIONS_ROUTE_POINTS_OBJECT_KEY);
-//
-//            List<LatLng> latLngList = new ArrayList<>(
-//                    PolyUtil.decode(points.trim().replace(
-//                            "\\\\",
-//                            "\\"
-//                    ))
-//            );
-//
-//            MapUtils.map.addPolyline(new PolylineOptions()
-//                    .color(R.color.primary)
-//                    .width(20f)
-//                    .clickable(false)
-//                    .addAll(latLngList)
-//            );
-//
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-    }
-
-    /**
      * Monitor the downloading process using an observer.
      *
      * @param offlineRegion The region to observe while downloading.
@@ -243,40 +213,6 @@ public class MapHandler {
                 Log.e("Mapbox tile count limit exceeded: %s", String.valueOf(limit));
             }
         });
-    }
-
-    /**
-     * Generate the Directions API URL based on the start and end point of the selected route.
-     *
-     * @return The generated URL
-     */
-    private static String generateUrl() {
-        StringBuilder startPointString = new StringBuilder();
-        StringBuilder endPointString = new StringBuilder();
-
-        List<Double> startPointCoordinates = Data.selectedRoute.startPoint.coordinates;
-        List<Double> endPointCoordinates = Data.selectedRoute.endPoint.coordinates;
-
-        Collections.reverse(startPointCoordinates);
-        Collections.reverse(endPointCoordinates);
-
-        for (int index = 0; index < startPointCoordinates.size(); index += 1) {
-            String startCoordinate = startPointCoordinates.get(index).toString();
-            String endCoordinate = endPointCoordinates.get(index).toString();
-
-            startPointString.append(startCoordinate);
-            endPointString.append(endCoordinate);
-
-            if (index == 0) {
-                startPointString.append(MapConstants.URL_QUERY_COMA_SEPERATOR);
-                endPointString.append(MapConstants.URL_QUERY_COMA_SEPERATOR);
-            }
-        }
-
-        return MapConstants.generateDirectionsUrl(
-                startPointString.toString(),
-                endPointString.toString()
-        );
     }
 
     /**

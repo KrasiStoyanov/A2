@@ -69,12 +69,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.3.0'
 
     // Firestore Firestore
-    implementation 'com.google.firebase:firebase-firestore:21.4.1'
-    implementation 'androidx.fragment:fragment:1.2.3'
+    implementation 'com.google.firebase:firebase-firestore:21.4.2'
+    implementation 'androidx.fragment:fragment:1.2.4'
 
     // Mapbox
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.1.0'
-    //implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.8.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-navigation:0.42.6'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.5.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-navigation:0.42.6'
     implementation ('com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6'){
