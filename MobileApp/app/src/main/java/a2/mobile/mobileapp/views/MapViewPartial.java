@@ -21,7 +21,6 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.offline.OfflineManager;
-import com.mapbox.services.android.navigation.v5.navigation.MapboxNavigation;
 
 import java.util.List;
 
@@ -30,7 +29,6 @@ import a2.mobile.mobileapp.activities.MainActivity;
 import a2.mobile.mobileapp.constants.SceneConstants;
 import a2.mobile.mobileapp.handlers.MapHandler;
 import a2.mobile.mobileapp.utils.MapUtils;
-import a2.mobile.mobileapp.utils.NavigationUtils;
 
 public class MapViewPartial extends LinearLayout
         implements OnMapReadyCallback {
@@ -56,9 +54,6 @@ public class MapViewPartial extends LinearLayout
     @Override
     public void onMapReady(@NonNull MapboxMap mapboxMap) {
         MapUtils.storeMapInstance(mapboxMap);
-        MapUtils.storeNavigationInstance(
-                new MapboxNavigation(context, context.getString(R.string.mapbox_access_token))
-        );
 
         offlineMapManager = OfflineManager.getInstance(context);
 

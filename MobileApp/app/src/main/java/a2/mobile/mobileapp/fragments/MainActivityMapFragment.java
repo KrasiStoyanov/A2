@@ -8,14 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
 
 import a2.mobile.mobileapp.R;
-import a2.mobile.mobileapp.handlers.MapHandler;
-import a2.mobile.mobileapp.handlers.NavigationHandler;
-import a2.mobile.mobileapp.utils.NavigationUtils;
 
-public class MainActivityMapFragment extends Fragment {
+public class MainActivityMapFragment extends Fragment implements LifecycleOwner {
+
+    private LifecycleRegistry lifecycleRegistry = new LifecycleRegistry(this);
 
     private Context context;
     private View rootView;
@@ -45,7 +48,6 @@ public class MainActivityMapFragment extends Fragment {
                 break;
             case R.layout.scene_navigation_view:
                 TransitionManager.go(navigationScene);
-                NavigationUtils.startNavigation(context);
                 break;
         }
 
@@ -63,6 +65,8 @@ public class MainActivityMapFragment extends Fragment {
         );
 
         assert view != null;
+        lifecycleRegistry.setCurrentState(Lifecycle.State.CREATED);
+
         rootView = view.findViewById(R.id.map_scene_manager);
         mapScene = Scene.getSceneForLayout(
                 (ViewGroup) rootView,
@@ -76,8 +80,18 @@ public class MainActivityMapFragment extends Fragment {
                 getActivity()
         );
 
-        NavigationUtils.storeRootView(rootView);
-
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        lifecycleRegistry.setCurrentState(Lifecycle.State.STARTED);
+    }
+
+    @NonNull
+    @Override
+    public Lifecycle getLifecycle() {
+        return lifecycleRegistry;
     }
 }

@@ -3,6 +3,7 @@ package a2.mobile.mobileapp.activities;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.fragments.MainActivityFragment;
 import a2.mobile.mobileapp.fragments.MainActivityMapFragment;
+import a2.mobile.mobileapp.utils.NavigationUtils;
 import a2.mobile.mobileapp.views.MapViewPartial;
 
 
@@ -70,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
             transaction.replace(R.id.map_scene_holder, mapManager);
             transaction.commit();
         }
+
+        NavigationUtils.storeContentHolderView(findViewById(R.id.content_holder));
     }
 
     /**

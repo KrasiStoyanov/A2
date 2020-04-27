@@ -19,7 +19,6 @@ import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.mapbox.services.android.navigation.v5.navigation.MapboxNavigation;
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute;
 
 import java.util.ArrayList;
@@ -47,8 +46,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 public class MapUtils {
     public static MapboxMap map;
     private static Style.Builder mapStyle;
-    private static MapboxNavigation navigation;
-    static DirectionsRoute navigationRoute;
+    public static DirectionsRoute navigationRoute;
 
     private static GeoJsonSource mapMarkerSource;
     private static GeoJsonSource mapRouteSource;
@@ -71,15 +69,6 @@ public class MapUtils {
      */
     public static void storeMapInstance(MapboxMap mapboxMap) {
         map = mapboxMap;
-    }
-
-    /**
-     * Store the mapbox navigation instance.
-     *
-     * @param mapboxNavigation The mapbox navigation instance
-     */
-    public static void storeNavigationInstance(MapboxNavigation mapboxNavigation) {
-        navigation = mapboxNavigation;
     }
 
     /**

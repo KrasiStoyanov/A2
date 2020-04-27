@@ -6,7 +6,6 @@ import android.location.Location;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,16 +13,18 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.services.android.navigation.ui.v5.NavigationView;
 import com.mapbox.services.android.navigation.ui.v5.NavigationViewOptions;
 import com.mapbox.services.android.navigation.ui.v5.listeners.NavigationListener;
+import com.mapbox.services.android.navigation.v5.navigation.MapboxNavigation;
 
 import a2.mobile.mobileapp.R;
 
 public class NavigationUtils {
     @SuppressLint("StaticFieldLeak")
-    private static View rootView;
+    private static View contentHolderView;
     @SuppressLint("StaticFieldLeak")
     private static MapView mapView;
     @SuppressLint("StaticFieldLeak")
     private static NavigationView navigationView;
+    private static MapboxNavigation navigation;
 
     public static boolean isNavigationActive = false;
 
@@ -34,14 +35,32 @@ public class NavigationUtils {
      *
      * @param view The root View instance
      */
-    public static void storeRootView(View view) {
-        rootView = view;
+    public static void storeContentHolderView(View view) {
+        contentHolderView = view;
+    }
+
+    /**
+     * Store the Navigation View instance.
+     *
+     * @param view The Navigation View instance
+     */
+    public static void storeNavigationView(NavigationView view) {
+        navigationView = view;
+    }
+
+    /**
+     * Store the mapbox navigation instance.
+     *
+     * @param mapboxNavigation The mapbox navigation instance
+     */
+    public static void storeNavigationInstance(MapboxNavigation mapboxNavigation) {
+        navigation = mapboxNavigation;
     }
 
     public static void startNavigation(Context context) {
-        navigationView = rootView.findViewById(R.id.mapbox_navigation);
-        Log.e(" SADASDA ", " ASDASD " + navigationView);
-        NavigationViewOptions.Builder options = NavigationViewOptions.builder()
+        NavigationViewOptions options = NavigationViewOptions.builder()
+                .directionsRoute(MapUtils.navigationRoute)
+                .shouldSimulateRoute(true)
                 .navigationListener(new NavigationListener() {
                     @Override
                     public void onCancelNavigation() {
@@ -58,16 +77,10 @@ public class NavigationUtils {
 
                     }
                 })
-                .directionsRoute(MapUtils.navigationRoute)
-                .shouldSimulateRoute(true)
-                .progressChangeListener((location, routeProgress) -> setSpeed(context, location))
-                .instructionListListener(visible -> {
-                    instructionListShown = true;
-                })
-                .speechAnnouncementListener(announcement -> announcement)
-                .bannerInstructionsListener(instructions -> instructions);
+                .progressChangeListener(((location, routeProgress) -> setSpeed(context, location)))
+                .build();
 
-        navigationView.startNavigation(options.build());
+//        navigationView.startNavigation(options);
 
         isNavigationActive = true;
     }
@@ -84,7 +97,7 @@ public class NavigationUtils {
         spannableString.setSpan(new AbsoluteSizeSpan(speedTextSize),
                 0, string.length() - 3, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
-        TextView speedWidget = rootView.findViewById(R.id.title);
+        TextView speedWidget = contentHolderView.findViewById(R.id.title);
         speedWidget.setText(spannableString);
         if (!instructionListShown) {
             speedWidget.setVisibility(View.VISIBLE);

@@ -21,6 +21,7 @@ import a2.mobile.mobileapp.handlers.RouteDetailsHandler;
 import a2.mobile.mobileapp.handlers.RoutesHandler;
 import a2.mobile.mobileapp.utils.MapUtils;
 import a2.mobile.mobileapp.utils.NavigationUtils;
+import a2.mobile.mobileapp.views.NavigationViewPartial;
 
 public class MainActivityFragment extends Fragment {
 
@@ -52,7 +53,7 @@ public class MainActivityFragment extends Fragment {
 
                 break;
             case R.layout.scene_navigation:
-                NavigationHandler.stopNavigation();
+                NavigationViewPartial.stopNavigation();
 
                 break;
         }
