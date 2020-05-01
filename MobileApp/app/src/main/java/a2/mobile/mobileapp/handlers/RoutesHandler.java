@@ -2,6 +2,7 @@ package a2.mobile.mobileapp.handlers;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,19 +20,18 @@ public class RoutesHandler {
             View rootView,
             List<Route> routesList) {
 
-        View view = ((Activity) context).getWindow().getDecorView()
-                .findViewById(android.R.id.content);
+        ((Activity)context).runOnUiThread(() -> {
+            RecyclerView routesListHolder = rootView.findViewById(R.id.routes_list);
+            RoutesAdapter routesAdapter = new RoutesAdapter(
+                    context,
+                    rootView,
+                    routesList
+            );
 
-        RecyclerView routesListHolder = view.findViewById(R.id.routes_list);
-        RoutesAdapter routesAdapter = new RoutesAdapter(
-                context,
-                rootView,
-                routesList
-        );
+            routesListHolder.setAdapter(routesAdapter);
 
-        routesListHolder.setAdapter(routesAdapter);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-        routesListHolder.setLayoutManager(layoutManager);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+            routesListHolder.setLayoutManager(layoutManager);
+        });
     }
 }

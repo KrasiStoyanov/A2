@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,9 +27,14 @@
                 android:layout_height="fill_parent"
                 mapbox:mapbox_cameraZoom="15" />
 
+            <com.mapbox.services.android.navigation.ui.v5.NavigationView
+                android:id="@+id/navigation"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"/>
+
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="50dp"
+                android:layout_height="70dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="0dp"
                 android:background="@drawable/radius_medium"
@@ -51,13 +57,83 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:gravity="top|center_horizontal"
             android:orientation="vertical"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp" />
+            android:paddingRight="20dp">
 
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/raleway_semi_bold"
+                    android:text="@string/title_navigation"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@color/title"
+                    android:textSize="@dimen/h3"/>
+
+                <TextView
+                    android:id="@+id/subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sen_regular"
+                    android:text="@string/title_navigation"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@color/body"
+                    android:textSize="@dimen/body_font_size"
+                    android:layout_marginTop="10dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    app:cardBackgroundColor="@color/button_primary__background"
+                    app:contentPadding="13dp"
+                    app:cardCornerRadius="6dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center">
+
+                        <TextView
+                            android:id="@+id/icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/icon_font"
+                            android:text="@string/icon_eye"
+                            android:textColor="@color/button_primary__icon"
+                            android:textSize="@dimen/button_icon_size"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/placeholder_navigate"
+                            android:fontFamily="@font/sen_bold"
+                            android:textSize="@dimen/button_font_size"
+                            android:textAllCaps="true"
+                            android:textColor="@color/button_primary__text"
+                            android:layout_marginStart="6dp"/>
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

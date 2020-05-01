@@ -15,6 +15,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 
 import a2.mobile.mobileapp.R;
+import a2.mobile.mobileapp.views.MapViewPartial;
 
 public class MainActivityMapFragment extends Fragment implements LifecycleOwner {
 
@@ -87,6 +88,13 @@ public class MainActivityMapFragment extends Fragment implements LifecycleOwner 
     public void onStart() {
         super.onStart();
         lifecycleRegistry.setCurrentState(Lifecycle.State.STARTED);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MapViewPartial.onDestroy();
+        lifecycleRegistry.setCurrentState(Lifecycle.State.DESTROYED);
     }
 
     @NonNull

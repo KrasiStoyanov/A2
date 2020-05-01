@@ -23,7 +23,7 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
 
     private final Context context;
     private View rootView;
-    private final List<Route> routesList;
+    private List<Route> routesList;
 
     private LayoutInflater inflater;
 
@@ -37,6 +37,10 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
         this.routesList = routesList;
 
         this.inflater = LayoutInflater.from(context);
+    }
+
+    public void updateDataList(List<Route> updatedList) {
+        routesList = updatedList;
     }
 
     @NonNull

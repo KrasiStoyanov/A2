@@ -1,5 +1,6 @@
 package a2.mobile.mobileapp.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 
@@ -156,23 +157,25 @@ public class MapUtils {
      * Render the route markers list in a newly created route symbol layer.
      */
     public static void updateRoute(Context context, Point origin, Point destination) {
-        mapMarkerSource = new GeoJsonSource(
-                MapConstants.MAP_ROUTE_MARKER_LAYER_SOURCE_ID,
-                FeatureCollection.fromFeatures(new Feature[]{
-                        Feature.fromGeometry(origin),
-                        Feature.fromGeometry(destination)
-                })
-        );
+        ((Activity)context).runOnUiThread(() -> {
+            mapMarkerSource = new GeoJsonSource(
+                    MapConstants.MAP_ROUTE_MARKER_LAYER_SOURCE_ID,
+                    FeatureCollection.fromFeatures(new Feature[]{
+                            Feature.fromGeometry(origin),
+                            Feature.fromGeometry(destination)
+                    })
+            );
 
-        mapRouteSource = new GeoJsonSource(MapConstants.MAP_ROUTE_LAYER_SOURCE_ID);
-        map.setStyle(mapStyle, style -> {
-            style.addSource(mapRouteSource);
-            style.addSource(mapMarkerSource);
+            mapRouteSource = new GeoJsonSource(MapConstants.MAP_ROUTE_LAYER_SOURCE_ID);
+            map.setStyle(mapStyle, style -> {
+                style.addSource(mapRouteSource);
+                style.addSource(mapMarkerSource);
 
-            style.addLayer(setRouteLayer(context));
-            style.addLayer(setRouteMarkerLayer());
+                style.addLayer(setRouteLayer(context));
+                style.addLayer(setRouteMarkerLayer());
 
-            renderRouteLayer(context, origin, destination);
+                renderRouteLayer(context, origin, destination);
+            });
         });
     }
 
@@ -188,7 +191,7 @@ public class MapUtils {
                 .accessToken(context.getString(R.string.mapbox_access_token))
                 .origin(origin)
                 .destination(destination)
-                .alternatives(true)
+                .alternatives(false)
                 .build()
                 .getRoute(new Callback<DirectionsResponse>() {
                     @Override

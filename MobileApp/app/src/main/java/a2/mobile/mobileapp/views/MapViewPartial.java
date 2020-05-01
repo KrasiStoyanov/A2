@@ -34,7 +34,8 @@ public class MapViewPartial extends LinearLayout
         implements OnMapReadyCallback {
 
     private Context context;
-    private MapView mapView;
+    @SuppressLint("StaticFieldLeak")
+    private static MapView mapView;
     public static PermissionsManager permissionsManager;
 
     @SuppressLint("StaticFieldLeak")
@@ -135,5 +136,9 @@ public class MapViewPartial extends LinearLayout
 
             permissionsManager.requestLocationPermissions((Activity) context);
         }
+    }
+
+    public static void onDestroy() {
+        mapView.onDestroy();
     }
 }

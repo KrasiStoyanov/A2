@@ -1,5 +1,6 @@
 package a2.mobile.mobileapp.handlers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.widget.EditText;
@@ -27,11 +28,13 @@ public class RouteDetailsHandler {
      * @param view    The view
      */
     public static void handleRouteSelection(Context context, View view) {
-        fillRouteDetailPlaceholders(view);
-        onRouteOptionButtonsClick(view);
+        ((Activity)context).runOnUiThread(() -> {
+            fillRouteDetailPlaceholders(view);
+            onRouteOptionButtonsClick(view);
 
-        List<RouteDetailsCard> routeDetailsCards = generateRouteDetailsCards();
-        handleRouteDetailsCards(context, view, routeDetailsCards);
+            List<RouteDetailsCard> routeDetailsCards = generateRouteDetailsCards();
+            handleRouteDetailsCards(context, view, routeDetailsCards);
+        });
     }
 
     /**

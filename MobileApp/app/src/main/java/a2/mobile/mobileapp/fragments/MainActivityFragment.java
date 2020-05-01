@@ -1,6 +1,8 @@
 package a2.mobile.mobileapp.fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Scene;
 import android.transition.TransitionManager;
@@ -13,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.activities.MainActivity;
+import a2.mobile.mobileapp.activities.TestMapActivity;
 import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.handlers.MapHandler;
 import a2.mobile.mobileapp.handlers.NavigationHandler;
@@ -53,9 +56,11 @@ public class MainActivityFragment extends Fragment {
 
                 break;
             case R.layout.scene_navigation:
-                NavigationViewPartial.stopNavigation();
+                NavigationHandler.stopNavigation();
+                switchScene(R.layout.scene_route_deails);
 
                 break;
+
         }
     }
 
@@ -81,9 +86,9 @@ public class MainActivityFragment extends Fragment {
                 break;
             case R.layout.scene_route_deails:
                 TransitionManager.go(routeDetailsScene);
-                if (currentScene == R.layout.scene_navigation) {
-                    MainActivity.mapManager.switchScene(R.layout.scene_map_view);
-                }
+//                if (currentScene == R.layout.scene_navigation) {
+//                    MainActivity.mapManager.switchScene(R.layout.scene_map_view);
+//                }
 
                 MapHandler.focusMapOnRoute(context);
                 MapHandler.setupRouteDirectionsAPI(context, rootView);
@@ -99,15 +104,18 @@ public class MainActivityFragment extends Fragment {
 
                 break;
             case R.layout.scene_navigation:
-                TransitionManager.go(navigationScene);
+//                TransitionManager.go(navigationScene);
 
-                MainActivity.mapManager.switchScene(R.layout.scene_navigation_view);
+//                MainActivity.mapManager.switchScene(R.layout.scene_navigation_view);
 
-                NavigationHandler.startNavigation(
-                        context,
-                        rootView,
-                        MapHandler.currentRouteObject
-                );
+//                NavigationHandler.startNavigation(
+//                        context,
+//                        rootView,
+//                        MapHandler.currentRouteObject
+//                );
+
+                context.startActivity(new Intent(context, TestMapActivity.class));
+                ((Activity)context).finish();
 
                 break;
         }

@@ -15,10 +15,14 @@ import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.offline.OfflineManager;
 import com.mapbox.services.android.navigation.v5.navigation.MapboxNavigation;
 
+import java.util.ArrayList;
+
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.data.Data;
+import a2.mobile.mobileapp.data.classes.location.LocationViewModel;
 import a2.mobile.mobileapp.fragments.MainActivityFragment;
 import a2.mobile.mobileapp.fragments.MainActivityMapFragment;
+import a2.mobile.mobileapp.handlers.RoutesHandler;
 import a2.mobile.mobileapp.utils.NavigationUtils;
 import a2.mobile.mobileapp.views.MapViewPartial;
 
@@ -34,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     public static MainActivityFragment sceneManager;
     @SuppressLint("StaticFieldLeak")
     public static MainActivityMapFragment mapManager;
+    public static LocationViewModel locationViewModel;
 
     @SuppressLint("StaticFieldLeak")
     public static ProgressBar progressBar;
@@ -47,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.activity_main);
 
+        locationViewModel = new LocationViewModel(getApplication());
         recyclerView = findViewById(R.id.recyclerView);
         progressBar = findViewById(R.id.progressBar);
 
@@ -63,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         // Initialize scene and map managers.
         sceneManager = new MainActivityFragment(this);
         mapManager = new MainActivityMapFragment(this);
-        mapNavigation = new MapboxNavigation(this, getString(R.string.mapbox_access_token));
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -73,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             transaction.commit();
         }
 
-        NavigationUtils.storeContentHolderView(findViewById(R.id.content_holder));
+//        NavigationUtils.storeContentHolderView(findViewById(R.id.content_holder));
     }
 
     /**
@@ -112,5 +117,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         sceneManager.goBack();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapManager.onDestroy();
     }
 }
