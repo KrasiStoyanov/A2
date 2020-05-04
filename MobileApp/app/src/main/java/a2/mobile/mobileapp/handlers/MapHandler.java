@@ -74,7 +74,7 @@ public class MapHandler {
         }
 
         // Create the region asynchronously
-        if (metadata != null) {
+        if (metadata != null && MapViewPartial.offlineMapManager != null) {
             MapViewPartial.offlineMapManager.createOfflineRegion(
                     definition,
                     metadata,

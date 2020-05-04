@@ -22,8 +22,13 @@
             android:gravity="top"
             android:orientation="horizontal">
 
-            <FrameLayout
-                android:id="@+id/map_scene_holder"
+<!--            <FrameLayout-->
+<!--                android:id="@+id/map_scene_holder"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="fill_parent"/>-->
+
+            <com.mapbox.mapboxsdk.maps.MapView
+                android:id="@+id/mapbox"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"/>
 

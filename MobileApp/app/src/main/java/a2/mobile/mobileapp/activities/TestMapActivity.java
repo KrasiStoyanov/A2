@@ -90,9 +90,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineJoin;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 
-public class TestMapActivity extends AppCompatActivity implements OnNavigationReadyCallback,
-        NavigationListener, ProgressChangeListener, InstructionListListener, SpeechAnnouncementListener,
-        BannerInstructionsListener {
+public class TestMapActivity extends AppCompatActivity {
 
     private MapboxMap map;
     private MapView mapView;
@@ -124,207 +122,15 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
 
         setContentView(R.layout.activity_test_map);
 
-        navigationView = findViewById(R.id.navigation);
-        CameraPosition initialPosition = new CameraPosition.Builder()
-                .target(new LatLng(ORIGIN.latitude(), ORIGIN.longitude()))
-                .zoom(INITIAL_ZOOM)
-                .build();
-
-        navigationView.onCreate(savedInstanceState);
-        navigationView.initialize(this, initialPosition);
-    }
-
-    @Override
-    public void onNavigationReady(boolean isRunning) {
-        new Thread(this::fetchRoute).start();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        navigationView.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        navigationView.onResume();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        navigationView.onLowMemory();
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        navigationView.onSaveInstanceState(outState);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        navigationView.onRestoreInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        navigationView.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        navigationView.onStop();
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        navigationView.onDestroy();
-    }
-
-    @Override
-    public void onCancelNavigation() {
-        // Navigation canceled, finish the activity
-        finish();
-    }
-
-    @Override
-    public void onNavigationFinished() {
-        // Intentionally empty
-    }
-
-    @Override
-    public void onNavigationRunning() {
-        // Intentionally empty
-    }
-
-    @Override
-    public void onProgressChange(Location location, RouteProgress routeProgress) {
-//        setSpeed(location, routeProgress);
-    }
-
-    @Override
-    public SpeechAnnouncement willVoice(SpeechAnnouncement announcement) {
-        return SpeechAnnouncement.builder()
-                .announcement("All announcements will be the same.")
-                .build();
-    }
-
-    @Override
-    public BannerInstructions willDisplay(BannerInstructions instructions) {
-        return instructions;
-    }
-
-    private void startNavigation(DirectionsRoute directionsRoute) {
-        NavigationViewOptions.Builder options = NavigationViewOptions.builder()
-                .navigationListener(this)
-                .directionsRoute(directionsRoute)
+        NavigationLauncherOptions options = NavigationLauncherOptions.builder()
+                .directionsRoute(MapUtils.navigationRoute)
                 .shouldSimulateRoute(true)
-                .progressChangeListener(this)
-                .instructionListListener(this)
-                .speechAnnouncementListener(this)
-                .bannerInstructionsListener(this);
+                .build();
 
-        navigationView.post(() -> navigationView.startNavigation((options.build())));
-    }
-
-    private void fetchRoute() {
-//        startNavigation();
-        NavigationRoute.builder(this)
-                .accessToken(getResources().getString(R.string.mapbox_access_token))
-                .origin(ORIGIN)
-                .destination(DESTINATION)
-                .alternatives(false)
-                .build()
-                .getRoute(new Callback<DirectionsResponse>() {
-                    @Override
-                    public void onResponse(
-                            @NonNull Call<DirectionsResponse> call,
-                            @NonNull Response<DirectionsResponse> response) {
-
-                        assert response.body() != null;
-                        DirectionsRoute directionsRoute = response.body().routes().get(0);
-                        startNavigation(directionsRoute);
-                    }
-
-                    @Override
-                    public void onFailure(
-                            @NonNull Call<DirectionsResponse> call,
-                            @NonNull Throwable t) {
-
-                    }
-                });
-    }
-
-    private void setSpeed(Location location, RouteProgress routeProgress) {
-        @SuppressLint("DefaultLocale") String string = String.format(
-                "%d\nMPH", (int) (location.getSpeed() * 2.2369)
-        );
-
-        int mphTextSize = getResources().getDimensionPixelSize(R.dimen.body_font_size);
-        int speedTextSize = getResources().getDimensionPixelSize(R.dimen.h4);
-
-        SpannableString spannableString = new SpannableString(string);
-        spannableString.setSpan(new AbsoluteSizeSpan(mphTextSize),
-                string.length() - 4, string.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-
-        spannableString.setSpan(new AbsoluteSizeSpan(speedTextSize),
-                0, string.length() - 3, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-
-        TextView speedWidget = findViewById(R.id.title);
-        speedWidget.setVisibility(View.VISIBLE);
-
-        StringBuilder stringBuilder = new StringBuilder();
-
-        RouteLegProgress legProgress = routeProgress.currentLegProgress();
-        stringBuilder.append("In ").append(legProgress.upComingStep().distance());
-
-        LegStep step = legProgress.currentStep();
-        step.bannerInstructions().forEach(i -> {
-            BannerText instruction = i.primary();
-            String instructionType = instruction.type();
-            String modifier = instruction.modifier();
-
-            if (instructionType != null && modifier != null) {
-                instructionType = instructionType.toLowerCase();
-                modifier = modifier.toLowerCase();
-
-                if ("turn".equals(instructionType)) {
-                    if (modifier.contains("sharp") || modifier.contains("slight")) {
-                        stringBuilder
-                                .append("m make a ")
-                                .append(modifier)
-                                .append(" ")
-                                .append(instructionType);
-                    } else if (modifier.equals("straight")) {
-                        stringBuilder.append("Continue straight");
-                    } else if (modifier.equals("uturn")) {
-                        stringBuilder.append("m make a U-turn");
-                    } else {
-                        stringBuilder.append("m turn ").append(modifier);
-                    }
-                }
-            }
-
-            stringBuilder
-                    .append(" towards ")
-                    .append(instruction.text())
-                    .append(".");
-        });
-
-        Log.e("Step", stringBuilder.toString());
-        speedWidget.setText(stringBuilder.toString());
-    }
-
-    @Override
-    public void onInstructionListVisibilityChanged(boolean visible) {
-
+        runOnUiThread(() -> NavigationLauncher.startNavigation(
+                TestMapActivity.this,
+                options
+        ));
     }
 
 
