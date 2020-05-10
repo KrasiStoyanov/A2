@@ -79,8 +79,11 @@ public class MainActivityFragment extends Fragment {
             case routeDetails:
                 TransitionManager.go(routeDetailsScene);
 
-                MapHandler.focusMapOnRoute(context);
-                MapHandler.setupRouteDirectionsAPI(context, rootView);
+                if (currentScene != Scenes.pointsOfInterest) {
+                    MapHandler.focusMapOnRoute(context);
+                }
+
+                RouteDetailsHandler.handleRouteSelection(context, rootView);
 
                 break;
             case pointsOfInterest:
@@ -134,9 +137,5 @@ public class MainActivityFragment extends Fragment {
         );
 
         return view;
-    }
-
-    public static void onRouteRenderComplete(Context context, View rootView) {
-        RouteDetailsHandler.handleRouteSelection(context, rootView);
     }
 }

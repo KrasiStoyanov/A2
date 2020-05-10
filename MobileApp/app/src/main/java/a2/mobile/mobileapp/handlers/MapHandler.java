@@ -142,42 +142,6 @@ public class MapHandler {
     }
 
     /**
-     * Set up the Direction API URL and render the outcome - a JSON object with the route path.
-     */
-    public static void setupRouteDirectionsAPI(Context context, View view) {
-//        // Initialize a new RequestQueue instance
-//        RequestQueue requestQueue = Volley.newRequestQueue(Data.context);
-//
-//        String url = MapHandler.generateUrl();
-//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-//                (Request.Method.GET, url, null, response -> {
-//
-//                    try {
-//                        //routes element
-//                        JSONArray routes = response.getJSONArray("routes");
-//                        JSONObject routesJSONObject = routes.getJSONObject(0);
-//
-//                        //Legs element
-//                        JSONArray leg = routesJSONObject.getJSONArray("legs");
-//                        JSONObject distance = leg.getJSONObject(0).getJSONObject("distance");
-//                        currentRouteDistance = distance.getString("text");
-//
-//                        MapHandler.renderRoutePath(routesJSONObject);
-//                        currentRouteObject = routesJSONObject;
-//
-//                        MainActivityFragment.onRouteRenderComplete(context, view);
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                }, error -> Log.d("Route Details Handler", "error"));
-//
-//        requestQueue.add(jsonObjectRequest);
-
-        MainActivityFragment.onRouteRenderComplete(context, view);
-    }
-
-    /**
      * Monitor the downloading process using an observer.
      *
      * @param offlineRegion The region to observe while downloading.
