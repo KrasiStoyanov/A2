@@ -19,21 +19,12 @@ import a2.mobile.mobileapp.data.classes.PointOfInterest;
 public class PointsOfInterestAdapter
         extends RecyclerView.Adapter<PointsOfInterestAdapter.ViewHolder> {
 
-    private Context context;
-    private View rootView;
     private LayoutInflater inflater;
 
     private List<PointOfInterest> pointsOfInterest;
 
-    public PointsOfInterestAdapter(
-            Context context,
-            View rootView,
-            List<PointOfInterest> pointsOfInterest) {
-
-        this.context = context;
-        this.rootView = rootView;
+    public PointsOfInterestAdapter(Context context, List<PointOfInterest> pointsOfInterest) {
         this.pointsOfInterest = pointsOfInterest;
-
         this.inflater = LayoutInflater.from(context);
     }
 

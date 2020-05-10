@@ -3,18 +3,15 @@ package a2.mobile.mobileapp.activities;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
@@ -28,9 +25,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.offline.OfflineManager;
-import com.mapbox.services.android.navigation.v5.navigation.MapboxNavigation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import a2.mobile.mobileapp.R;
@@ -38,27 +33,21 @@ import a2.mobile.mobileapp.constants.SceneConstants;
 import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.data.classes.location.LocationViewModel;
 import a2.mobile.mobileapp.fragments.MainActivityFragment;
-import a2.mobile.mobileapp.fragments.MainActivityMapFragment;
 import a2.mobile.mobileapp.handlers.MapHandler;
-import a2.mobile.mobileapp.handlers.RoutesHandler;
 import a2.mobile.mobileapp.utils.MapUtils;
-import a2.mobile.mobileapp.utils.NavigationUtils;
-import a2.mobile.mobileapp.views.MapViewPartial;
 
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PermissionsListener {
+public class MainActivity extends AppCompatActivity
+        implements OnMapReadyCallback, PermissionsListener {
 
-    private static final String TAG = "Main Activity";
-
-    public static MapboxNavigation mapNavigation;
-
-    public static RecyclerView recyclerView;
+    @SuppressLint("StaticFieldLeak")
+    public static RelativeLayout loadingBackground;
     @SuppressLint("StaticFieldLeak")
     public static MainActivityFragment sceneManager;
-    @SuppressLint("StaticFieldLeak")
-    public static MainActivityMapFragment mapManager;
     public static LocationViewModel locationViewModel;
     public static PermissionsManager permissionsManager;
+    @SuppressLint("StaticFieldLeak")
+    public static OfflineManager offlineMapManager;
     private MapView mapView;
 
     @SuppressLint("StaticFieldLeak")
@@ -74,37 +63,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
 
         locationViewModel = new LocationViewModel(getApplication());
-        recyclerView = findViewById(R.id.recyclerView);
-        progressBar = findViewById(R.id.progressBar);
+        loadingBackground = findViewById(R.id.progress_layout);
+        progressBar = findViewById(R.id.progress_bar);
 
         Data.context = this;
         Data.getDataFile("points_of_interest.xls");
-
-//        downloadComplete();
-
-//        String fileUrl = "https://github.com/KrasiStoyanov/Robocop/raw/master/MobileApp/app/src/main/assets/points_of_interest.xls";
-//        String fileUrlWithoutFileName = "https://github.com/KrasiStoyanov/Robocop/raw/master/MobileApp/app/src/main/assets/";
-//
-//        Data.fetchDataFile(fileUrl, fileUrlWithoutFileName);
 
         mapView = findViewById(R.id.mapbox);
         mapView.getMapAsync(this);
 
         // Initialize scene and map managers.
         sceneManager = new MainActivityFragment(this);
-//        mapManager = new MainActivityMapFragment(this);
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
             transaction.replace(R.id.content_holder, sceneManager);
-//            transaction.replace(R.id.map_scene_holder, mapManager);
             transaction.commit();
-        } else {
-//            savedInstanceState.get();
         }
-
-//        NavigationUtils.storeContentHolderView(findViewById(R.id.content_holder));
     }
 
     @Override
@@ -122,8 +98,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @NonNull String[] permissions,
             @NonNull int[] grantResults) {
 
-        assert MapViewPartial.permissionsManager != null;
-        MapViewPartial.permissionsManager.onRequestPermissionsResult(
+        assert permissionsManager != null;
+        permissionsManager.onRequestPermissionsResult(
                 requestCode,
                 permissions,
                 grantResults
@@ -170,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(@NonNull MapboxMap mapboxMap) {
         MapUtils.storeMapInstance(mapboxMap);
+        offlineMapManager = OfflineManager.getInstance(this);
 
         // Set up the map global style.
         MapUtils.setMapStyle(this);
@@ -231,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         @Override
                         public void onPermissionResult(boolean granted) {
                             if (granted) {
-                                MapUtils.map.getStyle(style -> MapViewPartial.enableLocationComponent(
+                                MapUtils.map.getStyle(style -> enableLocationComponent(
                                         context,
                                         style
                                 ));

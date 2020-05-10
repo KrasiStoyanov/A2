@@ -16,7 +16,6 @@ import a2.mobile.mobileapp.data.classes.PointOfInterest;
 public class PointsOfInterestHandler {
     public static void handlePointsOfInterest(
             Context context,
-            View rootView,
             List<PointOfInterest> pointsOfInterest) {
 
         View view = ((Activity) context).getWindow().getDecorView()
@@ -25,7 +24,6 @@ public class PointsOfInterestHandler {
         RecyclerView pointsOfInterestHolder = view.findViewById(R.id.points_of_interest_list);
         PointsOfInterestAdapter pointsOfInterestAdapter = new PointsOfInterestAdapter(
                 context,
-                rootView,
                 pointsOfInterest
         );
 

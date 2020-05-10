@@ -2,7 +2,6 @@ package a2.mobile.mobileapp.handlers;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,11 +19,10 @@ public class RoutesHandler {
             View rootView,
             List<Route> routesList) {
 
-        ((Activity)context).runOnUiThread(() -> {
+        ((Activity) context).runOnUiThread(() -> {
             RecyclerView routesListHolder = rootView.findViewById(R.id.routes_list);
             RoutesAdapter routesAdapter = new RoutesAdapter(
                     context,
-                    rootView,
                     routesList
             );
 

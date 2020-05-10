@@ -3,7 +3,6 @@ package a2.mobile.mobileapp.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -17,12 +16,10 @@ import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.maps.UiSettings;
-import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute;
 
 import java.util.ArrayList;
@@ -59,7 +56,6 @@ public class MapUtils {
     private static GeoJsonSource mapRouteSource;
 
     private static List<Feature> routeMarkers = new ArrayList<>();
-    private static final Object routeMarkersMonitor = new Object();
     private static final Runnable clearRouteMarkersRunnable = () -> {
         map.getStyle(style -> {
             style.removeSource(MapConstants.MAP_ROUTE_LAYER_SOURCE_ID);
@@ -159,14 +155,13 @@ public class MapUtils {
     /**
      * Clear the map from the route symbol layer and the route markers.
      */
-    public static void clearRouteMarkers(Context context) throws InterruptedException {
+    public static void clearRouteMarkers(Context context) {
         RunnableFuture<Void> task = new FutureTask<>(clearRouteMarkersRunnable, null);
-        ((Activity)context).runOnUiThread(task);
+        ((Activity) context).runOnUiThread(task);
         try {
             task.get(); // this will block until Runnable completes
         } catch (InterruptedException | ExecutionException e) {
-            // handle exception
-            Log.e("Exception", "Message: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -175,11 +170,7 @@ public class MapUtils {
      */
     public static void updateRoute(Context context, Point origin, Point destination) {
         // Clear all route markers on the map first if there are any.
-        try {
-            MapUtils.clearRouteMarkers(context);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        MapUtils.clearRouteMarkers(context);
 
         map.getStyle(style -> {
 

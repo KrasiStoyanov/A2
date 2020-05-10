@@ -17,30 +17,16 @@ import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.activities.MainActivity;
 import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.data.classes.Route;
+import a2.mobile.mobileapp.enums.Scenes;
 
 public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder> {
-    private final String TAG = "Routes Adapter";
-
-    private final Context context;
-    private View rootView;
     private List<Route> routesList;
 
     private LayoutInflater inflater;
 
-    public RoutesAdapter(
-            Context context,
-            View rootView,
-            List<Route> routesList) {
-
-        this.context = context;
-        this.rootView = rootView;
+    public RoutesAdapter(Context context, List<Route> routesList) {
         this.routesList = routesList;
-
         this.inflater = LayoutInflater.from(context);
-    }
-
-    public void updateDataList(List<Route> updatedList) {
-        routesList = updatedList;
     }
 
     @NonNull
@@ -67,7 +53,7 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
         holder.layout.setTag(route.id);
         holder.layout.setOnClickListener(view -> {
             Data.selectedRoute = route;
-            MainActivity.sceneManager.switchScene(R.layout.scene_route_deails);
+            MainActivity.sceneManager.switchScene(Scenes.routeDetails);
         });
     }
 

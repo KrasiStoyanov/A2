@@ -2,34 +2,25 @@ package a2.mobile.mobileapp.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Scene;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.mapbox.services.android.navigation.ui.v5.NavigationLauncher;
-import com.mapbox.services.android.navigation.ui.v5.NavigationLauncherOptions;
-
 import a2.mobile.mobileapp.R;
-import a2.mobile.mobileapp.activities.MainActivity;
-import a2.mobile.mobileapp.activities.TestMapActivity;
-import a2.mobile.mobileapp.constants.SceneConstants;
 import a2.mobile.mobileapp.data.Data;
+import a2.mobile.mobileapp.enums.Scenes;
 import a2.mobile.mobileapp.handlers.MapHandler;
 import a2.mobile.mobileapp.handlers.NavigationHandler;
 import a2.mobile.mobileapp.handlers.PointsOfInterestHandler;
 import a2.mobile.mobileapp.handlers.RouteDetailsHandler;
 import a2.mobile.mobileapp.handlers.RoutesHandler;
 import a2.mobile.mobileapp.utils.MapUtils;
-import a2.mobile.mobileapp.utils.NavigationUtils;
-import a2.mobile.mobileapp.views.NavigationViewPartial;
+import timber.log.Timber;
 
 public class MainActivityFragment extends Fragment {
 
@@ -39,9 +30,8 @@ public class MainActivityFragment extends Fragment {
     private Scene routesScene;
     private Scene routeDetailsScene;
     private Scene pointsOfInterestScene;
-    private Scene navigationScene;
 
-    private int currentScene;
+    private Scenes currentScene;
 
     public MainActivityFragment(Context context) {
         this.context = context;
@@ -49,21 +39,17 @@ public class MainActivityFragment extends Fragment {
 
     public void goBack() {
         switch (currentScene) {
-            case R.layout.scene_route_deails:
-                Log.e( "SCENE MANAGER" , "ROUTE DETIALS SCENE TO BE LOADED");
-                switchScene(R.layout.scene_routes);
+            case routeDetails:
+                Timber.e("ROUTE DETIALS SCENE TO BE LOADED");
+                switchScene(Scenes.routes);
 
                 // TODO: Only clear route rendering if there is no active navigation.
-                try {
-                    MapUtils.clearRouteMarkers(context);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                MapUtils.clearRouteMarkers(context);
 
                 break;
-            case R.layout.scene_points_of_interest:
-            case R.layout.scene_navigation:
-                switchScene(R.layout.scene_route_deails);
+            case pointsOfInterest:
+            case navigation:
+                switchScene(Scenes.routeDetails);
 
                 break;
 
@@ -71,17 +57,17 @@ public class MainActivityFragment extends Fragment {
     }
 
     /**
-     * Switch scenes based on the provided scene ID.
+     * Switch Scene based on the provided scene ID.
      *
      * @param id The scene to play
      */
-    public void switchScene(@NonNull int id) {
+    public void switchScene(Scenes id) {
         if (currentScene == id) {
             return;
         }
 
         switch (id) {
-            case R.layout.scene_routes:
+            case routes:
                 TransitionManager.go(routesScene);
                 RoutesHandler.handleRoutes(
                         context,
@@ -90,53 +76,27 @@ public class MainActivityFragment extends Fragment {
                 );
 
                 break;
-            case R.layout.scene_route_deails:
+            case routeDetails:
                 TransitionManager.go(routeDetailsScene);
-//                if (currentScene == R.layout.scene_navigation) {
-//                    MainActivity.mapManager.switchScene(R.layout.scene_map_view);
-//                }
 
                 MapHandler.focusMapOnRoute(context);
                 MapHandler.setupRouteDirectionsAPI(context, rootView);
 
                 break;
-            case R.layout.scene_points_of_interest:
+            case pointsOfInterest:
                 TransitionManager.go(pointsOfInterestScene);
                 PointsOfInterestHandler.handlePointsOfInterest(
                         context,
-                        rootView,
                         Data.selectedRoute.pointsOfInterest
                 );
 
                 break;
-            case R.layout.scene_navigation:
-//                TransitionManager.go(navigationScene);
-
-//                MainActivity.mapManager.switchScene(R.layout.scene_navigation_view);
-
-//                NavigationHandler.startNavigation(
-//                        context,
-//                        rootView,
-//                        MapHandler.currentRouteObject
-//                );
-
-                ((Activity)context).startActivityForResult(
-                        new Intent(context, TestMapActivity.class),
-                        SceneConstants.REQUEST_CODE_SAVED_INSTANCES
+            case navigation:
+                ((Activity) context).runOnUiThread(() ->
+                        NavigationHandler.startNavigation((Activity) context)
                 );
 
-//                NavigationLauncherOptions options = NavigationLauncherOptions.builder()
-//                        .directionsRoute(MapUtils.navigationRoute)
-//                        .shouldSimulateRoute(true)
-//                        .build();
-//
-//                ((Activity)context).runOnUiThread(() -> NavigationLauncher.startNavigation(
-//                        (Activity)context,
-//                        options
-//                ));
-
-                id = R.layout.scene_route_deails;
-
+                id = Scenes.routeDetails;
                 break;
         }
 
@@ -173,24 +133,10 @@ public class MainActivityFragment extends Fragment {
                 getActivity()
         );
 
-        navigationScene = Scene.getSceneForLayout(
-                (ViewGroup) rootView,
-                R.layout.scene_navigation,
-                getActivity()
-        );
-
         return view;
     }
 
     public static void onRouteRenderComplete(Context context, View rootView) {
         RouteDetailsHandler.handleRouteSelection(context, rootView);
-    }
-
-    /**
-     * Update the current scene value after returning back from secondary activities.
-     * @param scene The updated scene value.
-     */
-    public void updateCurrentScene(int scene) {
-        currentScene = scene;
     }
 }

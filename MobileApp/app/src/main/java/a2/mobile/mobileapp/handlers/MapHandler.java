@@ -2,7 +2,6 @@ package a2.mobile.mobileapp.handlers;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -28,11 +27,10 @@ import a2.mobile.mobileapp.data.classes.Point;
 import a2.mobile.mobileapp.data.classes.Route;
 import a2.mobile.mobileapp.fragments.MainActivityFragment;
 import a2.mobile.mobileapp.utils.MapUtils;
-import a2.mobile.mobileapp.views.MapViewPartial;
+import timber.log.Timber;
 
 public class MapHandler {
-    public static JSONObject currentRouteObject;
-    public static String currentRouteDistance;
+    static String currentRouteDistance;
     private static boolean isOfflineRegionDownloaded;
 
     /**
@@ -70,13 +68,13 @@ public class MapHandler {
             String json = jsonObject.toString();
             metadata = json.getBytes(MapConstants.MAP_JSON_CHARSET);
         } catch (Exception exception) {
-            Log.e("Failed to encode metadata: %s", Objects.requireNonNull(exception.getMessage()));
+            Timber.e(Objects.requireNonNull(exception.getMessage()));
             metadata = null;
         }
 
         // Create the region asynchronously
-        if (metadata != null && MapViewPartial.offlineMapManager != null) {
-            MapViewPartial.offlineMapManager.createOfflineRegion(
+        if (metadata != null) {
+            MainActivity.offlineMapManager.createOfflineRegion(
                     definition,
                     metadata,
                     new OfflineManager.CreateOfflineRegionCallback() {
@@ -93,7 +91,7 @@ public class MapHandler {
 
                         @Override
                         public void onError(String error) {
-                            Log.e("Error: %s", error);
+                            Timber.e(error);
                         }
                     });
         }
@@ -106,8 +104,10 @@ public class MapHandler {
 
         // Start and show the progress bar
         isOfflineRegionDownloaded = false;
+
         MainActivity.progressBar.setIndeterminate(true);
         MainActivity.progressBar.setVisibility(View.VISIBLE);
+        MainActivity.loadingBackground.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -135,6 +135,7 @@ public class MapHandler {
         isOfflineRegionDownloaded = true;
         MainActivity.progressBar.setIndeterminate(false);
         MainActivity.progressBar.setVisibility(View.GONE);
+        MainActivity.loadingBackground.setVisibility(View.GONE);
 
         // Show a toast
         Toast.makeText(context, "Region downloaded successfully!", Toast.LENGTH_LONG).show();
@@ -204,14 +205,14 @@ public class MapHandler {
             @Override
             public void onError(OfflineRegionError error) {
                 // If an error occurs, print to logcat
-                Log.e("onError reason: %s", error.getReason());
-                Log.e("onError message: %s", error.getMessage());
+                Timber.e(error.getReason());
+                Timber.e(error.getMessage());
             }
 
             @Override
             public void mapboxTileCountLimitExceeded(long limit) {
                 // Notify if offline region exceeds maximum tile count
-                Log.e("Mapbox tile count limit exceeded: %s", String.valueOf(limit));
+                Timber.e(String.valueOf(limit));
             }
         });
     }
@@ -231,7 +232,7 @@ public class MapHandler {
                 route.endPoint.coordinates.get(1)
         );
 
-        ((Activity)context).runOnUiThread(() -> {
+        ((Activity) context).runOnUiThread(() -> {
 
             // Add the start and end markers to the map.
             MapUtils.addRouteMarker(generateRouteMarker(

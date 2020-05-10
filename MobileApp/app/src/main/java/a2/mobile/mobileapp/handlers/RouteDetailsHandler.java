@@ -19,6 +19,7 @@ import a2.mobile.mobileapp.adapters.RouteDetailsAdapter;
 import a2.mobile.mobileapp.common.SpacesItemDecoration;
 import a2.mobile.mobileapp.common.login.RouteDetailsCard;
 import a2.mobile.mobileapp.data.Data;
+import a2.mobile.mobileapp.enums.Scenes;
 
 public class RouteDetailsHandler {
     /**
@@ -28,7 +29,7 @@ public class RouteDetailsHandler {
      * @param view    The view
      */
     public static void handleRouteSelection(Context context, View view) {
-        ((Activity)context).runOnUiThread(() -> {
+        ((Activity) context).runOnUiThread(() -> {
             fillRouteDetailPlaceholders(view);
             onRouteOptionButtonsClick(view);
 
@@ -90,7 +91,6 @@ public class RouteDetailsHandler {
         RecyclerView routeDetailsHolder = rootView.findViewById(R.id.route_details_cards);
         RouteDetailsAdapter routeDetailsAdapter = new RouteDetailsAdapter(
                 context,
-                rootView,
                 routeDetailsCards
         );
 
@@ -105,13 +105,13 @@ public class RouteDetailsHandler {
 
     private static void onRouteOptionButtonsClick(View view) {
         CardView navigateButton = view.findViewById(R.id.button_navigate);
-        navigateButton.setOnClickListener(v -> {
-            MainActivity.sceneManager.switchScene(R.layout.scene_navigation);
-        });
+        navigateButton.setOnClickListener(v ->
+                MainActivity.sceneManager.switchScene(Scenes.navigation)
+        );
 
         CardView viewRoutesButton = view.findViewById(R.id.button_view_routes);
-        viewRoutesButton.setOnClickListener(v -> {
-            MainActivity.sceneManager.switchScene(R.layout.scene_points_of_interest);
-        });
+        viewRoutesButton.setOnClickListener(v ->
+                MainActivity.sceneManager.switchScene(Scenes.pointsOfInterest)
+        );
     }
 }

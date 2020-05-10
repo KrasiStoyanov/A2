@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.CancellationSignal;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
-import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
@@ -30,43 +29,45 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
+import timber.log.Timber;
+
 @TargetApi(Build.VERSION_CODES.M)
 public class FingerprintHandler extends FingerprintManager.AuthenticationCallback {
-    private final String TAG = "Fingerprint Handler";
     private final String KEY_NAME = "Android Key";
 
     private Context context;
     private Intent activityToStart;
 
-    private FingerprintManager fingerprintManager;
-    private KeyguardManager keyguardManager;
-
     private KeyStore keyStore;
     private Cipher cipher;
 
     public FingerprintHandler(Context context, Intent activityToStart) {
+        super();
+
         this.context = context;
         this.activityToStart = activityToStart;
     }
 
     public void onFingerprintOptionClick() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            fingerprintManager = (FingerprintManager) context.getSystemService(Context.FINGERPRINT_SERVICE);
-            keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+        FingerprintManager fingerprintManager = (FingerprintManager) context.getSystemService(Context.FINGERPRINT_SERVICE);
+        KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
 
-            if (!fingerprintManager.isHardwareDetected()) {
-                Log.e(TAG, "Fingerprint Scanner not detected in Device");
-            } else if (ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.USE_FINGERPRINT
-            ) != PackageManager.PERMISSION_GRANTED) {
-                Log.e(TAG, "Permission not granted to use Fingerprint Scanner");
-            } else if (!keyguardManager.isKeyguardSecure()) {
-                Log.e(TAG, "Add Lock to your Phone in Settings");
+        assert fingerprintManager != null;
+        if (!fingerprintManager.isHardwareDetected()) {
+            Timber.e("Fingerprint Scanner not detected in Device");
+        } else if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.USE_FINGERPRINT
+        ) != PackageManager.PERMISSION_GRANTED) {
+            Timber.e("Permission not granted to use Fingerprint Scanner");
+        } else {
+            assert keyguardManager != null;
+            if (!keyguardManager.isKeyguardSecure()) {
+                Timber.e("Add Lock to your Phone in Settings");
             } else if (!fingerprintManager.hasEnrolledFingerprints()) {
-                Log.e(TAG, "You should add at least 1 Fingerprint to use this Feature");
+                Timber.e("You should add at least 1 Fingerprint to use this Feature");
             } else {
-                Log.e(TAG, "Place your Finger on Scanner to Access the App.");
+                Timber.e("Place your Finger on Scanner to Access the App.");
 
                 generateKey();
 
@@ -166,7 +167,7 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
     }
 
     private void update(String status, boolean didAuthenticate) {
-        Log.e(TAG, status);
+        Timber.e(status);
         if (didAuthenticate) {
             context.startActivity(activityToStart);
         }

@@ -15,23 +15,12 @@ import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.common.login.RouteDetailsCard;
 
 public class RouteDetailsAdapter extends RecyclerView.Adapter<RouteDetailsAdapter.ViewHolder> {
-    private final String TAG = "Route Details Adapter";
-
-    private final Context context;
-    private final View rootView;
     private final List<RouteDetailsCard> routeDetailsCards;
 
     private LayoutInflater inflater;
 
-    public RouteDetailsAdapter(
-            Context context,
-            View rootView,
-            List<RouteDetailsCard> routeDetailsCards) {
-
-        this.context = context;
-        this.rootView = rootView;
+    public RouteDetailsAdapter(Context context, List<RouteDetailsCard> routeDetailsCards) {
         this.routeDetailsCards = routeDetailsCards;
-
         this.inflater = LayoutInflater.from(context);
     }
 

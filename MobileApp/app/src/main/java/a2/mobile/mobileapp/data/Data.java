@@ -1,5 +1,6 @@
 package a2.mobile.mobileapp.data;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
 
@@ -19,13 +20,14 @@ import jxl.Workbook;
 import jxl.WorkbookSettings;
 
 public class Data {
+    @SuppressLint("StaticFieldLeak")
     public static Context context = null;
 
     public static Point startPoint = null;
     public static List<PointOfInterest> pointsOfInterest = new ArrayList<>();
     public static List<Route> routes = new ArrayList<>();
 
-    public static File fetchedFile = null;
+    private static File fetchedFile = null;
     public static Route selectedRoute = null;
 
     /**
@@ -64,7 +66,7 @@ public class Data {
      *
      * @param file The file from which the data will be extracted
      */
-    public static void storeData(File file) {
+    static void storeData(File file) {
         if (fetchedFile != null) return;
 
         WorkbookSettings workbookSettings = new WorkbookSettings();
