@@ -21,8 +21,8 @@
             android:gravity="top"
             android:orientation="horizontal">
 
-            <com.mapbox.mapboxsdk.maps.MapView
-                android:id="@+id/mapbox"
+            <com.mapbox.services.android.navigation.ui.v5.NavigationView
+                android:id="@+id/navigation"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 mapbox:mapbox_cameraZoom="15" />

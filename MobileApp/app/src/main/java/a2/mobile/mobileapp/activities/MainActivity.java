@@ -3,7 +3,9 @@ package a2.mobile.mobileapp.activities;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -98,9 +100,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             transaction.replace(R.id.content_holder, sceneManager);
 //            transaction.replace(R.id.map_scene_holder, mapManager);
             transaction.commit();
+        } else {
+//            savedInstanceState.get();
         }
 
 //        NavigationUtils.storeContentHolderView(findViewById(R.id.content_holder));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
     }
 
     /**

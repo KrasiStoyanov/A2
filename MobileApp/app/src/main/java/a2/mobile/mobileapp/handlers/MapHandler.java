@@ -1,5 +1,6 @@
 package a2.mobile.mobileapp.handlers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -230,42 +231,45 @@ public class MapHandler {
                 route.endPoint.coordinates.get(1)
         );
 
-        // Add the start and end markers to the map.
-        MapUtils.addRouteMarker(generateRouteMarker(
-                route.startPoint,
-                startPoint.getLongitude(),
-                startPoint.getLatitude()
-        ));
+        ((Activity)context).runOnUiThread(() -> {
 
-        MapUtils.addRouteMarker(generateRouteMarker(
-                route.endPoint,
-                endPoint.getLongitude(),
-                endPoint.getLatitude()
-        ));
+            // Add the start and end markers to the map.
+            MapUtils.addRouteMarker(generateRouteMarker(
+                    route.startPoint,
+                    startPoint.getLongitude(),
+                    startPoint.getLatitude()
+            ));
 
-        // Render the markers and route layers on the map.
-        MapUtils.updateRoute(
-                context,
-                com.mapbox.geojson.Point.fromLngLat(
-                        startPoint.getLongitude(),
-                        startPoint.getLatitude()
-                ),
-                com.mapbox.geojson.Point.fromLngLat(
-                        endPoint.getLongitude(),
-                        endPoint.getLatitude()
-                )
-        );
+            MapUtils.addRouteMarker(generateRouteMarker(
+                    route.endPoint,
+                    endPoint.getLongitude(),
+                    endPoint.getLatitude()
+            ));
 
-        // Position the camera in the bounds of the route.
-        LatLngBounds latLngBounds = new LatLngBounds.Builder()
-                .include(startPoint)
-                .include(endPoint)
-                .build();
+            // Render the markers and route layers on the map.
+            MapUtils.updateRoute(
+                    context,
+                    com.mapbox.geojson.Point.fromLngLat(
+                            startPoint.getLongitude(),
+                            startPoint.getLatitude()
+                    ),
+                    com.mapbox.geojson.Point.fromLngLat(
+                            endPoint.getLongitude(),
+                            endPoint.getLatitude()
+                    )
+            );
 
-        MapUtils.map.easeCamera(CameraUpdateFactory.newLatLngBounds(
-                latLngBounds,
-                MapConstants.MAP_FOCUS_PADDING
-        ));
+            // Position the camera in the bounds of the route.
+            LatLngBounds latLngBounds = new LatLngBounds.Builder()
+                    .include(startPoint)
+                    .include(endPoint)
+                    .build();
+
+            MapUtils.map.easeCamera(CameraUpdateFactory.newLatLngBounds(
+                    latLngBounds,
+                    MapConstants.MAP_FOCUS_PADDING
+            ));
+        });
     }
 
     /**

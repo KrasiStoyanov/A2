@@ -2,6 +2,7 @@ package a2.mobile.mobileapp.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
@@ -67,11 +68,15 @@ import com.mapbox.services.android.navigation.v5.routeprogress.RouteLegProgress;
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress;
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteStepProgress;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.constants.MapConstants;
+import a2.mobile.mobileapp.constants.SceneConstants;
+import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.handlers.RouteDetailsHandler;
 import a2.mobile.mobileapp.utils.MapUtils;
 import retrofit2.Call;
@@ -95,6 +100,7 @@ public class TestMapActivity extends AppCompatActivity {
     private MapboxMap map;
     private MapView mapView;
     private NavigationView navigationView;
+    private DirectionsRoute directionsRoute;
     private PermissionsManager permissionsManager;
 
     private SymbolManager symbolManager;
@@ -122,15 +128,79 @@ public class TestMapActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_test_map);
 
-        NavigationLauncherOptions options = NavigationLauncherOptions.builder()
-                .directionsRoute(MapUtils.navigationRoute)
-                .shouldSimulateRoute(true)
-                .build();
+        navigationView = findViewById(R.id.navigation);
+        navigationView.onCreate(savedInstanceState);
+        navigationView.initialize(isRunning -> {
+            Point origin = Point.fromLngLat(
+                    Data.selectedRoute.startPoint.coordinates.get(1),
+                    Data.selectedRoute.startPoint.coordinates.get(0)
+            );
+            Point destination = Point.fromLngLat(
+                    Data.selectedRoute.endPoint.coordinates.get(1),
+                    Data.selectedRoute.endPoint.coordinates.get(0)
+            );
+            fetchRoute(origin, destination);
+        });
+    }
 
-        runOnUiThread(() -> NavigationLauncher.startNavigation(
-                TestMapActivity.this,
-                options
-        ));
+    private void fetchRoute(Point origin, Point destination) {
+        assert Mapbox.getAccessToken() != null;
+        NavigationRoute.builder(this)
+                .accessToken(Mapbox.getAccessToken())
+                .origin(origin)
+                .destination(destination)
+                .build()
+                .getRoute(new Callback<DirectionsResponse>() {
+                    @Override
+                    public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
+                        directionsRoute = response.body().routes().get(0);
+                        startNavigation();
+                    }
+
+                    @Override
+                    public void onFailure(Call<DirectionsResponse> call, Throwable t) {
+
+                    }
+                });
+    }
+
+    private void startNavigation() {
+        if (directionsRoute == null) {
+            return;
+        }
+        NavigationViewOptions options = NavigationViewOptions.builder()
+                .directionsRoute(directionsRoute)
+                .shouldSimulateRoute(true)
+                .navigationListener(new NavigationListener() {
+                    @Override
+                    public void onCancelNavigation() {
+
+                    }
+
+                    @Override
+                    public void onNavigationFinished() {
+
+                    }
+
+                    @Override
+                    public void onNavigationRunning() {
+
+                    }
+                })
+                .progressChangeListener((location, routeProgress) -> {
+
+                })
+                .build();
+        navigationView.startNavigation(options);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(SceneConstants.CURRENT_SCENE_SAVED_INSTANCES, R.layout.scene_route_deails);
+        setResult(RESULT_OK, intent);
+
+        finish();
     }
 
 

@@ -110,6 +110,6 @@ public class NavigationHandler {
     }
 
     private static void setUpViewAfterNavigationExit() {
-        directionCardView.setVisibility(View.GONE);
+//        directionCardView.setVisibility(View.GONE);
     }
 }
