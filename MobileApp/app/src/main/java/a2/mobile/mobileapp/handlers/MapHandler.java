@@ -25,7 +25,6 @@ import a2.mobile.mobileapp.constants.MapConstants;
 import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.data.classes.Point;
 import a2.mobile.mobileapp.data.classes.Route;
-import a2.mobile.mobileapp.fragments.MainActivityFragment;
 import a2.mobile.mobileapp.utils.MapUtils;
 import timber.log.Timber;
 
@@ -221,7 +220,8 @@ public class MapHandler {
                     com.mapbox.geojson.Point.fromLngLat(
                             endPoint.getLongitude(),
                             endPoint.getLatitude()
-                    )
+                    ),
+                    Data.selectedRoute.pointsOfInterest
             );
 
             // Position the camera in the bounds of the route.

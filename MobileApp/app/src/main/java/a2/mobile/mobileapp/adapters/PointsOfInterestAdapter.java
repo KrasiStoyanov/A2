@@ -15,6 +15,7 @@ import java.util.List;
 
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.data.classes.PointOfInterest;
+import a2.mobile.mobileapp.utils.MapUtils;
 
 public class PointsOfInterestAdapter
         extends RecyclerView.Adapter<PointsOfInterestAdapter.ViewHolder> {
@@ -44,6 +45,7 @@ public class PointsOfInterestAdapter
         holder.visibilitySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 // TODO: Show marker.
+//                MapUtils.toggleInterestPointVisibility();
             } else {
                 // TODO: Hide marker.
             }

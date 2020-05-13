@@ -3,6 +3,8 @@ package a2.mobile.mobileapp.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -20,6 +22,7 @@ import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute;
 
 import java.util.ArrayList;
@@ -31,12 +34,16 @@ import java.util.concurrent.RunnableFuture;
 
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.constants.MapConstants;
+import a2.mobile.mobileapp.data.Data;
+import a2.mobile.mobileapp.data.classes.PointOfInterest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
 import static com.mapbox.core.constants.Constants.PRECISION_6;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.eq;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
@@ -92,8 +99,19 @@ public class MapUtils {
      * @param context The MainActivity context
      */
     public static void setMapStyle(Context context) {
+        String jsonObject = FileUtils.loadJSONFromAsset(
+                context,
+                "groningen.json"
+        );
+
+        String pointsOfInterest = FileUtils.loadJSONFromAsset(
+                context,
+                MapConstants.MAP_POINTS_OF_INTEREST_GEOJSON_FILENAME
+        );
+
+        assert jsonObject != null && pointsOfInterest != null;
         mapStyle = new Style.Builder()
-                .fromUri(Style.MAPBOX_STREETS)
+                .fromJson(jsonObject)
                 .withImage(MapConstants.MAP_MARKER_ID, BitmapFactory.decodeResource(
                         context.getResources(), R.drawable.red_marker
                 ));
@@ -103,6 +121,16 @@ public class MapUtils {
 
             uiSettings.setCompassEnabled(true);
             uiSettings.setAllGesturesEnabled(true);
+
+            GeoJsonSource pointsOfInterestSource = new GeoJsonSource(
+                    MapConstants.MAP_POINTS_OF_INTEREST_LAYER_SOURCE_ID
+            );
+
+            pointsOfInterestSource.setGeoJson(pointsOfInterest);
+            style.addSource(pointsOfInterestSource);
+
+            Source source = style.getSource(MapConstants.MAP_POINTS_OF_INTEREST_LAYER_SOURCE_ID);
+            Log.e("ASDSADSAD", "ASDASDASD " + source);
         });
     }
 
@@ -168,21 +196,39 @@ public class MapUtils {
     /**
      * Render the route markers list in a newly created route symbol layer.
      */
-    public static void updateRoute(Context context, Point origin, Point destination) {
+    public static void updateRoute(
+            Context context,
+            Point origin,
+            Point destination,
+            List<PointOfInterest> interestPoints) {
+
         // Clear all route markers on the map first if there are any.
         MapUtils.clearRouteMarkers(context);
 
         map.getStyle(style -> {
+            List<Feature> points = new ArrayList<>();
+            points.add(Feature.fromGeometry(origin));
+            for (a2.mobile.mobileapp.data.classes.Point interestPoint : interestPoints) {
+                List<Double> coordinates = interestPoint.coordinates;
+                Point point = Point.fromLngLat(coordinates.get(1), coordinates.get(0));
+                Feature feature = Feature.fromGeometry(point);
 
+                points.add(feature);
+            }
+
+            points.add(Feature.fromGeometry(destination));
             mapMarkerSource = new GeoJsonSource(
                     MapConstants.MAP_ROUTE_MARKER_LAYER_SOURCE_ID,
-                    FeatureCollection.fromFeatures(new Feature[]{
-                            Feature.fromGeometry(origin),
-                            Feature.fromGeometry(destination)
-                    })
+                    FeatureCollection.fromFeatures(points)
             );
 
             mapRouteSource = new GeoJsonSource(MapConstants.MAP_ROUTE_LAYER_SOURCE_ID);
+            SymbolLayer pointsOfInterestLayer = (SymbolLayer) style.getLayer(
+                    "points of interest"
+            );
+
+            assert pointsOfInterestLayer != null;
+            pointsOfInterestLayer.setFilter(eq(get("zone"), Data.selectedRoute.zone));
 
             style.addSource(mapRouteSource);
             style.addSource(mapMarkerSource);
@@ -191,6 +237,21 @@ public class MapUtils {
             style.addLayer(setRouteMarkerLayer());
 
             renderRouteLayer(context, origin, destination);
+        });
+    }
+
+    public static void toggleInterestPointVisibility(Context context) {
+        map.getStyle(style -> {
+            GeoJsonSource markerSource = style
+                    .getSourceAs(MapConstants.MAP_ROUTE_MARKER_LAYER_SOURCE_ID);
+
+
+            Toast.makeText(context, "ASDASDASD" + markerSource, Toast.LENGTH_LONG).show();
+            if (markerSource != null) {
+                List<Feature> features = markerSource.querySourceFeatures(
+                        get("marker")
+                );
+            }
         });
     }
 
@@ -205,6 +266,7 @@ public class MapUtils {
         NavigationRoute.builder(context)
                 .accessToken(context.getString(R.string.mapbox_access_token))
                 .origin(origin)
+                .addWaypoint(Point.fromLngLat(6.534384, 53.24047))
                 .destination(destination)
                 .alternatives(false)
                 .build()
@@ -250,5 +312,72 @@ public class MapUtils {
 
                     }
                 });
+//        List<Point> points = new ArrayList<>();
+//        points.add(origin);
+//        points.add(destination);
+//
+//        MapboxMapMatching.builder()
+//                .accessToken(context.getString(R.string.mapbox_access_token))
+//                .coordinates(points)
+//                .steps(true)
+//                .voiceInstructions(true)
+//                .bannerInstructions(true)
+//                .profile(DirectionsCriteria.PROFILE_WALKING)
+//                .build()
+//                .enqueueCall(new Callback<MapMatchingResponse>() {
+//
+//                    @Override
+//                    public void onResponse(
+//                            @NonNull Call<MapMatchingResponse> call,
+//                            @NonNull Response<MapMatchingResponse> response) {
+//
+//                        if (response.isSuccessful()) {
+//
+//                            // You can get the generic HTTP info about the response
+//                            Timber.e("Response code: %s", response.code());
+//                            if (response.body() == null) {
+//                                Timber.e("No routes found! Make sure you set the right user and access token.");
+//                                return;
+//                            } else if (response.body().matchings() == null) {
+//                                Timber.e("No routes found! Make sure you have provided a list of points.");
+//                                return;
+//                            } else if (response.body().matchings().size() == 0) {
+//                                Timber.e("No routes found! Make sure all the points in the list can be used to generate a route.");
+//                                return;
+//                            }
+//
+//                            // Get the directions route
+//                            DirectionsRoute currentRoute = response
+//                                    .body().matchings().get(0).toDirectionRoute();
+//
+//                            map.getStyle(style -> {
+//                                // Retrieve and update the source designated for showing the directions route
+//                                GeoJsonSource source = style.getSourceAs(MapConstants.MAP_ROUTE_LAYER_SOURCE_ID);
+//
+//                                // Create a LineString with the directions route's geometry and
+//                                // reset the GeoJSON source for the route LineLayer source
+//                                if (source != null) {
+//                                    source.setGeoJson(LineString.fromPolyline(
+//                                            Objects.requireNonNull(currentRoute.geometry()),
+//                                            PRECISION_6
+//                                    ));
+//
+//                                    navigationRoute = currentRoute;
+//                                }
+//                            });
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(
+//                            @NonNull Call<MapMatchingResponse> call,
+//                            @NonNull Throwable throwable) {
+//
+//                    }
+//                });
+    }
+
+    public static void toggleInterestPointVisibility(Point point, boolean visible) {
+
     }
 }

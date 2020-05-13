@@ -28,6 +28,7 @@ import com.mapbox.mapboxsdk.offline.OfflineManager;
 
 import java.util.List;
 
+import a2.mobile.mobileapp.BuildConfig;
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.constants.SceneConstants;
 import a2.mobile.mobileapp.data.Data;
@@ -35,6 +36,7 @@ import a2.mobile.mobileapp.data.classes.location.LocationViewModel;
 import a2.mobile.mobileapp.fragments.MainActivityFragment;
 import a2.mobile.mobileapp.handlers.MapHandler;
 import a2.mobile.mobileapp.utils.MapUtils;
+import timber.log.Timber;
 
 
 public class MainActivity extends AppCompatActivity
@@ -56,6 +58,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
 
         // Mapbox access token is configured here. This needs to be called either in your application
         // object or in the same activity which contains the mapview.

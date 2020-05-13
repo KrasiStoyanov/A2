@@ -1,0 +1,20 @@
+{
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Bernoulliborg",
+        "description": "A great place to get a snack or a cup of coffee."
+      },
+      "geometry": {
+        "coordinates": [
+          6.536597,
+          53.240197
+        ],
+        "type": "Point"
+      },
+      "id": "28efeb5e308989560b577a1669eae30a"
+    }
+  ],
+  "type": "FeatureCollection"
+}

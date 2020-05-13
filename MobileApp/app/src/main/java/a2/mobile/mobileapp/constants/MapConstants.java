@@ -28,6 +28,10 @@ public class MapConstants {
     public static final String MAP_ROUTE_MARKER_LAYER_SOURCE_ID = "Route Marker Layer Source ID";
     public static final String MAP_MARKER_ID = "Marker Icon";
 
+    public static final String MAP_POINTS_OF_INTEREST_LAYER_ID = "points of interest";
+    public static final String MAP_POINTS_OF_INTEREST_LAYER_SOURCE_ID = "Points_Of_Interest";
+    public static final String MAP_POINTS_OF_INTEREST_GEOJSON_FILENAME = "points-of-interest.geojson";
+
     // Google Maps settings
     public static final LatLng DEFAULT_LOCATION = new LatLng(51.842175, 5.859508);
     public static final int MAP_FOCUS_PADDING = 20; // Offset from the edges of the map in pixels.
