@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/log_in"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/logo_holder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="top"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/overlay"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:contentDescription="Log In Overlay"
+            android:src="@drawable/overlay" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="131dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:contentDescription="Robocop logo"
+                android:src="@drawable/logo" />
+            <ImageView
+                android:id="@+id/rounded"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:src="@drawable/radius_large"
+                android:gravity="bottom"
+                android:contentDescription="Top rounded part of content holder" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/content_holder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="top|center_horizontal"
+        android:orientation="vertical"
+        android:paddingLeft="30sp"
+        android:paddingRight="30sp"
+        android:paddingBottom="30sp">
+
+        <TextView
+            android:id="@+id/title_Connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/raleway_extrabold"
+            android:text="@string/welcome_title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/title"
+            android:textSize="@dimen/h1" />
+
+        <TextView
+            android:id="@+id/displaylist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10sp"
+            android:fontFamily="@font/sen_regular"
+            android:text="@string/devicebutton"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/body"
+            android:textSize="@dimen/body_font_size" />
+
+        <LinearLayout
+            android:layout_width="170dp"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/background_button_device"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                app:cardBackgroundColor="@color/button_primary__background"
+                app:cardCornerRadius="6dp"
+                app:contentPadding="13dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <Button
+                        android:id="@+id/button_todevicelist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@color/button_primary__background"
+                        android:fontFamily="@font/sen_bold"
+                        android:text="@string/Button_Display_devicelist"
+                        android:textColor="@color/button_primary__text"
+                        android:textSize="@dimen/button_font_size">
+
+                    </Button>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

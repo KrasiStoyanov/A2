@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/devicelist"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/logo_holder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="top"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/overlay"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:contentDescription="Log In Overlay"
+            android:src="@drawable/overlay" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="131dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:contentDescription="Robocop logo"
+                android:src="@drawable/logo" />
+            <ImageView
+                android:id="@+id/rounded"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:src="@drawable/radius_large"
+                android:gravity="bottom"
+                android:contentDescription="Top rounded part of content holder" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/content_holder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="top|center_horizontal"
+        android:orientation="vertical"
+        android:paddingLeft="30sp"
+        android:paddingRight="30sp"
+        android:paddingBottom="30sp">
+
+        <TextView
+            android:id="@+id/title_Connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/raleway_extrabold"
+            android:text="@string/Devicelist"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/title"
+            android:textSize="@dimen/h1" />
+
+        <LinearLayout
+            android:layout_width="213dp"
+            android:layout_height="136dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/devicename"
+                android:layout_width="147dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/raleway_extrabold"
+                android:textColor="@color/title"
+                android:text="My phone"
+                android:textSize="@dimen/h3"
+                />
+
+            <ImageButton
+                android:id="@+id/button_toPush_messages"
+                android:layout_width="61dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/baseline_arrow_right_alt_black_18dp">
+
+            </ImageButton>
+        </LinearLayout>
+
+
+
+
+
+
+
+
+
+    </LinearLayout>
+</LinearLayout>

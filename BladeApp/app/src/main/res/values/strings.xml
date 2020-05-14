@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">BladeApp</string>
+    <string name="welcome_title">Connect to device</string>
+    <string name="devicebutton">Tap the button to display devicelist</string>
+    <string name="Button_Display_devicelist">Display device list</string>
+    <string name="Devicelist">Tap to Connect</string>
+    <string name="Push_Messages">Push Messages</string>
+    <string name="Accept_push_message"> &#x20; &#x20; &#x20; &#x20; &#x20; &#x20;You need to accept\n
+                                        push messages to use the app\n
+                                         &#x20;&#x20;&#x20;&#x20;&#x20; &#x20; &#x20;  &#x20; &#x20; &#x20; &#x20;Accept it?
+    </string>
+
+    <string name="Accept_Button">Accept</string>
+    <string name="Decline_Button">Decline</string>
+    <string name="not_available">Connectivity is not available!</string>
+    <string name="DeviceName">%1$s</string>
+
+</resources>
