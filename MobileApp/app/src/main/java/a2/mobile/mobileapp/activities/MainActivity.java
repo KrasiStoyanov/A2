@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity
         progressBar = findViewById(R.id.progress_bar);
 
         Data.context = this;
-        Data.getDataFile("points_of_interest.xls");
 
         mapView = findViewById(R.id.mapbox);
         mapView.getMapAsync(this);

@@ -25,6 +25,10 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -44,6 +48,7 @@ import timber.log.Timber;
 import static com.mapbox.core.constants.Constants.PRECISION_6;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.eq;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.neq;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
@@ -61,6 +66,8 @@ public class MapUtils {
 
     private static GeoJsonSource mapMarkerSource;
     private static GeoJsonSource mapRouteSource;
+
+    private static JSONObject pointsOfInterestJSONObject;
 
     private static List<Feature> routeMarkers = new ArrayList<>();
     private static final Runnable clearRouteMarkersRunnable = () -> {
@@ -116,6 +123,12 @@ public class MapUtils {
                         context.getResources(), R.drawable.red_marker
                 ));
 
+        try {
+            pointsOfInterestJSONObject = new JSONObject(pointsOfInterest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         map.setStyle(mapStyle, style -> {
             UiSettings uiSettings = map.getUiSettings();
 
@@ -129,8 +142,9 @@ public class MapUtils {
             pointsOfInterestSource.setGeoJson(pointsOfInterest);
             style.addSource(pointsOfInterestSource);
 
-            Source source = style.getSource(MapConstants.MAP_POINTS_OF_INTEREST_LAYER_SOURCE_ID);
-            Log.e("ASDSADSAD", "ASDASDASD " + source);
+            // Get the data and store it locally.
+            Data.storePointsOfInterestDataSet(pointsOfInterest);
+            Data.getDataFile("points_of_interest.xls");
         });
     }
 
@@ -377,7 +391,49 @@ public class MapUtils {
 //                });
     }
 
-    public static void toggleInterestPointVisibility(Point point, boolean visible) {
+    public static void toggleInterestPointVisibility(
+            a2.mobile.mobileapp.data.classes.Point point,
+            boolean visible) {
 
+        map.getStyle(style -> {
+            SymbolLayer pointsOfInterestLayer = (SymbolLayer) style.getLayer(
+                    MapConstants.MAP_POINTS_OF_INTEREST_LAYER_ID
+            );
+
+            assert pointsOfInterestLayer != null;
+            GeoJsonSource pointsOfInterestSource = new GeoJsonSource(
+                    MapConstants.MAP_POINTS_OF_INTEREST_LAYER_SOURCE_ID
+            );
+
+            try {
+                JSONArray features = pointsOfInterestJSONObject.getJSONArray("features");
+                for (int index = 0; index < features.length(); index += 1) {
+                    JSONObject pointOfInterest = features.getJSONObject(index);
+                    int zone = pointOfInterest.getJSONObject("properties").getInt("zone");
+                    if (zone != Data.selectedRoute.zone) {
+                        features.remove(index);
+                    }
+                }
+
+                Log.e("Features", "Check");
+
+//                pointsOfInterestSource.setGeoJson(pointsOfInterest);
+//                style.addSource(pointsOfInterestSource);
+//
+//                pointsOfInterestLayer.withFilter(neq(get("title"), point.title));
+                // TODO: Create an appropriate filter when toggling the visibility.
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public static List<PointOfInterest> getPointsOfInterestByZone(int zone) {
+        List<PointOfInterest> pointsOfInterest = new ArrayList<>();
+        map.getStyle(style -> {
+
+        });
+
+        return pointsOfInterest;
     }
 }

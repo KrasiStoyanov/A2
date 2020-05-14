@@ -238,13 +238,13 @@
             }
         }
     },
-    "center": [6.535853, 53.240494],
+    "center": [6.535104, 53.240384],
     "zoom": 16.3,
     "bearing": 0,
     "pitch": 0,
     "sources": {
         "composite": {
-            "url": "mapbox://mapbox.mapbox-streets-v8,krasi-stoyanov.cka2a0qyq0gm32lpay7cjre9u-41xbj,mapbox.mapbox-terrain-v2",
+            "url": "mapbox://mapbox.mapbox-streets-v8,mapbox.mapbox-terrain-v2,krasi-stoyanov.cka2a0qyq0gm32lpay7cjre9u-41xbj",
             "type": "vector"
         }
     },
@@ -6296,7 +6296,6 @@
             "source": "composite",
             "source-layer": "Points_Of_Interest",
             "minzoom": 10,
-            "filter": ["match", ["id"], [1], true, false],
             "layout": {
                 "icon-image": "marker",
                 "icon-offset": [0, -20],
@@ -6309,7 +6308,7 @@
     ],
     "created": "2020-05-11T09:18:29.133Z",
     "id": "cka29xbs806le1ilnedoef18n",
-    "modified": "2020-05-12T11:48:08.287Z",
+    "modified": "2020-05-13T10:18:03.078Z",
     "owner": "krasi-stoyanov",
     "visibility": "private",
     "draft": false

@@ -3,6 +3,11 @@ package a2.mobile.mobileapp.data;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.InputStream;
@@ -14,6 +19,7 @@ import a2.mobile.mobileapp.data.classes.PointOfInterest;
 import a2.mobile.mobileapp.data.classes.Route;
 import a2.mobile.mobileapp.utils.DataUtils;
 import a2.mobile.mobileapp.utils.FileUtils;
+import a2.mobile.mobileapp.utils.MapUtils;
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -146,16 +152,9 @@ public class Data {
             route.zone = Integer.parseInt(row[5].getContents());
 
             route.pointsOfInterest = new ArrayList<>();
-
-            Sheet pointsOfInterestSheet = workbook.getSheet(1);
-            for (int jndnex = 0; jndnex < pointsOfInterestSheet.getRows(); jndnex += 1) {
-                Cell[] currentRow = pointsOfInterestSheet.getRow(jndnex);
-                PointOfInterest pointOfInterest = Data.generatePointOfInterest(currentRow);
-
-                for (int zone : pointOfInterest.getLocationZones()) {
-                    if (zone == route.zone) {
-                        route.pointsOfInterest.add(pointOfInterest);
-                    }
+            for (PointOfInterest pointOfInterest : pointsOfInterest) {
+                if (pointOfInterest.getLocationZones().indexOf(route.zone) > -1) {
+                    route.pointsOfInterest.add(pointOfInterest);
                 }
             }
 
@@ -171,5 +170,39 @@ public class Data {
                 DataUtils.stringToCoordinates(coordinates),
                 title
         );
+    }
+
+    public static void storePointsOfInterestDataSet(String dataSetJSONString) {
+        try {
+            JSONObject dataSetJSON = new JSONObject(dataSetJSONString);
+            JSONArray featuresArray = dataSetJSON.getJSONArray("features");
+
+            for (int index = 0; index < featuresArray.length(); index += 1) {
+                JSONObject feature = featuresArray.getJSONObject(index);
+                JSONObject properties = feature.getJSONObject("properties");
+                JSONArray coordinates = feature.getJSONObject("geometry")
+                        .getJSONArray("coordinates");
+
+                String title = properties.getString("title");
+                String interest = properties.getString("interest");
+
+                List<Integer> locationZones = new ArrayList<>();
+                locationZones.add(properties.getInt("zone"));
+
+                List<Double> coordinatesList = new ArrayList<>();
+                coordinatesList.add(coordinates.getDouble(0));
+                coordinatesList.add(coordinates.getDouble(1));
+
+                pointsOfInterest.add(new PointOfInterest(
+                        coordinatesList,
+                        locationZones,
+                        title,
+                        interest,
+                        ""
+                ));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
