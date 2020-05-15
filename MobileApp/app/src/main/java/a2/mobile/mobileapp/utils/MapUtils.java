@@ -18,6 +18,7 @@ import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.maps.UiSettings;
+import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
@@ -30,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -68,6 +70,7 @@ public class MapUtils {
     private static GeoJsonSource mapRouteSource;
 
     private static JSONObject pointsOfInterestJSONObject;
+    private static List<JSONObject> hiddenPointsOfInterestForCurrentRoute = new ArrayList<>();
 
     private static List<Feature> routeMarkers = new ArrayList<>();
     private static final Runnable clearRouteMarkersRunnable = () -> {
@@ -400,32 +403,72 @@ public class MapUtils {
                     MapConstants.MAP_POINTS_OF_INTEREST_LAYER_ID
             );
 
-            assert pointsOfInterestLayer != null;
-            GeoJsonSource pointsOfInterestSource = new GeoJsonSource(
-                    MapConstants.MAP_POINTS_OF_INTEREST_LAYER_SOURCE_ID
-            );
-
             try {
                 JSONArray features = pointsOfInterestJSONObject.getJSONArray("features");
+                List<JSONObject> visiblePointsOfInterest = new ArrayList<>();
+
                 for (int index = 0; index < features.length(); index += 1) {
                     JSONObject pointOfInterest = features.getJSONObject(index);
+                    boolean pointOfInterestVisible = true;
+
                     int zone = pointOfInterest.getJSONObject("properties").getInt("zone");
-                    if (zone != Data.selectedRoute.zone) {
-                        features.remove(index);
+                    String title = pointOfInterest.getJSONObject("properties")
+                            .getString("title");
+
+                    if (zone == Data.selectedRoute.zone) {
+
+                        Log.e("Features", "Zone " + zone + "; Title " + title);
+                        int indexOfPointOfInterest = hiddenPointsOfInterestForCurrentRoute
+                                .indexOf(pointOfInterest);
+
+                        if (indexOfPointOfInterest > -1) {
+                            pointOfInterestVisible = false;
+                        }
+
+                        if (title.equals(point.title)) {
+                            pointOfInterestVisible = visible;
+                        }
+
+                        if (pointOfInterestVisible) {
+                            visiblePointsOfInterest.add(pointOfInterest);
+
+                            if (indexOfPointOfInterest > -1) {
+                                hiddenPointsOfInterestForCurrentRoute.remove(pointOfInterest);
+                            }
+                        } else {
+                            if (indexOfPointOfInterest == -1) {
+                                hiddenPointsOfInterestForCurrentRoute.add(pointOfInterest);
+                            }
+                        }
                     }
                 }
 
-                Log.e("Features", "Check");
+                JSONObject object = new JSONObject();
+                object.put("features", new JSONArray(visiblePointsOfInterest));
+                object.put("type", "FeatureCollection");
 
-//                pointsOfInterestSource.setGeoJson(pointsOfInterest);
-//                style.addSource(pointsOfInterestSource);
-//
 //                pointsOfInterestLayer.withFilter(neq(get("title"), point.title));
                 // TODO: Create an appropriate filter when toggling the visibility.
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         });
+    }
+
+    private static JSONObject removeJSONObjectFromJSONArray(JSONArray jsonArray, JSONObject jsonObject) {
+        for (int index = 0; index < jsonArray.length(); index += 1) {
+            try {
+                JSONObject currentJSONObject = jsonArray.getJSONObject(index);
+                if (currentJSONObject.equals(jsonObject)) {
+                    jsonArray.remove(index);
+                    return currentJSONObject;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
     }
 
     public static List<PointOfInterest> getPointsOfInterestByZone(int zone) {
