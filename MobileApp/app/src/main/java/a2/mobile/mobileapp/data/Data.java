@@ -3,7 +3,6 @@ package a2.mobile.mobileapp.data;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +18,6 @@ import a2.mobile.mobileapp.data.classes.PointOfInterest;
 import a2.mobile.mobileapp.data.classes.Route;
 import a2.mobile.mobileapp.utils.DataUtils;
 import a2.mobile.mobileapp.utils.FileUtils;
-import a2.mobile.mobileapp.utils.MapUtils;
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;

@@ -2,6 +2,7 @@ package a2.mobile.mobileapp.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Scene;
 import android.transition.TransitionManager;
@@ -12,6 +13,8 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import a2.mobile.mobileapp.R;
+import a2.mobile.mobileapp.activities.TestMapActivity;
+import a2.mobile.mobileapp.constants.SceneConstants;
 import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.enums.Scenes;
 import a2.mobile.mobileapp.handlers.MapHandler;
@@ -95,8 +98,9 @@ public class MainActivityFragment extends Fragment {
 
                 break;
             case navigation:
-                ((Activity) context).runOnUiThread(() ->
-                        NavigationHandler.startNavigation((Activity) context)
+                ((Activity)context).startActivityForResult(
+                        new Intent(context, TestMapActivity.class),
+                        SceneConstants.REQUEST_CODE_SAVED_INSTANCES
                 );
 
                 id = Scenes.routeDetails;

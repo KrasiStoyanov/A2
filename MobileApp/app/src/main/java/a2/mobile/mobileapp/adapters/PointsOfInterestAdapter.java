@@ -11,8 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mapbox.geojson.Point;
-
 import java.util.List;
 
 import a2.mobile.mobileapp.R;

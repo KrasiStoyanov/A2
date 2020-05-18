@@ -16,6 +16,7 @@
     <string name="title_route_details">Sample Route #1</string>
     <string name="title_points_of_interest">Points of Interest</string>
     <string name="title_navigation">Navigation</string>
+    <string name="title_directions">Directions</string>
 
     <!--  Authentication types  -->
     <string name="fingerprint">Fingerprint</string>
