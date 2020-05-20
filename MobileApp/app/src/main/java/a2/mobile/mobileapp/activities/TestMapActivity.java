@@ -1,6 +1,5 @@
 package a2.mobile.mobileapp.activities;
 
-import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,34 +7,37 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.Response;
 import com.mapbox.api.directions.v5.DirectionsCriteria;
+import com.mapbox.api.directions.v5.models.BannerInstructions;
+import com.mapbox.api.directions.v5.models.BannerText;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
 import com.mapbox.api.directions.v5.models.DirectionsRoute;
+import com.mapbox.api.directions.v5.models.LegStep;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.services.android.navigation.ui.v5.NavigationLauncher;
-import com.mapbox.services.android.navigation.ui.v5.NavigationLauncherOptions;
+import com.mapbox.navigator.BannerInstruction;
 import com.mapbox.services.android.navigation.ui.v5.NavigationView;
 import com.mapbox.services.android.navigation.ui.v5.NavigationViewOptions;
 import com.mapbox.services.android.navigation.ui.v5.OnNavigationReadyCallback;
+import com.mapbox.services.android.navigation.ui.v5.listeners.BannerInstructionsListener;
 import com.mapbox.services.android.navigation.ui.v5.listeners.NavigationListener;
 import com.mapbox.services.android.navigation.ui.v5.listeners.RouteListener;
-import com.mapbox.services.android.navigation.v5.navigation.MapboxNavigation;
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute;
 import com.mapbox.services.android.navigation.v5.routeprogress.ProgressChangeListener;
+import com.mapbox.services.android.navigation.v5.routeprogress.RouteLegProgress;
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress;
+import com.mapbox.services.android.navigation.v5.routeprogress.RouteStepProgress;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import a2.mobile.mobileapp.R;
-import a2.mobile.mobileapp.enums.Scenes;
 import a2.mobile.mobileapp.handlers.NavigationHandler;
 import a2.mobile.mobileapp.utils.MapUtils;
 import retrofit2.Call;
@@ -45,22 +47,22 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
         NavigationListener, RouteListener, ProgressChangeListener {
 
     private NavigationView navigationView;
-    private boolean dropoffDialogShown;
+
     private Location lastKnownLocation;
+    private LegStep previousStep;
+    private int previousDistance = 0;
 
     private List<Point> points = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("Instance", "State " + Mapbox.hasInstance());
-
         if (!Mapbox.hasInstance()) {
             Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         }
 
         setContentView(R.layout.activity_test_map);
-        points = MapUtils.currentNavigationPoints;
+        points = new ArrayList<>(MapUtils.currentNavigationPoints);
 
         navigationView = findViewById(R.id.navigation);
         navigationView.onCreate(savedInstanceState);
@@ -164,7 +166,63 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
 
     @Override
     public void onProgressChange(@NotNull Location location, @NotNull RouteProgress routeProgress) {
+        RouteLegProgress legProgress = routeProgress.currentLegProgress();
+
+        // TODO: See how the message can be displayed only on a new instruction. Maybe check if the current waypoint is the same or see if there isn't something built-in, for example the bannerListInstructionListener
+        // TODO: Only generate message when the initial instruction for the coming maneuver is received. Update only the distance remaining.
+
+        assert legProgress != null;
+        LegStep step = legProgress.currentStep();
+        RouteStepProgress stepProgress = legProgress.currentStepProgress();
+
+        if (step != null && stepProgress != null) {
+            if (!step.equals(previousStep)) {
+                String instructionMessage = NavigationHandler.generateInstructionMessage(
+                        step,
+                        stepProgress
+                );
+
+                previousStep = step;
+            }
+
+            int distance = roundCurrentDistanceRemaining(stepProgress);
+            boolean isDistanceValid = validateCurrentDistanceRemaining(distance);
+            if (isDistanceValid && distance != previousDistance) {
+                NavigationHandler.updateDistanceRemaining(distance, this);
+
+                previousDistance = distance;
+            }
+        }
+
         lastKnownLocation = location;
+    }
+
+    private int roundCurrentDistanceRemaining(RouteStepProgress stepProgress) {
+        double distanceRemaining = stepProgress.getDistanceRemaining() == null ?
+                previousDistance : stepProgress.getDistanceRemaining();
+
+        int distance = (int) Math.round(distanceRemaining);
+
+        distance = distance - (distance % 50);
+        if (distance > 0 && distance <= 350) {
+            return distance;
+        } else if (distance > 500) {
+            if (distance % 100 == 0) {
+                return  distance;
+            }
+        }
+
+        return distance;
+    }
+
+    private boolean validateCurrentDistanceRemaining(int distanceRemaining) {
+        if (distanceRemaining >= 0 && distanceRemaining <= 500) {
+            return distanceRemaining % 50 == 0;
+        } else if (distanceRemaining > 500) {
+            return distanceRemaining % 100 == 0;
+        }
+
+        return false;
     }
 
     private void startNavigation(DirectionsRoute directionsRoute) {
@@ -174,10 +232,11 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
 
     private void fetchRoute(Point origin, Point destination) {
         NavigationRoute.Builder options = NavigationRoute.builder(this)
-                .accessToken(Mapbox.getAccessToken())
+                .accessToken(getResources().getString(R.string.mapbox_access_token))
                 .origin(origin)
                 .destination(destination)
                 .alternatives(true)
+                .voiceUnits(DirectionsCriteria.METRIC)
                 .profile(DirectionsCriteria.PROFILE_WALKING);
 
         for (Point point : points) {
@@ -190,19 +249,18 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
                     @NonNull Call<DirectionsResponse> call,
                     @NonNull retrofit2.Response<DirectionsResponse> response) {
 
+                assert response.body() != null;
                 startNavigation(response.body().routes().get(0));
             }
 
             @Override
-            public void onFailure(Call<DirectionsResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<DirectionsResponse> call, @NonNull Throwable t) {
 
             }
         });
     }
 
     private NavigationViewOptions setupOptions(DirectionsRoute directionsRoute) {
-        dropoffDialogShown = false;
-
         NavigationViewOptions.Builder options = NavigationViewOptions.builder();
         options.directionsRoute(directionsRoute)
                 .navigationListener(this)
@@ -211,9 +269,5 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
                 .shouldSimulateRoute(true);
 
         return options.build();
-    }
-
-    private Point getLastKnownLocation() {
-        return Point.fromLngLat(lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude());
     }
 }
