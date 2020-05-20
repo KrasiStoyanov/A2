@@ -11,7 +11,21 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f527b28f-a904-4daa-9d27-29d7c92df8ca" name="Default Changelist" comment="" />
+    <list default="true" id="f527b28f-a904-4daa-9d27-29d7c92df8ca" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/DeviceList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/DeviceList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/NavigateActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/NavigateActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_navigate.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_navigate.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/device_list.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/device_list.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/popup.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/popup.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../MobileApp/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../MobileApp/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/activities/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/activities/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/activities/TestMapActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/activities/TestMapActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/adapters/RoutesAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/adapters/RoutesAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../MobileApp/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../MobileApp/build.gradle" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,20 +48,25 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="resourceFile" />
         <option value="valueResourceFile" />
         <option value="layoutResourceFile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
   <component name="ProjectId" id="1bZUSgXYXX6Jff3O9hpRGJsge7a" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
-    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="Vuzix_Blade_API_22" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-05-07T08:25:04.741Z" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="M004E03488" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-05-20T08:32:03.541Z" />
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.editor" />
+    <property name="last_opened_file_path" value="C:/Program Files/Git/cmd/git.exe" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
     <key name="android.template.packageName">
@@ -138,5 +157,18 @@
       <updated>1588839110952</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

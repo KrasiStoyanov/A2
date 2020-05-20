@@ -1,6 +1,7 @@
 package a2.mobile.mobileapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +24,11 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
     private List<Route> routesList;
 
     private LayoutInflater inflater;
-
+    
     public RoutesAdapter(Context context, List<Route> routesList) {
         this.routesList = routesList;
         this.inflater = LayoutInflater.from(context);
+
     }
 
     @NonNull
@@ -35,6 +37,7 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
         View view = inflater.inflate(R.layout.route_option, parent, false);
 
         return new ViewHolder(view);
+
     }
 
     @Override
@@ -52,8 +55,10 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
 
         holder.layout.setTag(route.id);
         holder.layout.setOnClickListener(view -> {
+
             Data.selectedRoute = route;
             MainActivity.sceneManager.switchScene(Scenes.routeDetails);
+
         });
     }
 

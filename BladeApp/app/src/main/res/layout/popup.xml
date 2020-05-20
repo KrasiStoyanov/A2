@@ -4,9 +4,8 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/transparent_Black"
-    android:src="@drawable/border">
-    
+    android:background="@drawable/border">
+
     <TextView
         android:id="@+id/point_Of_interest"
         android:layout_width="wrap_content"
@@ -21,10 +20,9 @@
 
     <TextView
         android:id="@+id/details_of_point"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_width="246dp"
         android:layout_height="wrap_content"
-        android:text="Stay open after closing time 3 AM"
+        android:layout_marginTop="5dp"
         />
     <Button
         android:id="@+id/close_pop_up"

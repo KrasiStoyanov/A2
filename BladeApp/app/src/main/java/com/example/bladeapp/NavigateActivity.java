@@ -2,7 +2,10 @@ package com.example.bladeapp;
 
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
@@ -16,15 +19,24 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.vuzix.connectivity.sdk.Connectivity;
+
+import org.w3c.dom.Text;
 
 public class NavigateActivity extends Activity {
-    private Point p;
+
     private ImageButton btn_show_popup;
-    private Button close;
     private PopupWindow mPopupWindow;
     private LinearLayout mLinearLayout;
     private Context mContext;
     private Activity mActivity;
+    private TextView navigation_message_view;
+    private LinearLayout navigation_message_holder;
+    private static final String ACTION_SEND = "a2.mobile.mobileapp.SEND";
+    private static final String EXTRA_TEXT = "my_string_extra";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +45,11 @@ public class NavigateActivity extends Activity {
         mContext = getApplicationContext();
         mActivity = NavigateActivity.this;
 
+        navigation_message_view = findViewById(R.id.navigation_text);
+
         mLinearLayout =(LinearLayout)findViewById(R.id.pop_up_holder);
+        navigation_message_holder = (LinearLayout)findViewById(R.id.text_holder);
+
         btn_show_popup = (ImageButton) findViewById(R.id.button_popup);
         btn_show_popup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,55 +75,39 @@ public class NavigateActivity extends Activity {
                     public void onClick(View view) {
                         // Dismiss the popup window
                         mPopupWindow.dismiss();
+                        navigation_message_holder.setVisibility(View.VISIBLE);
+                        btn_show_popup.setVisibility(View.VISIBLE);
                     }
                 });
-                Log.e("test Layou","?"+mLinearLayout);
-                mPopupWindow.showAtLocation(new LinearLayout(NavigateActivity.this), Gravity.CENTER,0,0);
+                navigation_message_holder.setVisibility(View.INVISIBLE);
+                btn_show_popup.setVisibility(View.GONE);
+                mPopupWindow.showAtLocation(new LinearLayout(NavigateActivity.this), Gravity.CENTER,20,20);
+
 
 
             }
         });
     }
-    /*@Override
-    public void onWindowFocusChanged(boolean hasfocus){
-        int[] location = new int[2];
-        ImageButton imageButton = (ImageButton) findViewById(R.id.button_popup);
-        imageButton.getLocationOnScreen(location);
-        p = new Point();
-        p.x = location[0];
-        p.y = location[1];
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerReceiver(receiver, new IntentFilter(ACTION_SEND));
     }
 
-    private void showPopup(final Activity context, Point p) {
-        int popupWidth = 200;
-        int popupHeight = 150;
-        // Inflate the popup.xml
-        setContentView(R.layout.popup);
-        LinearLayout viewGroup = (LinearLayout)findViewById(R.id.pop_up_holder);
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        assert layoutInflater != null;
-        View layout = layoutInflater.inflate(R.layout.popup, viewGroup);
-        // Creating the PopupWindow
-        final PopupWindow popup = new PopupWindow(context);
-        popup.setContentView(layout);
-        popup.setWidth(popupWidth);
-        popup.setHeight(popupHeight);
-        popup.setFocusable(true);
-        // Some offset to align the popup a bit to the right, and a bit down, relative to button's position.
-        int OFFSET_X = 30;
-        int OFFSET_Y = 30;
-        // Clear the default translucent background
-        popup.setBackgroundDrawable(new BitmapDrawable(context.getResources()));
-
-        // Displaying the popup at the specified location, + offsets.
-        popup.showAtLocation(layout, Gravity.NO_GRAVITY, p.x + OFFSET_X, p.y + OFFSET_Y);
-        close = (Button)findViewById(R.id.close_pop_up);
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popup.dismiss();
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(receiver);
+    }
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Connectivity.get(context).verify(intent, "a2.mobile.mobileapp")) {
+                String text =intent.getStringExtra(EXTRA_TEXT);
+                if(text != null){
+                    navigation_message_view.setText(text);
+                }
             }
-        }) ;
-    }
-*/
+        }
+    };
 }

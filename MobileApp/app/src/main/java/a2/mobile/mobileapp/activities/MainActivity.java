@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity
     @SuppressLint("StaticFieldLeak")
     public static ProgressBar progressBar;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity
 
         mapView = findViewById(R.id.mapbox);
         mapView.getMapAsync(this);
+
 
         // Initialize scene and map managers.
         sceneManager = new MainActivityFragment(this);

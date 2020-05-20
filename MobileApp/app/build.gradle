@@ -79,4 +79,6 @@ dependencies {
     implementation('com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.43.0-alpha.1'){
         transitive = true
     }
+    //Vuzix connectivity dependencies
+    implementation 'com.vuzix:connectivity-sdk:1.1'
 }
