@@ -24,7 +24,7 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
     private List<Route> routesList;
 
     private LayoutInflater inflater;
-    
+
     public RoutesAdapter(Context context, List<Route> routesList) {
         this.routesList = routesList;
         this.inflater = LayoutInflater.from(context);

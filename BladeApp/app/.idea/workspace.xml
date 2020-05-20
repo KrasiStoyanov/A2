@@ -12,19 +12,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f527b28f-a904-4daa-9d27-29d7c92df8ca" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/DeviceList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/DeviceList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/NavigateActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/NavigateActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_navigate.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_navigate.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/device_list.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/device_list.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/popup.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/popup.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../MobileApp/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../MobileApp/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/activities/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/activities/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/activities/TestMapActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/activities/TestMapActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/adapters/RoutesAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/adapters/RoutesAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../MobileApp/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../MobileApp/build.gradle" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,7 +21,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="M004E03488" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="LHS7N19314002579" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
