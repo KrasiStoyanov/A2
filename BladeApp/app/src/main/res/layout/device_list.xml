@@ -76,7 +76,6 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/raleway_extrabold"
                 android:textColor="@color/title"
-                android:text="My phone"
                 android:textSize="@dimen/h3"
                 />
 

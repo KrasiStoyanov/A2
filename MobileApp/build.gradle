@@ -21,6 +21,8 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://mapbox.bintray.com/mapbox' }
+        //Vuzix
+        maven { url "https://dl.bintray.com/vuzix/lib" }
     }
 }
 

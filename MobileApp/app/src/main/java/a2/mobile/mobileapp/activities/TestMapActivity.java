@@ -1,6 +1,7 @@
 package a2.mobile.mobileapp.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +29,7 @@ import com.mapbox.services.android.navigation.v5.navigation.MapboxNavigation;
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute;
 import com.mapbox.services.android.navigation.v5.routeprogress.ProgressChangeListener;
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress;
+import com.vuzix.connectivity.sdk.Connectivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -49,6 +51,8 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
     private Location lastKnownLocation;
 
     private List<Point> points = new ArrayList<>();
+    //Test
+    private static final String ACTION_SEND = "a2.mobile.mobileapp.SEND";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,7 +61,7 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
 
         if (!Mapbox.hasInstance()) {
             Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
-        }
+    }
 
         setContentView(R.layout.activity_test_map);
         points = MapUtils.currentNavigationPoints;
@@ -65,6 +69,12 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
         navigationView = findViewById(R.id.navigation);
         navigationView.onCreate(savedInstanceState);
         navigationView.initialize(this);
+
+        //  Test broadcast
+        Intent sendIntent = new Intent(ACTION_SEND);
+        sendIntent.setPackage("com.example.bladeapp");
+        sendIntent.putExtra("my_string_extra", "Krasi Thank you");
+        Connectivity.get(this).sendBroadcast(sendIntent);
     }
 
     @Override
@@ -123,6 +133,7 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
     @Override
     public void onNavigationReady(boolean isRunning) {
         fetchRoute(points.remove(0), points.remove(0));
+
     }
 
     @Override
