@@ -294,6 +294,7 @@ public class MapUtils {
                 .origin(origin)
                 .destination(destination)
                 .alternatives(true)
+                .voiceUnits(DirectionsCriteria.METRIC)
                 .profile(DirectionsCriteria.PROFILE_WALKING);
 
         for (Point point : currentNavigationPoints) {

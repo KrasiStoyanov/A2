@@ -2,6 +2,7 @@ package a2.mobile.mobileapp.activities;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,9 +29,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.constants.NavigationConstants;
+import a2.mobile.mobileapp.data.Data;
+import a2.mobile.mobileapp.data.classes.PointOfInterest;
 import a2.mobile.mobileapp.handlers.NavigationHandler;
 import a2.mobile.mobileapp.utils.MapUtils;
 import retrofit2.Call;
@@ -43,9 +47,13 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
 
     private Location lastKnownLocation;
     private LegStep previousStep;
-    private int previousDistance = 0;
+    private int previousDistanceToManeuver = 0;
 
     private List<Point> points = new ArrayList<>();
+    private int currentInterestPoint = 0;
+    private boolean didUpdateCurrentPoint = false;
+    private boolean noMoreInterestPoints = false;
+
     //Test
     private static final String ACTION_SEND = "a2.mobile.mobileapp.SEND";
 
@@ -126,7 +134,6 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
     @Override
     public void onNavigationReady(boolean isRunning) {
         fetchRoute(points.remove(0), points.remove(0));
-
     }
 
     @Override
@@ -179,36 +186,53 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
 
         if (step != null && stepProgress != null) {
             if (!step.equals(previousStep)) {
-                String instructionMessage = NavigationHandler.generateInstructionMessage(
-                        step,
-                        stepProgress
-                );
+                NavigationHandler.updateDirection(step);
 
                 previousStep = step;
             }
 
-            int distance = roundCurrentDistanceRemaining(stepProgress);
-            boolean isDistanceValid = validateCurrentDistanceRemaining(distance);
-            if (isDistanceValid && distance != previousDistance) {
-                NavigationHandler.updateDistanceRemaining(distance, this);
-
-                previousDistance = distance;
+            if (didUpdateCurrentPoint && currentInterestPoint > 0) {
+                currentInterestPoint++;
+                didUpdateCurrentPoint = false;
             }
+
+            double unformattedDistance = stepProgress.getDistanceRemaining() == null ?
+                    previousDistanceToManeuver : stepProgress.getDistanceRemaining();
+
+            int distanceToManeuver = roundCurrentDistanceRemaining(unformattedDistance);
+            boolean isDistanceValid = validateCurrentDistanceRemaining(distanceToManeuver);
+            if (isDistanceValid && distanceToManeuver != previousDistanceToManeuver) {
+                NavigationHandler.updateDistanceRemaining(distanceToManeuver);
+                previousDistanceToManeuver = distanceToManeuver;
+            }
+
+            updateInterestPoint(step);
         }
 
         lastKnownLocation = location;
     }
 
+    private void updateInterestPoint(LegStep step) {
+        int distanceToWaypoint = roundCurrentDistanceRemaining(step.distance());
+        boolean isDistanceValid = validateCurrentDistanceRemaining(distanceToWaypoint);
+        if (isDistanceValid && distanceToWaypoint <= 50) {
+            if (!didUpdateCurrentPoint) {
+                NavigationHandler.updateInterestPoint(Data.selectedRoute.pointsOfInterest.get(
+                        currentInterestPoint
+                ));
+
+                didUpdateCurrentPoint = true;
+            }
+        }
+    }
+
     /**
      * Round the distance remaining depending on its value to the closest 50/100.
      *
-     * @param stepProgress The current step progress from which to get the distance remaining
+     * @param distanceRemaining The current distance remaining (normal format)
      * @return The rounded distance remaining
      */
-    private int roundCurrentDistanceRemaining(RouteStepProgress stepProgress) {
-        double distanceRemaining = stepProgress.getDistanceRemaining() == null ?
-                previousDistance : stepProgress.getDistanceRemaining();
-
+    private int roundCurrentDistanceRemaining(@NonNull double distanceRemaining) {
         int distance = (int) Math.round(distanceRemaining);
 
         distance = distance - (distance % 50);

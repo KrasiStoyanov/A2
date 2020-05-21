@@ -6,79 +6,49 @@ import android.util.Log;
 import com.mapbox.api.directions.v5.models.BannerInstructions;
 import com.mapbox.api.directions.v5.models.BannerText;
 import com.mapbox.api.directions.v5.models.LegStep;
+import com.mapbox.navigator.BannerInstruction;
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteStepProgress;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
+import a2.mobile.mobileapp.data.classes.PointOfInterest;
+import a2.mobile.mobileapp.enums.PointOfInterestPriorities;
+
 public class NavigationHandler {
-    private static StringBuilder currentMessage = new StringBuilder();
+    private static String direction;
+    private static String iconName;
     private static String target;
-    private static Double distance;
+    private static double distance;
 
-    public static String generateInstructionMessage(
-            LegStep currentStep,
-            RouteStepProgress stepProgress) {
+    private static String interestPointTitle;
+    private static String interestPointDescription;
+    private static PointOfInterestPriorities interestPointPriority;
 
-        StringBuilder message = new StringBuilder();
-        message
-                .append("In ")
-                .append(new DecimalFormat("#.##").format(
-                        stepProgress.getDistanceRemaining()
-                ));
-
+    public static void updateDirection(LegStep currentStep) {
         List<BannerInstructions> instructions = currentStep.bannerInstructions();
 
-        assert instructions != null;
-        for (BannerInstructions i : instructions) {
-            BannerText instruction = i.primary();
-            String instructionType = instruction.type();
-            String modifier = instruction.modifier();
+        if (instructions != null && instructions.size() > 0) {
+            BannerInstructions mostImportantInstruction = instructions.get(0);
+            BannerText primaryInstruction = mostImportantInstruction.primary();
 
-            if (instructionType != null && modifier != null) {
-                instructionType = instructionType.toLowerCase();
-                modifier = modifier.toLowerCase();
-
-                if ("turn".equals(instructionType)) {
-                    if (modifier.contains("sharp") || modifier.contains("slight")) {
-                        message
-                                .append("m make a ")
-                                .append(modifier)
-                                .append(" ")
-                                .append(instructionType);
-                    } else if (modifier.equals("straight")) {
-                        message.append("Continue straight");
-                    } else if (modifier.equals("uturn")) {
-                        message.append("m make a U-turn");
-                    } else {
-                        message.append("m turn ").append(modifier);
-                    }
-                }
-            }
-
-            if (instruction.text().contains("arrive")) {
-
-            }
-
-            message
-                    .append(" towards ")
-                    .append(instruction.text())
-                    .append(".");
+            direction = primaryInstruction.type();
+            updateIconName();
         }
-
-        Log.e("Step", message.toString());
-        currentMessage = message;
-        distance = stepProgress.getDistanceRemaining();
-
-        return currentMessage.toString();
     }
 
-    public static void updateDistanceRemaining(int distanceRemaining, Context context) {
-        // TODO: send distance to glasses.
-        Log.e("Distance Remaining", "Distaince: " + distanceRemaining);
+    private static void updateIconName() {
+        iconName = direction;
     }
 
-    public static String generateArrivalMessage() {
-        return "You have arrived at your destination. You can see it on the ";
+    public static void updateDistanceRemaining(int distanceRemaining) {
+        distance = distanceRemaining;
+    }
+
+    public static void updateInterestPoint(PointOfInterest interestPoint) {
+        interestPointTitle = interestPoint.title;
+        interestPointDescription = interestPoint.interest;
+        interestPointPriority = interestPoint.getPriority();
+        Log.e("Priority", "Priority " + interestPointPriority + " " + interestPointTitle);
     }
 }

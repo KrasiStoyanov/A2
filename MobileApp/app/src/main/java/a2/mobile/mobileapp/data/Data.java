@@ -16,6 +16,7 @@ import java.util.List;
 import a2.mobile.mobileapp.data.classes.Point;
 import a2.mobile.mobileapp.data.classes.PointOfInterest;
 import a2.mobile.mobileapp.data.classes.Route;
+import a2.mobile.mobileapp.enums.PointOfInterestPriorities;
 import a2.mobile.mobileapp.utils.DataUtils;
 import a2.mobile.mobileapp.utils.FileUtils;
 import jxl.Cell;
@@ -109,34 +110,6 @@ public class Data {
         return null;
     }
 
-    /**
-     * Process points of interest and add it to the list of points of interests.
-     *
-     * @param row The row from which to process the data
-     */
-    private static PointOfInterest generatePointOfInterest(Cell[] row) {
-        String title = row[0].getContents();
-        String interest = row[1].getContents();
-        String coordinates = row[2].getContents();
-        String typeOfBuilding = row[3].getContents();
-
-        List<Integer> locationZones = new ArrayList<>();
-        String[] zonesText = row[4].getContents().split(", ");
-        for (String zone : zonesText) {
-            locationZones.add(Integer.parseInt(zone));
-        }
-
-        List<Double> parsedCoordinates = DataUtils.stringToCoordinates(coordinates);
-
-        return new PointOfInterest(
-                parsedCoordinates,
-                locationZones,
-                title,
-                interest,
-                typeOfBuilding
-        );
-    }
-
     private static void storeRoute(Workbook workbook) {
         Sheet routesSheet = workbook.getSheet(0);
 
@@ -183,6 +156,7 @@ public class Data {
 
                 String title = properties.getString("title");
                 String interest = properties.getString("interest");
+                String priority = properties.get("priority").toString().toUpperCase();
 
                 List<Integer> locationZones = new ArrayList<>();
                 locationZones.add(properties.getInt("zone"));
@@ -196,7 +170,8 @@ public class Data {
                         locationZones,
                         title,
                         interest,
-                        ""
+                        "",
+                        PointOfInterestPriorities.valueOf(priority)
                 ));
             }
         } catch (JSONException e) {
