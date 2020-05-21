@@ -41,5 +41,7 @@ public class PointOfInterest extends Point {
         return this.id;
     }
 
-    public PointOfInterestPriorities getPriority() { return this.priority; }
+    public PointOfInterestPriorities getPriority() {
+        return this.priority;
+    }
 }

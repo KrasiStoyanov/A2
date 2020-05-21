@@ -2,7 +2,6 @@ package a2.mobile.mobileapp.activities;
 
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,12 +28,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.constants.NavigationConstants;
 import a2.mobile.mobileapp.data.Data;
-import a2.mobile.mobileapp.data.classes.PointOfInterest;
 import a2.mobile.mobileapp.handlers.NavigationHandler;
 import a2.mobile.mobileapp.utils.MapUtils;
 import retrofit2.Call;

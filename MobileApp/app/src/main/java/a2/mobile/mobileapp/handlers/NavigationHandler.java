@@ -1,15 +1,11 @@
 package a2.mobile.mobileapp.handlers;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.mapbox.api.directions.v5.models.BannerInstructions;
 import com.mapbox.api.directions.v5.models.BannerText;
 import com.mapbox.api.directions.v5.models.LegStep;
-import com.mapbox.navigator.BannerInstruction;
-import com.mapbox.services.android.navigation.v5.routeprogress.RouteStepProgress;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import a2.mobile.mobileapp.data.classes.PointOfInterest;
