@@ -1,7 +1,6 @@
 package a2.mobile.mobileapp.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,7 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.ViewHolder
     private List<Route> routesList;
 
     private LayoutInflater inflater;
-    
+
     public RoutesAdapter(Context context, List<Route> routesList) {
         this.routesList = routesList;
         this.inflater = LayoutInflater.from(context);

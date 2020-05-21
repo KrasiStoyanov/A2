@@ -1,28 +1,21 @@
 package a2.mobile.mobileapp.activities;
 
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.mapbox.api.directions.v5.DirectionsCriteria;
-import com.mapbox.api.directions.v5.models.BannerInstructions;
-import com.mapbox.api.directions.v5.models.BannerText;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
 import com.mapbox.api.directions.v5.models.DirectionsRoute;
 import com.mapbox.api.directions.v5.models.LegStep;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.navigator.BannerInstruction;
 import com.mapbox.services.android.navigation.ui.v5.NavigationView;
 import com.mapbox.services.android.navigation.ui.v5.NavigationViewOptions;
 import com.mapbox.services.android.navigation.ui.v5.OnNavigationReadyCallback;
-import com.mapbox.services.android.navigation.ui.v5.listeners.BannerInstructionsListener;
 import com.mapbox.services.android.navigation.ui.v5.listeners.NavigationListener;
 import com.mapbox.services.android.navigation.ui.v5.listeners.RouteListener;
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute;
@@ -30,18 +23,14 @@ import com.mapbox.services.android.navigation.v5.routeprogress.ProgressChangeLis
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteLegProgress;
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress;
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteStepProgress;
-import com.vuzix.connectivity.sdk.Connectivity;
-
-import com.vuzix.connectivity.sdk.Connectivity;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
 import a2.mobile.mobileapp.R;
+import a2.mobile.mobileapp.constants.NavigationConstants;
 import a2.mobile.mobileapp.handlers.NavigationHandler;
 import a2.mobile.mobileapp.utils.MapUtils;
 import retrofit2.Call;
@@ -65,7 +54,7 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
         super.onCreate(savedInstanceState);
         if (!Mapbox.hasInstance()) {
             Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
-    }
+        }
 
         setContentView(R.layout.activity_test_map);
         points = new ArrayList<>(MapUtils.currentNavigationPoints);
@@ -75,10 +64,10 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
         navigationView.initialize(this);
 
         //  Test broadcast
-        Intent sendIntent = new Intent(ACTION_SEND);
-        sendIntent.setPackage("com.example.bladeapp");
-        sendIntent.putExtra("my_string_extra", "Krasi Thank you");
-        Connectivity.get(this).sendBroadcast(sendIntent);
+//        Intent sendIntent = new Intent(ACTION_SEND);
+//        sendIntent.setPackage("com.example.bladeapp");
+//        sendIntent.putExtra("my_string_extra", "Krasi Thank you");
+//        Connectivity.get(this).sendBroadcast(sendIntent);
     }
 
     @Override
@@ -210,6 +199,12 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
         lastKnownLocation = location;
     }
 
+    /**
+     * Round the distance remaining depending on its value to the closest 50/100.
+     *
+     * @param stepProgress The current step progress from which to get the distance remaining
+     * @return The rounded distance remaining
+     */
     private int roundCurrentDistanceRemaining(RouteStepProgress stepProgress) {
         double distanceRemaining = stepProgress.getDistanceRemaining() == null ?
                 previousDistance : stepProgress.getDistanceRemaining();
@@ -217,25 +212,25 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
         int distance = (int) Math.round(distanceRemaining);
 
         distance = distance - (distance % 50);
-        if (distance > 0 && distance <= 350) {
+        if (distance >= NavigationConstants.DISTANCE_REMAINING_MIN_HUNDRED && distance % 100 == 0) {
             return distance;
-        } else if (distance > 500) {
-            if (distance % 100 == 0) {
-                return  distance;
-            }
         }
 
         return distance;
     }
 
+    /**
+     * Make sure that the rounded distance gets shown only when it is valid.
+     *
+     * @param distanceRemaining The distance remaining
+     * @return Whether the distance is valid
+     */
     private boolean validateCurrentDistanceRemaining(int distanceRemaining) {
-        if (distanceRemaining >= 0 && distanceRemaining <= 500) {
-            return distanceRemaining % 50 == 0;
-        } else if (distanceRemaining > 500) {
+        if (distanceRemaining >= NavigationConstants.DISTANCE_REMAINING_MIN_HUNDRED) {
             return distanceRemaining % 100 == 0;
         }
 
-        return false;
+        return distanceRemaining % 50 == 0;
     }
 
     private void startNavigation(DirectionsRoute directionsRoute) {
