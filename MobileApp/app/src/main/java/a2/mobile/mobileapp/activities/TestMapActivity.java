@@ -50,7 +50,6 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
     private NavigationView navigationView;
     private boolean dropoffDialogShown;
     private Location lastKnownLocation;
-
     private List<Point> points = new ArrayList<>();
     //Test
     private static final String ACTION_SEND = "a2.mobile.mobileapp.SEND";
@@ -72,10 +71,10 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
         navigationView.initialize(this);
 
         //  Test broadcast
-        Intent sendIntent = new Intent(ACTION_SEND);
-        sendIntent.setPackage("com.example.bladeapp");
-        sendIntent.putExtra("my_string_extra", "Krasi Thank you");
-        Connectivity.get(this).sendBroadcast(sendIntent);
+//        Intent sendIntent = new Intent(ACTION_SEND);
+//        sendIntent.setPackage("com.example.bladeapp");
+//        sendIntent.putExtra("my_string_extra", "Krasi Thank you");
+//        Connectivity.get(this).sendBroadcast(sendIntent);
     }
 
     @Override
