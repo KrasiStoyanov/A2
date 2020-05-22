@@ -1,15 +1,18 @@
 package a2.mobile.mobileapp.handlers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.mapbox.api.directions.v5.models.BannerInstructions;
 import com.mapbox.api.directions.v5.models.BannerText;
 import com.mapbox.api.directions.v5.models.LegStep;
+import com.vuzix.connectivity.sdk.Connectivity;
 
 import java.util.List;
 
 import a2.mobile.mobileapp.activities.TestMapActivity;
+import a2.mobile.mobileapp.constants.NavigationConstants;
 import a2.mobile.mobileapp.data.classes.PointOfInterest;
 import a2.mobile.mobileapp.enums.PointOfInterestPriorities;
 
@@ -43,19 +46,29 @@ public class NavigationHandler {
 
     private static void updateIconName() {
         iconName = direction;
+        sendDataToBladeApp("icon name", iconName);
     }
 
     public static void updateDistanceRemaining(int distanceRemaining) {
         distance = distanceRemaining;
+        sendDataToBladeApp("distance remaining", String.valueOf(distance));
     }
 
     public static void updateInterestPoint(PointOfInterest interestPoint) {
         interestPointTitle = interestPoint.title;
         interestPointDescription = interestPoint.interest;
         interestPointPriority = interestPoint.getPriority();
+
+        sendDataToBladeApp("interest point title", interestPointTitle);
+        sendDataToBladeApp("interest point description", interestPointDescription);
+        sendDataToBladeApp("interest point priority", interestPointPriority.toString());
     }
 
-    public static void sendDataToBladeApp() {
-        // TODO: Make a generic method that receives data and sends it to the glasses.
+    private static void sendDataToBladeApp(String name, String data) {
+        Intent sendIntent = new Intent(NavigationConstants.SEND_DATA_ACTION);
+        sendIntent.setPackage("com.example.bladeapp");
+        sendIntent.putExtra(name, data);
+
+        Connectivity.get(mContext).sendBroadcast(sendIntent);
     }
 }
