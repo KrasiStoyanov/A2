@@ -2,7 +2,6 @@ package a2.mobile.mobileapp.handlers;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.mapbox.api.directions.v5.models.BannerInstructions;
 import com.mapbox.api.directions.v5.models.BannerText;
@@ -11,7 +10,6 @@ import com.vuzix.connectivity.sdk.Connectivity;
 
 import java.util.List;
 
-import a2.mobile.mobileapp.activities.TestMapActivity;
 import a2.mobile.mobileapp.constants.NavigationConstants;
 import a2.mobile.mobileapp.data.classes.PointOfInterest;
 import a2.mobile.mobileapp.enums.PointOfInterestPriorities;
