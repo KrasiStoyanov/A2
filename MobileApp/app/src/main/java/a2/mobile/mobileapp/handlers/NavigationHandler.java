@@ -45,6 +45,5 @@ public class NavigationHandler {
         interestPointTitle = interestPoint.title;
         interestPointDescription = interestPoint.interest;
         interestPointPriority = interestPoint.getPriority();
-        Log.e("Priority", "Priority " + interestPointPriority + " " + interestPointTitle);
     }
 }

@@ -47,6 +47,7 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
     private int previousDistanceToManeuver = 0;
 
     private List<Point> points = new ArrayList<>();
+    private int pointsSize = 0;
     private int currentInterestPoint = 0;
     private boolean didUpdateCurrentPoint = false;
     private boolean noMoreInterestPoints = false;
@@ -130,6 +131,8 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
 
     @Override
     public void onNavigationReady(boolean isRunning) {
+        pointsSize = points.size();
+
         fetchRoute(points.remove(0), points.remove(0));
     }
 
@@ -174,9 +177,6 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
     public void onProgressChange(@NotNull Location location, @NotNull RouteProgress routeProgress) {
         RouteLegProgress legProgress = routeProgress.currentLegProgress();
 
-        // TODO: See how the message can be displayed only on a new instruction. Maybe check if the current waypoint is the same or see if there isn't something built-in, for example the bannerListInstructionListener
-        // TODO: Only generate message when the initial instruction for the coming maneuver is received. Update only the distance remaining.
-
         assert legProgress != null;
         LegStep step = legProgress.currentStep();
         RouteStepProgress stepProgress = legProgress.currentStepProgress();
@@ -186,10 +186,6 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
                 NavigationHandler.updateDirection(step);
 
                 previousStep = step;
-            }
-
-            if (didUpdateCurrentPoint && currentInterestPoint > 0) {
-                currentInterestPoint++;
                 didUpdateCurrentPoint = false;
             }
 
@@ -203,22 +199,28 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
                 previousDistanceToManeuver = distanceToManeuver;
             }
 
-            updateInterestPoint(step);
+            updateInterestPoint(legProgress, step);
         }
 
         lastKnownLocation = location;
     }
 
-    private void updateInterestPoint(LegStep step) {
-        int distanceToWaypoint = roundCurrentDistanceRemaining(step.distance());
-        boolean isDistanceValid = validateCurrentDistanceRemaining(distanceToWaypoint);
-        if (isDistanceValid && distanceToWaypoint <= 50) {
-            if (!didUpdateCurrentPoint) {
-                NavigationHandler.updateInterestPoint(Data.selectedRoute.pointsOfInterest.get(
-                        currentInterestPoint
-                ));
+    private void updateInterestPoint(RouteLegProgress legProgress, LegStep step) {
+        if (legProgress.upComingStep() == null) {
+            int distanceToWaypoint = roundCurrentDistanceRemaining(step.distance());
+            boolean isDistanceValid = validateCurrentDistanceRemaining(distanceToWaypoint);
 
-                didUpdateCurrentPoint = true;
+            if (isDistanceValid && distanceToWaypoint <= 50) {
+                if (!didUpdateCurrentPoint &&
+                        currentInterestPoint < Data.selectedRoute.pointsOfInterest.size()) {
+
+                    NavigationHandler.updateInterestPoint(Data.selectedRoute.pointsOfInterest.get(
+                            currentInterestPoint
+                    ));
+
+                    didUpdateCurrentPoint = true;
+                    currentInterestPoint++;
+                }
             }
         }
     }
