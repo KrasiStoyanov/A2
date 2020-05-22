@@ -64,6 +64,7 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
 
         setContentView(R.layout.activity_test_map);
         points = new ArrayList<>(MapUtils.currentNavigationPoints);
+        NavigationHandler.storeContext(this);
 
         navigationView = findViewById(R.id.navigation);
         navigationView.onCreate(savedInstanceState);
