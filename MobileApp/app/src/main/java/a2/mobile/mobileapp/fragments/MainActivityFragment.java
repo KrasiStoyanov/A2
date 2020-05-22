@@ -18,7 +18,6 @@ import a2.mobile.mobileapp.constants.SceneConstants;
 import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.enums.Scenes;
 import a2.mobile.mobileapp.handlers.MapHandler;
-import a2.mobile.mobileapp.handlers.NavigationHandler;
 import a2.mobile.mobileapp.handlers.PointsOfInterestHandler;
 import a2.mobile.mobileapp.handlers.RouteDetailsHandler;
 import a2.mobile.mobileapp.handlers.RoutesHandler;
@@ -98,7 +97,7 @@ public class MainActivityFragment extends Fragment {
 
                 break;
             case navigation:
-                ((Activity)context).startActivityForResult(
+                ((Activity) context).startActivityForResult(
                         new Intent(context, TestMapActivity.class),
                         SceneConstants.REQUEST_CODE_SAVED_INSTANCES
                 );

@@ -16,7 +16,6 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
-import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.maps.UiSettings;
@@ -43,7 +42,6 @@ import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.data.classes.PointOfInterest;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
 import static com.mapbox.core.constants.Constants.PRECISION_6;
@@ -296,6 +294,7 @@ public class MapUtils {
                 .origin(origin)
                 .destination(destination)
                 .alternatives(true)
+                .voiceUnits(DirectionsCriteria.METRIC)
                 .profile(DirectionsCriteria.PROFILE_WALKING);
 
         for (Point point : currentNavigationPoints) {

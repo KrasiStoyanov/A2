@@ -5,7 +5,8 @@
       "properties": {
         "title": "BrugsmaBorg",
         "interest": "Study building.",
-        "zone": 3
+        "zone": 3,
+        "priority": "medium"
       },
       "geometry": {
         "coordinates": [
@@ -21,7 +22,8 @@
       "properties": {
         "title": "UB Zernike",
         "interest": "Library",
-        "zone": 2
+        "zone": 2,
+        "priority": "high"
       },
       "geometry": {
         "coordinates": [
@@ -37,7 +39,8 @@
       "properties": {
         "title": "Bernoulliborg",
         "interest": "A great place to get a snack or a cup of coffee.",
-        "zone": 1
+        "zone": 1,
+        "priority": "low"
       },
       "geometry": {
         "coordinates": [
@@ -53,7 +56,8 @@
       "properties": {
         "title": "Moyee",
         "interest": "Cup of coffe spot.",
-        "zone": 2
+        "zone": 2,
+        "priority": "medium"
       },
       "geometry": {
         "coordinates": [
@@ -69,7 +73,8 @@
       "properties": {
         "title": "Faculty Association Ibn Battuta",
         "interest": "NA",
-        "zone": 2
+        "zone": 2,
+        "priority": "low"
       },
       "geometry": {
         "coordinates": [
