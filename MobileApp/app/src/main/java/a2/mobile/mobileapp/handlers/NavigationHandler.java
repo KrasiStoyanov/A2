@@ -38,7 +38,7 @@ public class NavigationHandler {
             BannerInstructions mostImportantInstruction = instructions.get(0);
             BannerText primaryInstruction = mostImportantInstruction.primary();
 
-            direction = primaryInstruction.type();
+            direction = primaryInstruction.modifier();
             updateIconName();
         }
     }
