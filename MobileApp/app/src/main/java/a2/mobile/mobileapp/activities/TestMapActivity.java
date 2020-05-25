@@ -173,13 +173,6 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
         RouteStepProgress stepProgress = legProgress.currentStepProgress();
 
         if (step != null && stepProgress != null) {
-            if (!step.equals(previousStep)) {
-                NavigationHandler.updateDirection(step);
-
-                previousStep = step;
-                didUpdateCurrentPoint = false;
-            }
-
             double unformattedDistance = stepProgress.getDistanceRemaining() == null ?
                     previousDistanceToManeuver : stepProgress.getDistanceRemaining();
 
@@ -188,6 +181,13 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
             if (isDistanceValid && distanceToManeuver != previousDistanceToManeuver) {
                 NavigationHandler.updateDistanceRemaining(distanceToManeuver);
                 previousDistanceToManeuver = distanceToManeuver;
+            }
+
+            if (!step.equals(previousStep)) {
+                NavigationHandler.updateDirection(step);
+
+                previousStep = step;
+                didUpdateCurrentPoint = false;
             }
 
             updateInterestPoint(legProgress, step);
