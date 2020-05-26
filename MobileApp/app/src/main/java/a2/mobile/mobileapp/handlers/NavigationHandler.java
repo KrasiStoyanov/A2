@@ -46,7 +46,7 @@ public class NavigationHandler {
     private static void updateIconName() {
         iconName = direction;
 
-        sendDataToBladeApp("icon_name", iconName);
+        sendDataToBladeApp("icon_name", new String[] { iconName });
     }
 
     public static void updateDistanceRemaining(int distanceRemaining) {
@@ -56,7 +56,7 @@ public class NavigationHandler {
             formattedDistance = (distance / 1000) + " km";
         }
 
-        sendDataToBladeApp("distance_remaining", formattedDistance);
+        sendDataToBladeApp("distance_remaining", new String[] { formattedDistance });
     }
 
     public static void updateInterestPoint(PointOfInterest interestPoint) {
@@ -64,12 +64,14 @@ public class NavigationHandler {
         interestPointDescription = interestPoint.interest;
         interestPointPriority = interestPoint.getPriority();
 
-        sendDataToBladeApp("interest point title", interestPointTitle);
-        sendDataToBladeApp("interest point description", interestPointDescription);
-        sendDataToBladeApp("interest point priority", interestPointPriority.toString());
+        sendDataToBladeApp("interest point title", new String[] {
+                interestPointTitle,
+                interestPointDescription,
+                interestPointPriority.toString()
+        });
     }
 
-    private static void sendDataToBladeApp(String name, String data) {
+    private static void sendDataToBladeApp(String name, String[] data) {
         Intent sendIntent = new Intent(NavigationConstants.SEND_DATA_ACTION);
         sendIntent.setPackage("com.example.bladeapp");
         //sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
