@@ -45,14 +45,18 @@ public class NavigationHandler {
 
     private static void updateIconName() {
         iconName = direction;
+
         sendDataToBladeApp("icon_name", iconName);
-        Log.e("icon_name",iconName);
     }
 
     public static void updateDistanceRemaining(int distanceRemaining) {
         distance = distanceRemaining;
-        sendDataToBladeApp("distance_remaining", String.valueOf(distance));
-        Log.e("distance",String.valueOf(distance));
+        String formattedDistance = (int) distance + "m";
+        if (distance >= 1000) {
+            formattedDistance = (distance / 1000) + " km";
+        }
+
+        sendDataToBladeApp("distance_remaining", formattedDistance);
     }
 
     public static void updateInterestPoint(PointOfInterest interestPoint) {
@@ -61,11 +65,8 @@ public class NavigationHandler {
         interestPointPriority = interestPoint.getPriority();
 
         sendDataToBladeApp("interest point title", interestPointTitle);
-        Log.e("title",interestPointTitle);
         sendDataToBladeApp("interest point description", interestPointDescription);
-        Log.e("description",interestPointDescription);
         sendDataToBladeApp("interest point priority", interestPointPriority.toString());
-        Log.e("priority",interestPointPriority.toString());
     }
 
     private static void sendDataToBladeApp(String name, String data) {

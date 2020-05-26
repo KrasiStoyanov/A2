@@ -2,6 +2,7 @@ package a2.mobile.mobileapp.activities;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -224,6 +225,9 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
      */
     private int roundCurrentDistanceRemaining(@NonNull double distanceRemaining) {
         int distance = (int) Math.round(distanceRemaining);
+        if (distance <= NavigationConstants.DISTANCE_REMAINING_MIN_FIFTIETH) {
+            return distance - (distance % 5);
+        }
 
         distance = distance - (distance % 50);
         if (distance >= NavigationConstants.DISTANCE_REMAINING_MIN_HUNDRED && distance % 100 == 0) {
@@ -240,7 +244,9 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
      * @return Whether the distance is valid
      */
     private boolean validateCurrentDistanceRemaining(int distanceRemaining) {
-        if (distanceRemaining >= NavigationConstants.DISTANCE_REMAINING_MIN_HUNDRED) {
+        if (distanceRemaining <= NavigationConstants.DISTANCE_REMAINING_MIN_FIFTIETH) {
+            return distanceRemaining % 5 == 0;
+        } else if (distanceRemaining >= NavigationConstants.DISTANCE_REMAINING_MIN_HUNDRED) {
             return distanceRemaining % 100 == 0;
         }
 
