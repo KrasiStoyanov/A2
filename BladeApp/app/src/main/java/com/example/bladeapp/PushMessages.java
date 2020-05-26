@@ -22,7 +22,7 @@ public class PushMessages extends Activity {
     }
 
     private void acceptButtonClicked(){
-        Intent tonavigation = new Intent(getApplicationContext(),NavigateActivity.class);
+        Intent tonavigation = new Intent(getApplicationContext(),Navigationpage.class);
         startActivity(tonavigation);
     }
     class acceptButtonClick implements View.OnClickListener{

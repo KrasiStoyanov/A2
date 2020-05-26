@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent_Black">
+    android:background="@color/transparent_Black"
+    >
 
     <LinearLayout
         android:id="@+id/notification_icon_holder"
@@ -12,16 +13,9 @@
         android:layout_height="100dp"
         android:gravity="end"
         android:background="@color/transparent_Black"
-        android:src="@drawable/border">
+        android:src="@drawable/border"
+        android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/button_popup"
-            android:layout_width="69dp"
-            android:layout_height="63dp"
-            android:background="@color/transparent_Black"
-            android:src="@drawable/ic_notifications_black_18dp">
-
-        </ImageButton>
     </LinearLayout>
 
     <LinearLayout
@@ -38,11 +32,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/distance_holder"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity=""
+                android:layout_gravity="center"
                 android:fontFamily="@font/raleway_extrabold"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/blue"
@@ -68,7 +63,9 @@
             android:layout_gravity="center"
             app:cardBackgroundColor="@color/button_primary__background"
             app:cardCornerRadius="20dp"
-            app:contentPadding="13dp">
+            app:contentPadding="13dp"
+            android:visibility="gone"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -76,15 +73,16 @@
                 android:layout_gravity="center">
 
                 <ImageView
+                    android:id="@+id/direction_icon"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_arrow_back_black_18dp">
+                    >
 
 
                 </ImageView>
             </LinearLayout>
 
-            >
+
         </androidx.cardview.widget.CardView>
 
 
