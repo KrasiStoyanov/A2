@@ -29,7 +29,7 @@ public class DeviceList extends Activity {
         Topushbutton = (ImageButton)findViewById(R.id.button_toPush_messages);
         Topushbutton.setOnClickListener(new TopushButtonClick());
         //check for Connectivity framework
-        if (!Connectivity.get(this).isAvailable()) {
+        if (!Connectivity.get(this).isConnected()) {
             Toast.makeText(mContext, R.string.not_available, Toast.LENGTH_SHORT).show();
             finish();
             return;

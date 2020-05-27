@@ -1,39 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/pop_up_holder"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    >
-    <TextView
-        android:id="@+id/point_Of_interest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:fontFamily="@font/raleway_extrabold"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/white"
-        android:textSize="@dimen/h1"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PopUpActivity"
+    android:gravity="center">
 
+    <LinearLayout
+        android:id="@+id/pop_up_holder"
+        android:layout_width="296dp"
+        android:layout_height="219dp"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        />
+        <TextView
+            android:id="@+id/point_Of_interest"
+            android:layout_width="147dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/raleway_extrabold"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/white"
+            android:textSize="@dimen/h1" />
 
-    <TextView
-        android:id="@+id/details_of_point"
-        android:layout_width="246dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        />
-    <Button
-        android:id="@+id/close_pop_up"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center_horizontal"
-        android:fontFamily="@font/raleway_extrabold"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/white"
-        android:textSize="@dimen/h5"
-        android:text="Close"/>
+        <TextView
+            android:id="@+id/details_of_point"
+            android:layout_width="246dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/close_pop_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/raleway_extrabold"
+            android:text="Close"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/white"
+            android:textSize="@dimen/h5" />
+
+    </LinearLayout>
+</RelativeLayout>

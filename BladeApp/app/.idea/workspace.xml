@@ -14,18 +14,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f527b28f-a904-4daa-9d27-29d7c92df8ca" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/Navigationpage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/res/drawable/ic_arrow_forward_black_18dp.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/res/drawable/ic_arrow_upward_24px.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/PopUpActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/GetReceiver.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/HomeActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/HomeActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/NavigateActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/NavigateActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/PushMessages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/PushMessages.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable/ic_notifications_black_18dp.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_navigate.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_navigate.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/DeviceList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/DeviceList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/NavigateActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/Navigationpage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/Navigationpage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/res/layout/popup.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/popup.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/enums/PointOfInterestPriorities.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/enums/PointOfInterestPriorities.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/handlers/NavigationHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/handlers/NavigationHandler.java" afterDir="false" />
@@ -45,7 +41,12 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
-        <projects_view />
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
       </state>
     </system>
   </component>
@@ -67,7 +68,7 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="M004E03488" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-05-26T22:17:03.512Z" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-05-27T19:53:22.279Z" />
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="last_opened_file_path" value="C:/Program Files/Git/cmd/git.exe" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
