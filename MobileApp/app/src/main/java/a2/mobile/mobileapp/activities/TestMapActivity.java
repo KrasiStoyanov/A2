@@ -306,7 +306,7 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
                 .navigationListener(this)
                 .progressChangeListener(this)
                 .routeListener(this)
-                .shouldSimulateRoute(true);
+                .shouldSimulateRoute(false);
 
         return options.build();
     }
