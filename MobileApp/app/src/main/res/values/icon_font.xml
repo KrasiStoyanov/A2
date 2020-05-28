@@ -20,4 +20,8 @@
 
     <!--  Directions  -->
     <string name="icon_corner_up_left"></string>
+
+    <!--  Symbols  -->
+    <string name="icon_bell"></string>
+    <string name="icon_trash"></string>
 </resources>

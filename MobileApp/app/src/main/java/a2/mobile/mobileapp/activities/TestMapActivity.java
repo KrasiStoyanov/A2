@@ -50,7 +50,9 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
     private List<Point> points = new ArrayList<>();
     private int pointsSize = 0;
     private int currentInterestPoint = 0;
+
     private boolean didUpdateCurrentPoint = false;
+    private boolean didNotifyForInterestPoint = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,7 +63,12 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
 
         setContentView(R.layout.activity_test_map);
         points = new ArrayList<>(MapUtils.currentNavigationPoints);
+
         NavigationHandler.storeContext(this);
+        NavigationHandler.setUpInterestPointsAdapter(
+                this,
+                findViewById(R.id.activity_navigation)
+        );
 
         navigationView = findViewById(R.id.navigation);
         navigationView.onCreate(savedInstanceState);
@@ -163,6 +170,10 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
 
     @Override
     public void onArrival() {
+        if (!didNotifyForInterestPoint) {
+            // TODO: Notify the user for the current point of interest.
+            didNotifyForInterestPoint = true;
+        }
     }
 
     @Override
@@ -189,6 +200,7 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
 
                 previousStep = step;
                 didUpdateCurrentPoint = false;
+                didNotifyForInterestPoint = false;
             }
 
             updateInterestPoint(legProgress, step);

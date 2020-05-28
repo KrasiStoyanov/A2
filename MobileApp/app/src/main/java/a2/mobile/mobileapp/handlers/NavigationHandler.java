@@ -1,18 +1,28 @@
 package a2.mobile.mobileapp.handlers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mapbox.api.directions.v5.models.BannerInstructions;
 import com.mapbox.api.directions.v5.models.BannerText;
 import com.mapbox.api.directions.v5.models.LegStep;
 import com.vuzix.connectivity.sdk.Connectivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import a2.mobile.mobileapp.R;
+import a2.mobile.mobileapp.adapters.InterestPointAdapter;
+import a2.mobile.mobileapp.adapters.RoutesAdapter;
 import a2.mobile.mobileapp.constants.NavigationConstants;
 import a2.mobile.mobileapp.data.classes.PointOfInterest;
+import a2.mobile.mobileapp.data.classes.Route;
 import a2.mobile.mobileapp.enums.PointOfInterestPriorities;
 
 public class NavigationHandler {
@@ -26,6 +36,8 @@ public class NavigationHandler {
     private static String interestPointTitle;
     private static String interestPointDescription;
     private static PointOfInterestPriorities interestPointPriority;
+
+    private static InterestPointAdapter interestPointsAdapter;
 
     public static void storeContext(Context context) {
         mContext = context;
@@ -69,6 +81,10 @@ public class NavigationHandler {
                 interestPointDescription,
                 interestPointPriority.toString()
         });
+
+        if (interestPointsAdapter != null) {
+            interestPointsAdapter.addItem(interestPoint);
+        }
     }
 
     private static void sendDataToBladeApp(String name, String[] data) {
@@ -77,6 +93,27 @@ public class NavigationHandler {
         //sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         sendIntent.putExtra(name, data);
 
-        Connectivity.get(mContext).sendBroadcast(sendIntent);
+        Connectivity connectivity = Connectivity.get(mContext);
+        if (connectivity.isAvailable()) {
+            connectivity.sendBroadcast(sendIntent);
+        }
+    }
+
+    public static void setUpInterestPointsAdapter(
+            Context context,
+            View rootView) {
+
+        ((Activity) context).runOnUiThread(() -> {
+            RecyclerView interestPointsHolder = rootView.findViewById(R.id.interest_points);
+            interestPointsAdapter = new InterestPointAdapter(
+                    context,
+                    new ArrayList<>()
+            );
+
+            interestPointsHolder.setAdapter(interestPointsAdapter);
+
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+            interestPointsHolder.setLayoutManager(layoutManager);
+        });
     }
 }

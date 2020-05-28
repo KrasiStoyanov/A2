@@ -42,4 +42,9 @@
     <color name="button_primary__background">@color/blue</color>
     <color name="button_primary__text">@color/white</color>
     <color name="button_primary__icon">@color/blue_lighter</color>
+
+    <!--  Interest Point Priorities  -->
+    <color name="priority_high">#FF0000</color>
+    <color name="priority_medium">#ffA500</color>
+    <color name="priority_low">#6495ed</color>
 </resources>
