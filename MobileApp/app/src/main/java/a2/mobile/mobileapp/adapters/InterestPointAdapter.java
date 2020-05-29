@@ -32,7 +32,7 @@ public class InterestPointAdapter
     @NonNull
     @Override
     public InterestPointAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        CardView view = (CardView) inflater.inflate(R.layout.interest_point, parent, false);
+        View view = inflater.inflate(R.layout.interest_point, parent, false);
 
         return new InterestPointAdapter.ViewHolder(view);
     }

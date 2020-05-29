@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,6 +39,7 @@ public class NavigationHandler {
     private static PointOfInterestPriorities interestPointPriority;
 
     private static InterestPointAdapter interestPointsAdapter;
+    private static LinearLayoutManager linearLayoutManager;
 
     public static void storeContext(Context context) {
         mContext = context;
@@ -71,7 +73,10 @@ public class NavigationHandler {
         sendDataToBladeApp("distance_remaining", new String[] { formattedDistance });
     }
 
-    public static void updateInterestPoint(PointOfInterest interestPoint) {
+    public static void updateInterestPoint(
+            PointOfInterest interestPoint,
+            TextView noInterestPointsTextView) {
+
         interestPointTitle = interestPoint.title;
         interestPointDescription = interestPoint.interest;
         interestPointPriority = interestPoint.getPriority();
@@ -83,7 +88,15 @@ public class NavigationHandler {
         });
 
         if (interestPointsAdapter != null) {
+            if (noInterestPointsTextView.getVisibility() == View.VISIBLE) {
+                noInterestPointsTextView.setVisibility(View.GONE);
+            }
+
             interestPointsAdapter.addItem(interestPoint);
+            linearLayoutManager.scrollToPositionWithOffset(
+                    interestPointsAdapter.getItemCount() - 1,
+                    0
+            );
         }
     }
 
@@ -112,8 +125,13 @@ public class NavigationHandler {
 
             interestPointsHolder.setAdapter(interestPointsAdapter);
 
-            LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-            interestPointsHolder.setLayoutManager(layoutManager);
+            linearLayoutManager = new LinearLayoutManager(
+                    context,
+                    RecyclerView.HORIZONTAL,
+                    false
+            );
+
+            interestPointsHolder.setLayoutManager(linearLayoutManager);
         });
     }
 }

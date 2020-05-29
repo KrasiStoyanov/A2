@@ -3,6 +3,7 @@ package a2.mobile.mobileapp.activities;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,6 +55,8 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
     private boolean didUpdateCurrentPoint = false;
     private boolean didNotifyForInterestPoint = false;
 
+    private TextView noInterestPointsTextView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +65,7 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
         }
 
         setContentView(R.layout.activity_test_map);
+        noInterestPointsTextView = findViewById(R.id.no_interest_points);
         points = new ArrayList<>(MapUtils.currentNavigationPoints);
 
         NavigationHandler.storeContext(this);
@@ -218,9 +222,10 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
                 if (!didUpdateCurrentPoint &&
                         currentInterestPoint < Data.selectedRoute.pointsOfInterest.size()) {
 
-                    NavigationHandler.updateInterestPoint(Data.selectedRoute.pointsOfInterest.get(
-                            currentInterestPoint
-                    ));
+                    NavigationHandler.updateInterestPoint(
+                            Data.selectedRoute.pointsOfInterest.get(currentInterestPoint),
+                            noInterestPointsTextView
+                    );
 
                     didUpdateCurrentPoint = true;
                     currentInterestPoint++;
