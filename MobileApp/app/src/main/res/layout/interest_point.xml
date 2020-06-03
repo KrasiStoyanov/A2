@@ -41,6 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="6dp"
+                    android:maxLength="50"
                     android:fontFamily="@font/raleway_semi_bold"
                     android:textSize="@dimen/small_font_size"
                     android:textColor="@color/blue_light"
