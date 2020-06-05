@@ -38,4 +38,8 @@
 
     <!--  Test passcode key  -->
     <string name="passcode_key">2846</string>
+
+    <!--  Other  -->
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
 </resources>
