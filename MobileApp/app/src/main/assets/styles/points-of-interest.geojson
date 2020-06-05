@@ -3,26 +3,60 @@
     {
       "type": "Feature",
       "properties": {
-        "title": "BrugsmaBorg",
-        "interest": "Study building.",
-        "zone": 3,
+        "title": "Groningen Railway Station",
+        "interest": "The first station building was completed in 1865 and demolished in 1894. The second and current station building was designed by Izaak Gosschalk, completed in 1896, and most recently restored in 2000.",
+        "zone": 2,
         "priority": "medium"
       },
       "geometry": {
         "coordinates": [
-          6.532907,
-          53.239976
+          6.564066,
+          53.211015
         ],
         "type": "Point"
       },
-      "id": "11b9c8f0ca08a0bc16035e5ae0950ef8"
+      "id": "125e56b81a836c052026eeddf0158108"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Schuurman Schoenen",
+        "interest": "Shoe store",
+        "zone": 5,
+        "priority": "low"
+      },
+      "geometry": {
+        "coordinates": [
+          6.563869,
+          53.217223
+        ],
+        "type": "Point"
+      },
+      "id": "1b01dde85001421d211c12fe7e47b15e"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Vismarkt",
+        "interest": "Groningen's Fish Market has been in existence since 1821 and is open Monday, Tuesday and Staurday.",
+        "zone": 1,
+        "priority": "medium"
+      },
+      "geometry": {
+        "coordinates": [
+          6.5648,
+          53.217189
+        ],
+        "type": "Point"
+      },
+      "id": "1e16f1ff909ad6dfdeb77c6aca06747e"
     },
     {
       "type": "Feature",
       "properties": {
         "title": "UB Zernike",
         "interest": "Library",
-        "zone": 2,
+        "zone": 3,
         "priority": "high"
       },
       "geometry": {
@@ -39,7 +73,7 @@
       "properties": {
         "title": "Bernoulliborg",
         "interest": "A great place to get a snack or a cup of coffee.",
-        "zone": 1,
+        "zone": 3,
         "priority": "low"
       },
       "geometry": {
@@ -54,36 +88,121 @@
     {
       "type": "Feature",
       "properties": {
-        "title": "Moyee",
-        "interest": "Cup of coffe spot.",
-        "zone": 2,
-        "priority": "medium"
+        "title": "Huize Maas",
+        "interest": "Idk",
+        "zone": 5,
+        "priority": "high"
       },
       "geometry": {
         "coordinates": [
-          6.534488,
-          53.239511
+          6.564588,
+          53.216823
         ],
         "type": "Point"
       },
-      "id": "87dba80b9d526c294b81197a8748874a"
+      "id": "67f777bb6416c4a6b67da2c56a3034f8"
     },
     {
       "type": "Feature",
       "properties": {
-        "title": "Faculty Association Ibn Battuta",
-        "interest": "NA",
+        "title": "Groningen University and Museum",
+        "interest": "Founded in 1614, the Groningen University and its extensive grounds are certainly worth exploring.",
+        "zone": 1,
+        "priority": "high"
+      },
+      "geometry": {
+        "coordinates": [
+          6.563209,
+          53.218777
+        ],
+        "type": "Point"
+      },
+      "id": "682169ffa03d155dc08651a78220bad2"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Martini Tower",
+        "interest": "One of Groningen's most important landmarks built in the 13th century and rebuilt in the 15th century.",
+        "zone": 1,
+        "priority": "high"
+      },
+      "geometry": {
+        "coordinates": [
+          6.568211,
+          53.219385
+        ],
+        "type": "Point"
+      },
+      "id": "6a455fca80e8f92264caaae23ef7daf0"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "New Yorker",
+        "interest": "Fashion store",
+        "zone": 5,
+        "priority": "medium"
+      },
+      "geometry": {
+        "coordinates": [
+          6.564399,
+          53.21736
+        ],
+        "type": "Point"
+      },
+      "id": "8ebb828fb7aa84c2e6759f880b9d3cbe"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Pathe",
+        "interest": "Cinema",
         "zone": 2,
         "priority": "low"
       },
       "geometry": {
         "coordinates": [
-          6.533963,
-          53.23903
+          6.566033,
+          53.214306
         ],
         "type": "Point"
       },
-      "id": "bccbea1afc218822acacdc1601501758"
+      "id": "cf1a609fa1f3e5f425ba43f194278ef0"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Groninger Museum",
+        "interest": "Founded in 1874, the Groninger Museum remains one of the most technologically advanced art galleries in the Netherlands.",
+        "zone": 2,
+        "priority": "medium"
+      },
+      "geometry": {
+        "coordinates": [
+          6.565993,
+          53.212282
+        ],
+        "type": "Point"
+      },
+      "id": "de1b356b035c34a3e827c904f2ceeee4"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "The Northern Shipping Museum",
+        "interest": "The Northern Shipping Museum (Noordelijk Scheepvaartmuseum), provides a fascinating glimpse into Groningen's rich maritime history.",
+        "zone": 1,
+        "priority": "medium"
+      },
+      "geometry": {
+        "coordinates": [
+          6.560165,
+          53.216474
+        ],
+        "type": "Point"
+      },
+      "id": "e0a2fa3d81297fddeaca3e7e5d95b17a"
     }
   ],
   "type": "FeatureCollection"
