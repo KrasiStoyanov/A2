@@ -1,13 +1,16 @@
 package a2.mobile.mobileapp.activities;
 
+import android.app.Dialog;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.mapbox.api.directions.v5.DirectionsCriteria;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
@@ -21,6 +24,7 @@ import com.mapbox.services.android.navigation.ui.v5.OnNavigationReadyCallback;
 import com.mapbox.services.android.navigation.ui.v5.listeners.NavigationListener;
 import com.mapbox.services.android.navigation.ui.v5.listeners.RouteListener;
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute;
+import com.mapbox.services.android.navigation.v5.offroute.OffRouteListener;
 import com.mapbox.services.android.navigation.v5.routeprogress.ProgressChangeListener;
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteLegProgress;
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress;
@@ -34,13 +38,14 @@ import java.util.List;
 import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.constants.NavigationConstants;
 import a2.mobile.mobileapp.data.Data;
+import a2.mobile.mobileapp.data.classes.PointOfInterest;
 import a2.mobile.mobileapp.handlers.NavigationHandler;
 import a2.mobile.mobileapp.utils.MapUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 
 public class TestMapActivity extends AppCompatActivity implements OnNavigationReadyCallback,
-        NavigationListener, RouteListener, ProgressChangeListener {
+        NavigationListener, RouteListener, ProgressChangeListener, OffRouteListener {
 
     private NavigationView navigationView;
 
@@ -49,6 +54,9 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
     private int previousDistanceToManeuver = 0;
 
     private List<Point> points = new ArrayList<>();
+    private Point origin;
+    private Point destination;
+
     private int pointsSize = 0;
     private int currentInterestPoint = 0;
 
@@ -56,6 +64,9 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
     private boolean didNotifyForInterestPoint = false;
 
     private TextView noInterestPointsTextView;
+    private Location lastLocation;
+    private Dialog shouldRerouteDialog;
+    private Handler rerouteHandler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,6 +74,9 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
         if (!Mapbox.hasInstance()) {
             Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         }
+
+        shouldRerouteDialog = new Dialog(this);
+        rerouteHandler = new Handler();
 
         setContentView(R.layout.activity_test_map);
         noInterestPointsTextView = findViewById(R.id.no_interest_points);
@@ -136,7 +150,10 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
     public void onNavigationReady(boolean isRunning) {
         pointsSize = points.size();
 
-        fetchRoute(points.remove(0), points.remove(0));
+        origin = points.remove(0);
+        destination = points.remove(0);
+
+        fetchRoute(origin, destination);
     }
 
     @Override
@@ -182,11 +199,13 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
 
     @Override
     public void onProgressChange(@NotNull Location location, @NotNull RouteProgress routeProgress) {
+        lastLocation = location;
         RouteLegProgress legProgress = routeProgress.currentLegProgress();
 
         assert legProgress != null;
         LegStep step = legProgress.currentStep();
         RouteStepProgress stepProgress = legProgress.currentStepProgress();
+
 
         if (step != null && stepProgress != null) {
             double unformattedDistance = stepProgress.getDistanceRemaining() == null ?
@@ -218,6 +237,7 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
             int distanceToWaypoint = roundCurrentDistanceRemaining(step.distance());
             boolean isDistanceValid = validateCurrentDistanceRemaining(distanceToWaypoint);
 
+            // TODO: Check if the upcomingWaypoints have the current interest point coordinates as the first element.
             if (isDistanceValid && distanceToWaypoint <= 50) {
                 if (!didUpdateCurrentPoint &&
                         currentInterestPoint < Data.selectedRoute.pointsOfInterest.size()) {
@@ -311,8 +331,34 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
                 .navigationListener(this)
                 .progressChangeListener(this)
                 .routeListener(this)
-                .shouldSimulateRoute(false);
+                .shouldSimulateRoute(true);
 
         return options.build();
+    }
+
+    @Override
+    public void userOffRoute(@NotNull Location location) {
+        if (!shouldRerouteDialog.isShowing()) {
+            shouldRerouteDialog.setContentView(R.layout.custom_pop_up);
+
+            CardView acceptButton = shouldRerouteDialog.findViewById(R.id.accept_button);
+            CardView declineButton = shouldRerouteDialog.findViewById(R.id.accept_button);
+
+            if (acceptButton != null && declineButton != null) {
+                acceptButton.setOnClickListener(v -> reroute());
+            }
+
+            shouldRerouteDialog.show();
+            rerouteHandler.postDelayed(this::reroute, 10000);
+        }
+    }
+
+    private void reroute() {
+        origin = Point.fromLngLat(
+                lastKnownLocation.getLongitude(),
+                lastKnownLocation.getLatitude()
+        );
+
+        fetchRoute(origin, destination);
     }
 }
