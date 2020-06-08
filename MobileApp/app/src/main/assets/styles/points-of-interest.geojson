@@ -37,6 +37,23 @@
     {
       "type": "Feature",
       "properties": {
+        "title": "The Northern Shipping Museum",
+        "interest": "The Northern Shipping Museum (Noordelijk Scheepvaartmuseum), provides a fascinating glimpse into Groningen's rich maritime history.",
+        "zone": 1,
+        "priority": "medium"
+      },
+      "geometry": {
+        "coordinates": [
+          6.560165,
+          53.216474
+        ],
+        "type": "Point"
+      },
+      "id": "e0a2fa3d81297fddeaca3e7e5d95b17a"
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "title": "Vismarkt",
         "interest": "Groningen's Fish Market has been in existence since 1821 and is open Monday, Tuesday and Staurday.",
         "zone": 1,
@@ -186,23 +203,6 @@
         "type": "Point"
       },
       "id": "de1b356b035c34a3e827c904f2ceeee4"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "title": "The Northern Shipping Museum",
-        "interest": "The Northern Shipping Museum (Noordelijk Scheepvaartmuseum), provides a fascinating glimpse into Groningen's rich maritime history.",
-        "zone": 1,
-        "priority": "medium"
-      },
-      "geometry": {
-        "coordinates": [
-          6.560165,
-          53.216474
-        ],
-        "type": "Point"
-      },
-      "id": "e0a2fa3d81297fddeaca3e7e5d95b17a"
     }
   ],
   "type": "FeatureCollection"

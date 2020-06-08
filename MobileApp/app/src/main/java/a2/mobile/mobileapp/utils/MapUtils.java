@@ -218,7 +218,7 @@ public class MapUtils {
             List<PointOfInterest> interestPoints) {
 
         // Clear all route markers on the map first if there are any.
-        MapUtils.clearRouteMarkers(context);
+        clearRouteMarkers(context);
 
         currentNavigationPoints.add(origin);
         for (PointOfInterest point : interestPoints) {

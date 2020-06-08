@@ -57,7 +57,6 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
     private Point origin;
     private Point destination;
 
-    private int pointsSize = 0;
     private int currentInterestPoint = 0;
 
     private boolean didUpdateCurrentPoint = false;
@@ -148,10 +147,8 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
 
     @Override
     public void onNavigationReady(boolean isRunning) {
-        pointsSize = points.size();
-
         origin = points.remove(0);
-        destination = points.remove(0);
+        destination = points.remove(points.size() - 1);
 
         fetchRoute(origin, destination);
     }
