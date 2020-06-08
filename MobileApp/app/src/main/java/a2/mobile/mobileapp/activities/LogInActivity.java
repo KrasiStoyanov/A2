@@ -149,6 +149,7 @@ public class LogInActivity extends FragmentActivity implements OnMapReadyCallbac
     private void setNoAccountLink() {
         // Store the message from the resources and find the index of the word.
         String noAccountMessage = getResources().getString(R.string.welcome_no_account);
+
         int indexOfClickableWord = noAccountMessage.indexOf("here");
 
         // Create a clickable span and override its methods.
@@ -174,7 +175,6 @@ public class LogInActivity extends FragmentActivity implements OnMapReadyCallbac
                 noAccountMessage.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         );
-
         TextView noAccountTextView = findViewById(R.id.body_welcome_no_account);
 
         noAccountTextView.setText(spannableString);
