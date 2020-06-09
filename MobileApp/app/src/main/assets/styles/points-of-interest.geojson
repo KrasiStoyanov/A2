@@ -122,23 +122,6 @@
     {
       "type": "Feature",
       "properties": {
-        "title": "Bernoulliborg",
-        "interest": "A great place to get a snack or a cup of coffee.",
-        "zone": 3,
-        "priority": "low"
-      },
-      "geometry": {
-        "coordinates": [
-          6.536597,
-          53.240197
-        ],
-        "type": "Point"
-      },
-      "id": "28efeb5e308989560b577a1669eae30a"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "title": "UB Zernike",
         "interest": "Library",
         "zone": 3,
@@ -152,6 +135,23 @@
         "type": "Point"
       },
       "id": "206b020b59881700b6a418e7f46277e9"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Bernoulliborg",
+        "interest": "A great place to get a snack or a cup of coffee.",
+        "zone": 3,
+        "priority": "low"
+      },
+      "geometry": {
+        "coordinates": [
+          6.536597,
+          53.240197
+        ],
+        "type": "Point"
+      },
+      "id": "28efeb5e308989560b577a1669eae30a"
     },
     {
       "type": "Feature",
