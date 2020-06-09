@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.vuzix:hud-resources:1.2@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/88b8a9ef00f267d44fca7df020401ae2/jetified-hud-resources-1.2/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/88b8a9ef00f267d44fca7df020401ae2/jetified-hud-resources-1.2/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b2aee2ffad5106fc45c8f21974e07929/jetified-hud-resources-1.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b2aee2ffad5106fc45c8f21974e07929/jetified-hud-resources-1.2/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vuzix/hud-resources/1.2/cf2c0fd1582b5bcc015689fb68420b8ea5a56f29/hud-resources-1.2-javadoc.jar!/" />

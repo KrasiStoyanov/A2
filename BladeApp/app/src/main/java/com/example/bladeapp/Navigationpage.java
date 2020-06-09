@@ -108,7 +108,7 @@ public class Navigationpage extends Activity  {
                             Intent intent = new Intent(mActivity, PopUpActivity.class);
                             String[] message = title;
                             intent.putExtra("Point of Interest", message);
-                            startActivity(intent);
+                            startActivityForResult(intent,2);
                         }
                     });
                     new Handler().postDelayed(new Runnable() {
@@ -150,7 +150,12 @@ public class Navigationpage extends Activity  {
 
     }
 
-
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+            if(requestCode == 2){
+                notification_icon.setVisibility(View.GONE);
+            }
+    }
 
 }

@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../BladeApp.iml" filepath="$PROJECT_DIR$/../BladeApp.iml" group="BladeApp" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/BladeApp-app.iml" filepath="$PROJECT_DIR$/.idea/modules/BladeApp-app.iml" group="BladeApp/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-492574981/Robocop-BladeApp.iml" filepath="$PROJECT_DIR$/.idea/modules/-492574981/Robocop-BladeApp.iml" group="BladeApp" />
       <module fileurl="file://$PROJECT_DIR$/app.iml" filepath="$PROJECT_DIR$/app.iml" group="BladeApp/app" />
     </modules>
   </component>

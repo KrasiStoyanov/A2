@@ -18,7 +18,7 @@ public class PopUpActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.popup);
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         String[] message = intent.getStringArrayExtra("Point of Interest");
         LinearLayout mLinearLayout =findViewById(R.id.pop_up_holder);
         assert message != null;
@@ -41,6 +41,7 @@ public class PopUpActivity extends Activity {
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setResult(2,intent);
                 finish();
             }
         });
