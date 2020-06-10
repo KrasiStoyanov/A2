@@ -122,6 +122,40 @@
     {
       "type": "Feature",
       "properties": {
+        "title": "Next to my place",
+        "interest": "Test interest",
+        "priority": "high",
+        "zone": 4
+      },
+      "geometry": {
+        "coordinates": [
+          6.591514,
+          53.192198
+        ],
+        "type": "Point"
+      },
+      "id": "41c96daaf98b9dde486a81b8f01084d3"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Backyard",
+        "interest": "Test",
+        "priority": "low",
+        "zone": 4
+      },
+      "geometry": {
+        "coordinates": [
+          6.591516,
+          53.191318
+        ],
+        "type": "Point"
+      },
+      "id": "0aaf220609bea8fd270f7ea237dc9132"
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "title": "UB Zernike",
         "interest": "Library",
         "zone": 3,
