@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.mapbox.api.directions.v5.DirectionsCriteria;
+import com.mapbox.api.directions.v5.models.BannerInstructions;
+import com.mapbox.api.directions.v5.models.BannerText;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
 import com.mapbox.api.directions.v5.models.DirectionsRoute;
 import com.mapbox.api.directions.v5.models.LegStep;
@@ -28,6 +30,7 @@ import com.mapbox.services.android.navigation.v5.offroute.OffRouteListener;
 import com.mapbox.services.android.navigation.v5.routeprogress.ProgressChangeListener;
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteLegProgress;
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress;
+import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgressState;
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteStepProgress;
 
 import org.jetbrains.annotations.NotNull;
@@ -203,6 +206,21 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
         LegStep step = legProgress.currentStep();
         RouteStepProgress stepProgress = legProgress.currentStepProgress();
 
+        RouteProgressState state = routeProgress.currentState();
+        if (state != null && state.equals(RouteProgressState.ROUTE_ARRIVED)) {
+            if (!didUpdateCurrentPoint &&
+                    currentInterestPoint < Data.selectedRoute.pointsOfInterest.size()) {
+
+                NavigationHandler.updateInterestPoint(
+                        Data.selectedRoute.pointsOfInterest.get(currentInterestPoint),
+                        noInterestPointsTextView
+                );
+
+                didUpdateCurrentPoint = true;
+                currentInterestPoint++;
+            }
+        }
+
 
         if (step != null && stepProgress != null) {
             double unformattedDistance = stepProgress.getDistanceRemaining() == null ?
@@ -222,33 +240,9 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
                 didUpdateCurrentPoint = false;
                 didNotifyForInterestPoint = false;
             }
-
-            updateInterestPoint(legProgress, step);
         }
 
         lastKnownLocation = location;
-    }
-
-    private void updateInterestPoint(RouteLegProgress legProgress, LegStep step) {
-        if (legProgress.upComingStep() == null) {
-            int distanceToWaypoint = roundCurrentDistanceRemaining(step.distance());
-            boolean isDistanceValid = validateCurrentDistanceRemaining(distanceToWaypoint);
-
-            // TODO: Check if the upcomingWaypoints have the current interest point coordinates as the first element.
-            if (isDistanceValid && distanceToWaypoint <= 50) {
-                if (!didUpdateCurrentPoint &&
-                        currentInterestPoint < Data.selectedRoute.pointsOfInterest.size()) {
-
-                    NavigationHandler.updateInterestPoint(
-                            Data.selectedRoute.pointsOfInterest.get(currentInterestPoint),
-                            noInterestPointsTextView
-                    );
-
-                    didUpdateCurrentPoint = true;
-                    currentInterestPoint++;
-                }
-            }
-        }
     }
 
     /**
@@ -328,7 +322,7 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
                 .navigationListener(this)
                 .progressChangeListener(this)
                 .routeListener(this)
-                .shouldSimulateRoute(true);
+                .shouldSimulateRoute(false);
 
         return options.build();
     }
@@ -339,7 +333,7 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
             shouldRerouteDialog.setContentView(R.layout.custom_pop_up);
 
             CardView acceptButton = shouldRerouteDialog.findViewById(R.id.accept_button);
-            CardView declineButton = shouldRerouteDialog.findViewById(R.id.accept_button);
+            CardView declineButton = shouldRerouteDialog.findViewById(R.id.decline_button);
 
             if (acceptButton != null && declineButton != null) {
                 acceptButton.setOnClickListener(v -> reroute());
