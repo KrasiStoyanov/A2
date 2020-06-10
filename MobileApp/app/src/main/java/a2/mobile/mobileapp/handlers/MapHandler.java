@@ -170,6 +170,7 @@ public class MapHandler {
                 // If an error occurs, print to logcat
                 Timber.e(error.getReason());
                 Timber.e(error.getMessage());
+                MapHandler.endProgress(context);
             }
 
             @Override
