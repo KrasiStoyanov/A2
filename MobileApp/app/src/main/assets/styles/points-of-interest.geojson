@@ -139,6 +139,23 @@
     {
       "type": "Feature",
       "properties": {
+        "title": "Skip me",
+        "interest": "N/A",
+        "priority": "lowest",
+        "zone": 4
+      },
+      "geometry": {
+        "coordinates": [
+          6.59088,
+          53.192046
+        ],
+        "type": "Point"
+      },
+      "id": "a50257b04b662341be3473b6702de649"
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "title": "Backyard",
         "interest": "Test",
         "priority": "low",

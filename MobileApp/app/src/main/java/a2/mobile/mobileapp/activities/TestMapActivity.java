@@ -42,6 +42,7 @@ import a2.mobile.mobileapp.R;
 import a2.mobile.mobileapp.constants.NavigationConstants;
 import a2.mobile.mobileapp.data.Data;
 import a2.mobile.mobileapp.data.classes.PointOfInterest;
+import a2.mobile.mobileapp.enums.PointOfInterestPriorities;
 import a2.mobile.mobileapp.handlers.NavigationHandler;
 import a2.mobile.mobileapp.utils.MapUtils;
 import retrofit2.Call;
@@ -211,10 +212,15 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
             if (!didUpdateCurrentPoint &&
                     currentInterestPoint < Data.selectedRoute.pointsOfInterest.size()) {
 
-                NavigationHandler.updateInterestPoint(
-                        Data.selectedRoute.pointsOfInterest.get(currentInterestPoint),
-                        noInterestPointsTextView
-                );
+                PointOfInterest interestPoint = Data.selectedRoute.pointsOfInterest
+                        .get(currentInterestPoint);
+
+                if (!interestPoint.getPriority().equals(PointOfInterestPriorities.LOWEST)) {
+                    NavigationHandler.updateInterestPoint(
+                            Data.selectedRoute.pointsOfInterest.get(currentInterestPoint),
+                            noInterestPointsTextView
+                    );
+                }
 
                 didUpdateCurrentPoint = true;
                 currentInterestPoint++;
@@ -322,7 +328,7 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
                 .navigationListener(this)
                 .progressChangeListener(this)
                 .routeListener(this)
-                .shouldSimulateRoute(false);
+                .shouldSimulateRoute(true);
 
         return options.build();
     }
