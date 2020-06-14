@@ -14,16 +14,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f527b28f-a904-4daa-9d27-29d7c92df8ca" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/DeviceList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/DeviceList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/HomeActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/HomeActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/Navigationpage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/Navigationpage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/PopUpActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bladeapp/PopUpActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../MobileApp/app/src/main/assets/points_of_interest.xls" beforeDir="false" afterPath="$PROJECT_DIR$/../../MobileApp/app/src/main/assets/points_of_interest.xls" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../MobileApp/app/src/main/assets/styles/points-of-interest.geojson" beforeDir="false" afterPath="$PROJECT_DIR$/../../MobileApp/app/src/main/assets/styles/points-of-interest.geojson" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/enums/PointOfInterestPriorities.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../MobileApp/app/src/main/java/a2/mobile/mobileapp/enums/PointOfInterestPriorities.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
