@@ -16,7 +16,7 @@ public class HomeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         toDeviceButton = findViewById(R.id.button_todevicelist);
-
+    //click the button to jump to next activity
         toDeviceButton.setOnClickListener(new DeviceButtonClick());
 
     }

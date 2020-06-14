@@ -26,14 +26,18 @@ import androidx.cardview.widget.CardView;
 
 import com.vuzix.connectivity.sdk.Connectivity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Navigationpage extends Activity  {
     private PopupWindow mPopupWindow;
     private LinearLayout mLinearLayout;
     private Context mContext;
     private Activity mActivity;
-    public Runnable mRunnerble;
+    public List<ImageButton> notification_list = new ArrayList<>();
+    private int notification_index;
+    //public Runnable mRunnerble;
     private static final String low = "LOW";
     private static final String medium = "MEDIUM";
     private static final String high = "HIGH";
@@ -60,16 +64,18 @@ public class Navigationpage extends Activity  {
         super.onStop();
         unregisterReceiver(receiver);
     }
-
+    //Generate a BroadcastReceiver to receive the data from Mobile application
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            //check if the app connect with the correct mobile application(package)
             if (Connectivity.get(context).verify(intent, "a2.mobile.mobileapp")) {
-
+                //Receive distance of navigation and set it on the layout
                 String[] distance = intent.getStringArrayExtra("distance_remaining");
                 if (distance != null) {
                     navigation_distance_view.setText(distance[0]);
                 }
+                //Receive navigation text and set it on the layout
                 String[] navigation_text = intent.getStringArrayExtra("icon_name");
                 if (navigation_text != null) {
                     Log.e("Text",navigation_text[0]);
@@ -85,11 +91,13 @@ public class Navigationpage extends Activity  {
                     }
 
                 }
+                //Receive point of interest
                 final String[] title = intent.getStringArrayExtra("interest point title");
 
                 if (title != null) {
                     Log.e("Title", Arrays.toString(title));
 
+                    //Set notification icon based on the priority of the point of interest
                     notification_icon = new ImageButton(mContext);notification_icon.setTag("button_popup");
                     notification_icon.setLayoutParams(new LinearLayout.LayoutParams(85,95));
                     notification_icon.setBackgroundColor(getResources().getColor(R.color.transparent_Black));
@@ -105,12 +113,16 @@ public class Navigationpage extends Activity  {
                     notification_icon.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            notification_index = notification_list.indexOf(notification_icon);
                             Intent intent = new Intent(mActivity, PopUpActivity.class);
                             String[] message = title;
                             intent.putExtra("Point of Interest", message);
                             startActivityForResult(intent,2);
+
                         }
                     });
+                    //Time out function for the notifications.
+                    notification_list.add(notification_icon);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -119,10 +131,13 @@ public class Navigationpage extends Activity  {
                         }
                     },5000);
                     Handler mHandler = new Handler();
-                    mRunnerble = new Runnable() {
+                     Runnable mRunnerble = new Runnable() {
                         @Override
                         public void run() {
-                            notification_icon.setVisibility(View.GONE);
+                            if(notification_index>= 0 && notification_index<notification_list.size()){
+                                ImageButton current_notification_icon = notification_list.remove(notification_index);
+                                current_notification_icon.setVisibility(View.GONE);
+                            }
                         }
 
                     };
@@ -139,7 +154,7 @@ public class Navigationpage extends Activity  {
 
         mContext = getApplicationContext();
         mActivity = Navigationpage.this;
-
+    //initialize  layouts
         navigation_message_view = findViewById(R.id.navigation_text);
         navigation_distance_view = findViewById(R.id.distance_holder);
         navigation_message_holder = (LinearLayout)findViewById(R.id.text_holder);
@@ -149,12 +164,15 @@ public class Navigationpage extends Activity  {
         directionIcon = findViewById(R.id.direction_icon);
 
     }
-
+    //Disappear the notification icons when the user close the pop-up window.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
             if(requestCode == 2){
-                notification_icon.setVisibility(View.GONE);
+                if(notification_index>= 0 && notification_index<notification_list.size()) {
+                    ImageButton current_notification_icon = notification_list.remove(notification_index);
+                    current_notification_icon.setVisibility(View.GONE);
+                }
             }
     }
 

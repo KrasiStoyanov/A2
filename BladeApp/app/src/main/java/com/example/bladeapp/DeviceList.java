@@ -51,7 +51,7 @@ public class DeviceList extends Activity {
     }
 
 
-
+    //get the device name which has been connected
     public void getRemoteDevice() {
         Connectivity connectivity = Connectivity.get(mContext);
         final Device device = connectivity.getDevice();

@@ -22,6 +22,7 @@ public class PopUpActivity extends Activity {
         String[] message = intent.getStringArrayExtra("Point of Interest");
         LinearLayout mLinearLayout =findViewById(R.id.pop_up_holder);
         assert message != null;
+        //set the border of notification based on the priority
         if(message[2].equals(low)){
             mLinearLayout.setBackgroundResource(R.drawable.border);
         }else if(message[2].equals(medium)){
@@ -29,6 +30,7 @@ public class PopUpActivity extends Activity {
         }else if(message[2].equals(high)){
             mLinearLayout.setBackgroundResource(R.drawable.border_red);
         }
+        //set the points of interest data
         TextView title = findViewById(R.id.point_Of_interest);
         TextView descriptiption_of_point = findViewById(R.id.details_of_point);
         assert message != null;
