@@ -3,6 +3,7 @@
     {
       "type": "Feature",
       "properties": {
+        "type": "interest",
         "title": "The Northern Shipping Museum",
         "interest": "The Northern Shipping Museum (Noordelijk Scheepvaartmuseum), provides a fascinating glimpse into Groningen's rich maritime history.",
         "zone": 1,
@@ -20,6 +21,7 @@
     {
       "type": "Feature",
       "properties": {
+        "type": "interest",
         "title": "Vismarkt",
         "interest": "Groningen's Fish Market has been in existence since 1821 and is open Monday, Tuesday and Staurday.",
         "zone": 1,
@@ -37,6 +39,7 @@
     {
       "type": "Feature",
       "properties": {
+        "type": "interest",
         "title": "Groningen University and Museum",
         "interest": "Founded in 1614, the Groningen University and its extensive grounds are certainly worth exploring.",
         "zone": 1,
@@ -54,6 +57,7 @@
     {
       "type": "Feature",
       "properties": {
+        "type": "interest",
         "title": "Martini Tower",
         "interest": "One of Groningen's most important landmarks built in the 13th century and rebuilt in the 15th century.",
         "zone": 1,
@@ -71,6 +75,7 @@
     {
       "type": "Feature",
       "properties": {
+        "type": "interest",
         "title": "Groningen Railway Station",
         "interest": "The first station building was completed in 1865 and demolished in 1894. The second and current station building was designed by Izaak Gosschalk, completed in 1896, and most recently restored in 2000.",
         "zone": 2,
@@ -88,6 +93,7 @@
     {
       "type": "Feature",
       "properties": {
+        "type": "interest",
         "title": "Groninger Museum",
         "interest": "Founded in 1874, the Groninger Museum remains one of the most technologically advanced art galleries in the Netherlands.",
         "zone": 2,
@@ -105,6 +111,7 @@
     {
       "type": "Feature",
       "properties": {
+        "type": "interest",
         "title": "Pathe",
         "interest": "Cinema",
         "zone": 2,
@@ -122,6 +129,7 @@
     {
       "type": "Feature",
       "properties": {
+        "type": "interest",
         "title": "Next to my place",
         "interest": "Test interest",
         "priority": "high",
@@ -139,6 +147,7 @@
     {
       "type": "Feature",
       "properties": {
+        "type": "point",
         "title": "Skip me",
         "interest": "N/A",
         "priority": "lowest",
@@ -156,6 +165,7 @@
     {
       "type": "Feature",
       "properties": {
+        "type": "interest",
         "title": "Backyard",
         "interest": "Test",
         "priority": "low",
@@ -173,6 +183,7 @@
     {
       "type": "Feature",
       "properties": {
+        "type": "interest",
         "title": "UB Zernike",
         "interest": "Library",
         "zone": 3,
@@ -190,6 +201,7 @@
     {
       "type": "Feature",
       "properties": {
+        "type": "interest",
         "title": "Bernoulliborg",
         "interest": "A great place to get a snack or a cup of coffee.",
         "zone": 3,
@@ -207,6 +219,7 @@
     {
       "type": "Feature",
       "properties": {
+        "type": "interest",
         "title": "Schuurman Schoenen",
         "interest": "Shoe store",
         "zone": 5,
@@ -224,6 +237,7 @@
     {
       "type": "Feature",
       "properties": {
+        "type": "interest",
         "title": "New Yorker",
         "interest": "Fashion store",
         "zone": 5,
@@ -241,6 +255,7 @@
     {
       "type": "Feature",
       "properties": {
+        "type": "interest",
         "title": "Huize Maas",
         "interest": "Idk",
         "zone": 5,

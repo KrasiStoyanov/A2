@@ -2,6 +2,7 @@ package a2.mobile.mobileapp.handlers;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -186,6 +187,7 @@ public class MapHandler {
      */
     public static void focusMapOnRoute(Context context) {
         Route route = Data.selectedRoute;
+        Log.e("Interest Points", route.pointsOfInterest.toString());
         LatLng startPoint = new LatLng(
                 route.startPoint.coordinates.get(0),
                 route.startPoint.coordinates.get(1)

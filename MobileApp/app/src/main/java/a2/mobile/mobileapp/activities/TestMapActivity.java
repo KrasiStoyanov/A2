@@ -1,6 +1,7 @@
 package a2.mobile.mobileapp.activities;
 
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +19,7 @@ import com.mapbox.api.directions.v5.models.BannerText;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
 import com.mapbox.api.directions.v5.models.DirectionsRoute;
 import com.mapbox.api.directions.v5.models.LegStep;
+import com.mapbox.api.directions.v5.models.RouteLeg;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.services.android.navigation.ui.v5.NavigationView;
@@ -207,27 +209,6 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
         LegStep step = legProgress.currentStep();
         RouteStepProgress stepProgress = legProgress.currentStepProgress();
 
-        RouteProgressState state = routeProgress.currentState();
-        if (state != null && state.equals(RouteProgressState.ROUTE_ARRIVED)) {
-            if (!didUpdateCurrentPoint &&
-                    currentInterestPoint < Data.selectedRoute.pointsOfInterest.size()) {
-
-                PointOfInterest interestPoint = Data.selectedRoute.pointsOfInterest
-                        .get(currentInterestPoint);
-
-                if (!interestPoint.getPriority().equals(PointOfInterestPriorities.LOWEST)) {
-                    NavigationHandler.updateInterestPoint(
-                            Data.selectedRoute.pointsOfInterest.get(currentInterestPoint),
-                            noInterestPointsTextView
-                    );
-                }
-
-                didUpdateCurrentPoint = true;
-                currentInterestPoint++;
-            }
-        }
-
-
         if (step != null && stepProgress != null) {
             double unformattedDistance = stepProgress.getDistanceRemaining() == null ?
                     previousDistanceToManeuver : stepProgress.getDistanceRemaining();
@@ -237,6 +218,26 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
             if (isDistanceValid && distanceToManeuver != previousDistanceToManeuver) {
                 NavigationHandler.updateDistanceRemaining(distanceToManeuver);
                 previousDistanceToManeuver = distanceToManeuver;
+
+                Log.e("Just TEst", "Upcoming Step " + legProgress.upComingStep() + "; Distance to step: " + distanceToManeuver);
+                if (legProgress.upComingStep() == null && distanceToManeuver <= 25) {
+                    if (!didUpdateCurrentPoint &&
+                            currentInterestPoint < Data.selectedRoute.pointsOfInterest.size()) {
+
+                        PointOfInterest interestPoint = Data.selectedRoute.pointsOfInterest
+                                .get(currentInterestPoint);
+
+                        if (!interestPoint.getPriority().equals(PointOfInterestPriorities.LOWEST)) {
+                            NavigationHandler.updateInterestPoint(
+                                    Data.selectedRoute.pointsOfInterest.get(currentInterestPoint),
+                                    noInterestPointsTextView
+                            );
+                        }
+
+                        didUpdateCurrentPoint = true;
+                        currentInterestPoint++;
+                    }
+                }
             }
 
             if (!step.equals(previousStep)) {

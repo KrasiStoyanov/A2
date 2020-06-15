@@ -154,8 +154,8 @@ public class Data {
                 JSONArray coordinates = feature.getJSONObject("geometry")
                         .getJSONArray("coordinates");
 
-                String title = properties.getString("title");
-                String interest = properties.getString("interest");
+                String title = properties.optString("title");
+                String interest = properties.optString("interest");
                 String priority = properties.get("priority").toString().toUpperCase();
 
                 List<Integer> locationZones = new ArrayList<>();

@@ -30,7 +30,7 @@ public class MapConstants {
 
     public static final String MAP_POINTS_OF_INTEREST_LAYER_ID = "points of interest";
     public static final String MAP_POINTS_OF_INTEREST_LAYER_SOURCE_ID = "Points_Of_Interest";
-    public static final String MAP_POINTS_OF_INTEREST_GEOJSON_FILENAME = "points-of-interest.geojson";
+    public static final String MAP_POINTS_OF_INTEREST_GEOJSON_FILENAME = "apeldoorn.geojson";
 
     // Google Maps settings
     public static final LatLng DEFAULT_LOCATION = new LatLng(51.842175, 5.859508);
