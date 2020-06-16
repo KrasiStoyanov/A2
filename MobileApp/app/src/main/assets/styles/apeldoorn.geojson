@@ -170,7 +170,56 @@
         "type": "Point"
       },
       "id": "fa2252f3c240d420877bb18b6ca819b2"
-    }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "1st interest",
+        "interest": "cool place",
+        "priority": "high",
+        "zone": 4
+      },
+      "geometry": {
+        "coordinates": [
+          6.591551,
+          53.192188
+        ],
+        "type": "Point"
+      },
+      "id": "b5d93a33e468136b2e495d04edc0eae6"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "priority": "lowest",
+        "zone": 4
+      },
+      "geometry": {
+        "coordinates": [
+          6.590873,
+          53.192059
+        ],
+        "type": "Point"
+      },
+      "id": "72c5c948977cc0ce38e6420c4afdb5b2"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "2nd interest",
+        "interest": "backyard",
+        "priority": "low",
+        "zone": 4
+      },
+      "geometry": {
+        "coordinates": [
+          6.591462,
+          53.191355
+        ],
+        "type": "Point"
+      },
+      "id": "4089c428edf2414d167713903ef8f919"
+    },
   ],
   "type": "FeatureCollection"
 }
