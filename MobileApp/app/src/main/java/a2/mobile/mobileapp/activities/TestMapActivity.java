@@ -66,7 +66,6 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
     private int currentInterestPoint = 0;
 
     private boolean didUpdateCurrentPoint = false;
-    private boolean didNotifyForInterestPoint = false;
 
     private TextView noInterestPointsTextView;
     private Location lastLocation;
@@ -194,10 +193,7 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
 
     @Override
     public void onArrival() {
-        if (!didNotifyForInterestPoint) {
-            // TODO: Notify the user for the current point of interest.
-            didNotifyForInterestPoint = true;
-        }
+        didUpdateCurrentPoint = false;
     }
 
     @Override
@@ -219,23 +215,23 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
                 NavigationHandler.updateDistanceRemaining(distanceToManeuver);
                 previousDistanceToManeuver = distanceToManeuver;
 
-                Log.e("Just TEst", "Upcoming Step " + legProgress.upComingStep() + "; Distance to step: " + distanceToManeuver);
-                if (legProgress.upComingStep() == null && distanceToManeuver <= 25) {
+                Float fractionTraveled = legProgress.fractionTraveled();
+                if (fractionTraveled != null && fractionTraveled >= 0.95f) {
                     if (!didUpdateCurrentPoint &&
                             currentInterestPoint < Data.selectedRoute.pointsOfInterest.size()) {
 
                         PointOfInterest interestPoint = Data.selectedRoute.pointsOfInterest
                                 .get(currentInterestPoint);
 
+                        didUpdateCurrentPoint = true;
+                        currentInterestPoint++;
+
                         if (!interestPoint.getPriority().equals(PointOfInterestPriorities.LOWEST)) {
                             NavigationHandler.updateInterestPoint(
-                                    Data.selectedRoute.pointsOfInterest.get(currentInterestPoint),
+                                    interestPoint,
                                     noInterestPointsTextView
                             );
                         }
-
-                        didUpdateCurrentPoint = true;
-                        currentInterestPoint++;
                     }
                 }
             }
@@ -244,8 +240,6 @@ public class TestMapActivity extends AppCompatActivity implements OnNavigationRe
                 NavigationHandler.updateDirection(step);
 
                 previousStep = step;
-                didUpdateCurrentPoint = false;
-                didNotifyForInterestPoint = false;
             }
         }
 

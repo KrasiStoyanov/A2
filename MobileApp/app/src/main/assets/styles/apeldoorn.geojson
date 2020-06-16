@@ -89,6 +89,87 @@
         "type": "Point"
       },
       "id": "438c9a9d3d85378d1f9635f8c2659fbb"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "priority": "lowest",
+        "zone": 3
+      },
+      "geometry": {
+        "coordinates": [
+          6.528524,
+          53.2274
+        ],
+        "type": "Point"
+      },
+      "id": "79bd79584d25d962c6a7daf7f4ae60d3"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Test point",
+        "interest": "Cool place",
+        "priority": "high",
+        "zone": 3
+      },
+      "geometry": {
+        "coordinates": [
+          6.52708,
+          53.227288
+        ],
+        "type": "Point"
+      },
+      "id": "0d2ae41bc1bdd50b2ccc2d5f4ab5ed8c"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "priority": "lowest",
+        "zone": 3
+      },
+      "geometry": {
+        "coordinates": [
+          6.526815,
+          53.227853
+        ],
+        "type": "Point"
+      },
+      "id": "3f30937b45af375e40ae7b676601dac7"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Test interest 2",
+        "interest": "Another one",
+        "priority": "medium",
+        "zone": 3
+      },
+      "geometry": {
+        "coordinates": [
+          6.52649,
+          53.227792
+        ],
+        "type": "Point"
+      },
+      "id": "22722c90071cae1eccef673dae784f41"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "3rd point",
+        "interest": "Should show",
+        "priority": "low",
+        "zone": 3
+      },
+      "geometry": {
+        "coordinates": [
+          6.526852,
+          53.227089
+        ],
+        "type": "Point"
+      },
+      "id": "fa2252f3c240d420877bb18b6ca819b2"
     }
   ],
   "type": "FeatureCollection"
