@@ -93,21 +93,6 @@
     {
       "type": "Feature",
       "properties": {
-        "priority": "lowest",
-        "zone": 3
-      },
-      "geometry": {
-        "coordinates": [
-          6.528524,
-          53.2274
-        ],
-        "type": "Point"
-      },
-      "id": "79bd79584d25d962c6a7daf7f4ae60d3"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "title": "Test point",
         "interest": "Cool place",
         "priority": "high",
@@ -147,8 +132,8 @@
       },
       "geometry": {
         "coordinates": [
-          6.52649,
-          53.227792
+          6.525726,
+          53.227611
         ],
         "type": "Point"
       },
@@ -164,8 +149,8 @@
       },
       "geometry": {
         "coordinates": [
-          6.526852,
-          53.227089
+          6.525838,
+          53.22710
         ],
         "type": "Point"
       },
@@ -181,12 +166,12 @@
       },
       "geometry": {
         "coordinates": [
-          6.591551,
-          53.192188
+          6.591389,
+          53.19314
         ],
         "type": "Point"
       },
-      "id": "b5d93a33e468136b2e495d04edc0eae6"
+      "id": "ff5fc144c66d8d30273fceae51e5f0a5"
     },
     {
       "type": "Feature",
@@ -196,29 +181,95 @@
       },
       "geometry": {
         "coordinates": [
-          6.590873,
-          53.192059
+          6.590954,
+          53.193752
         ],
         "type": "Point"
       },
-      "id": "72c5c948977cc0ce38e6420c4afdb5b2"
+      "id": "fe78f654d64a010f715a5e54042d7fc2"
     },
     {
       "type": "Feature",
       "properties": {
         "title": "2nd interest",
-        "interest": "backyard",
+        "interest": "another one",
         "priority": "low",
         "zone": 4
       },
       "geometry": {
         "coordinates": [
-          6.591462,
-          53.191355
+          6.592054,
+          53.193995
         ],
         "type": "Point"
       },
-      "id": "4089c428edf2414d167713903ef8f919"
+      "id": "f05c17ac7ef77fc52b34afeca0d86a53"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "priority": "lowest",
+        "zone": 4
+      },
+      "geometry": {
+        "coordinates": [
+          6.593398,
+          53.194204
+        ],
+        "type": "Point"
+      },
+      "id": "bcf6107d871bbd41e8b3f05aa48b1a77"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "3rd interest",
+        "interest": "third one",
+        "priority": "medium",
+        "zone": 4
+      },
+      "geometry": {
+        "coordinates": [
+          6.592566,
+          53.193402
+        ],
+        "type": "Point"
+      },
+      "id": "865e61ffc8c4d9abac00f91491fe679e"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "1st interest",
+        "interest": "cool place",
+        "priority": "high",
+        "zone": 5
+      },
+      "geometry": {
+        "coordinates": [
+          6.592345,
+          53.192405
+        ],
+        "type": "Point"
+      },
+      "id": "577e4290edaad395adc38245b708c3c5"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "2nd interest",
+        "interest": "another one",
+        "priority": "low",
+        "zone": 5
+      },
+      "geometry": {
+        "coordinates": [
+          6.591826,
+          53.1923
+        ],
+        "type": "Point"
+      },
+      "id": "6b2fd3166cbd4f2b683b55807028bbfd"
     },
   ],
   "type": "FeatureCollection"
